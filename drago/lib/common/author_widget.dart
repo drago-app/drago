@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
-import 'package:helius/core/entities/submission_author.dart';
-import 'package:helius/styles.dart';
+import 'package:drago/core/entities/submission_author.dart';
 
 class AuthorWidget extends StatelessWidget {
   final SubmissionAuthor author;

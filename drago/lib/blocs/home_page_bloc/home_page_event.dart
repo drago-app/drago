@@ -5,7 +5,6 @@ abstract class HomePageEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class UserAuthenticated extends HomePageEvent {
-  @override
-  List<Object> get props => null;
-}
+class UserAuthenticated extends HomePageEvent {}
+
+class UserNotAuthenticated extends HomePageEvent {}

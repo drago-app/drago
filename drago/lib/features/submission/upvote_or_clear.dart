@@ -1,17 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
-import 'package:helius/core/entities/submission_entity.dart';
-import 'package:helius/core/error/failures.dart';
-import 'package:helius/core/usecases/usecase.dart';
-import 'package:helius/reddit_service.dart';
+import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/error/failures.dart';
+import 'package:drago/core/usecases/usecase.dart';
+import 'package:drago/reddit_service.dart';
+
+import '../../user_service.dart';
 
 class UpvoteOrClear implements UseCase<SubmissionModel, VoteParams> {
   final RedditService reddit;
+  final UserService userService;
 
-  UpvoteOrClear({@required this.reddit});
+  UpvoteOrClear({@required this.reddit, @required this.userService});
 
   @override
   Future<Either<Failure, SubmissionModel>> call(params) async {
+    if (!await userService.isUserLoggedIn()) {
+      return Left(NotAuthorizedFailure());
+    }
+
     if (params.submission.voteState == VoteState_.Up) {
       reddit.clearVote(params.submission);
 

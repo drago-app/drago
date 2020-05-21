@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helius/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/submission_entity.dart';
 
 class SubmissionScore extends StatelessWidget {
   final SubmissionModel submission;
@@ -19,7 +19,7 @@ class SubmissionScore extends StatelessWidget {
             FaIcon(FontAwesomeIcons.arrowUp,
                 size: 14, color: _mapStateToColor(submission.voteState)),
             Text(
-              ' ${submission.score.toString()}',
+              ' ${submission.score.scoreAsString}',
               style: TextStyle(
                   fontSize: 14, color: _mapStateToColor(submission.voteState)),
             )

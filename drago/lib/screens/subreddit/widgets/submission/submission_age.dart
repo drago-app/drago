@@ -7,21 +7,22 @@ class SubmissionAge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicWidth(
-      child: Row(
-        children: <Widget>[
-          Icon(
-            CupertinoIcons.clock,
-            size: 12,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Icon(
+          CupertinoIcons.clock,
+          size: 14,
+          color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
+        ),
+        Text(
+          age,
+          style: TextStyle(
+            color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
+            fontSize: 14.0,
           ),
-          Text(
-            age,
-            style: TextStyle(
-              fontSize: 12.0,
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }

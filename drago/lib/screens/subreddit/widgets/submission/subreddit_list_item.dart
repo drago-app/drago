@@ -1,17 +1,32 @@
+import 'package:drago/common/log_in_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helius/blocs/submission_bloc.dart/submission.dart';
-import 'package:helius/common/common.dart';
-import 'package:helius/core/entities/submission_entity.dart';
-import 'package:helius/screens/subreddit/widgets/widgets.dart';
+import 'package:drago/blocs/submission_bloc.dart/submission.dart';
+import 'package:drago/common/common.dart';
+import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/screens/subreddit/widgets/widgets.dart';
 
 class SubredditListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SubmissionBloc, SubmissionState>(
+    return BlocConsumer<SubmissionBloc, SubmissionState>(
+      listener: (context, state) {
+        if (state is SubmissionError)
+          showCupertinoDialog(
+              context: context,
+              builder: (context) => CupertinoLogInAlert(
+                    context: context,
+                    titleText: state.title,
+                    contentText: state.content,
+                  ));
+      },
       builder: (context, state) {
         return CupertinoListTile(
+          onTap: () {
+            Navigator.of(context).pushNamed('/comments',
+                arguments: BlocProvider.of<SubmissionBloc>(context));
+          },
           bottomRightCorner: SubmissionSave(
             submission: state.submission,
           ),
@@ -24,14 +39,14 @@ class SubredditListItem extends StatelessWidget {
           subtitle: SubredditListItemBottomBar(submission: state.submission),
           trailing: Column(
             children: <Widget>[
-              VoteButton(
+              SquareActionButton(
                 color: CupertinoColors.systemOrange,
                 iconData: FontAwesomeIcons.longArrowAltUp,
                 onTap: () =>
                     BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
                 switchCondition: state.submission.voteState == VoteState_.Up,
               ),
-              VoteButton(
+              SquareActionButton(
                 color: CupertinoColors.systemPurple,
                 iconData: FontAwesomeIcons.longArrowAltDown,
                 onTap: () =>
@@ -64,7 +79,7 @@ class SubredditListItemBottomBar extends StatelessWidget {
             submission: submission,
             onTap: () =>
                 BlocProvider.of<SubmissionBloc>(context).add(Upvote())),
-        SubmissionNumComments(numComments: submission.numComments),
+        SubmissionNumComments(submission: submission),
         SubmissionAge(age: submission.age),
         _optionsButton(context, submission)
       ],
@@ -114,15 +129,17 @@ class CupertinoListTile extends StatefulWidget {
   final Widget subtitle;
   final Widget trailing;
   final Widget bottomRightCorner;
+  final Function onTap;
 
-  CupertinoListTile(
-      {Key key,
-      this.leading,
-      this.title,
-      this.subtitle,
-      this.trailing,
-      this.bottomRightCorner})
-      : super(key: key);
+  CupertinoListTile({
+    Key key,
+    this.leading,
+    this.title,
+    this.subtitle,
+    this.trailing,
+    this.bottomRightCorner,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   _StatefulStateCupertino createState() => _StatefulStateCupertino();
@@ -131,42 +148,65 @@ class CupertinoListTile extends StatefulWidget {
 class _StatefulStateCupertino extends State<CupertinoListTile> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(bottom: 0, right: 0, child: widget.bottomRightCorner),
-        Padding(
-          padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-          child: Container(
-            padding: EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        width: 1, color: CupertinoColors.lightBackgroundGray))),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Flexible(
-                  child: widget.leading,
-                  flex: 3,
-                ),
-                Flexible(
-                  child: Column(
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Container(
+        padding: EdgeInsets.only(
+          top: 8,
+          left: 8,
+        ),
+        decoration: BoxDecoration(
+            // border: Border(
+            //     bottom: BorderSide(width: 0, color: CupertinoColors.activeBlue)),
+            color: CupertinoTheme.of(context).barBackgroundColor),
+        child: Stack(
+          children: [
+            Container(
+                padding: const EdgeInsets.all(0.0),
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              width: 0, color: CupertinoColors.inactiveGray))),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      widget.title,
-                      widget.subtitle,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        child: widget.leading,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    widget.title,
+                                    widget.subtitle
+                                  ],
+                                ),
+                              ),
+                              widget.trailing
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  flex: 5,
-                ),
-                Flexible(child: widget.trailing, flex: 1)
-              ],
-            ),
-          ),
+                )),
+            Positioned(bottom: 0, right: 0, child: widget.bottomRightCorner),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

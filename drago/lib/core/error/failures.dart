@@ -9,3 +9,5 @@ class SomeFailure extends Failure {
   final String message;
   SomeFailure({this.message});
 }
+
+class NotAuthorizedFailure extends Failure {}

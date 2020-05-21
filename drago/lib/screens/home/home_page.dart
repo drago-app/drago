@@ -1,15 +1,10 @@
-import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helius/blocs/blocs.dart';
-import 'package:helius/common/common.dart';
-// import 'package:helius/home/list_item_base.dart';
-// import 'package:helius/home/routing_message.dart';
-// import 'package:helius/home/subreddit_bloc.dart';
-// import 'package:helius/home/subreddit_page.dart';
-// import 'package:helius/home/subreddit_provider.dart';
-// import 'package:helius/home/subreddit_tile_model.dart';
+import 'package:drago/blocs/blocs.dart';
+import 'package:drago/common/common.dart';
+// import 'package:drago/home/list_item_base.dart';
+// import 'package:drago/home/subreddit_tile_model.dart';
 // import 'package:sticky_headers/sticky_headers.dart';
 
 class HomePage extends StatelessWidget {

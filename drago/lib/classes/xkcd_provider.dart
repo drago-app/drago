@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:helius/classes/xkcd_model.dart';
+import 'package:drago/classes/xkcd_model.dart';
 import 'package:http/http.dart' show Client;
 import 'dart:convert';
 

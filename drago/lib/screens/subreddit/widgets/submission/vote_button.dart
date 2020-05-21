@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helius/core/entities/submission_entity.dart';
 
-class VoteButton extends StatelessWidget {
+class SquareActionButton extends StatelessWidget {
   final Function onTap;
   final IconData iconData;
   final Color color;
   final bool switchCondition;
 
-  VoteButton(
+  SquareActionButton(
       {@required this.onTap,
       @required this.iconData,
       @required this.color,
@@ -25,11 +24,11 @@ class VoteButton extends StatelessWidget {
       child: AnimatedSwitcher(
         duration: Duration(milliseconds: 150),
         child: (switchCondition)
-            ? ActiveVoteState(
+            ? _ActiveSquareActionButton(
                 color: color,
                 iconData: iconData,
               )
-            : NeutralVoteState(iconData: iconData),
+            : _InactiveSquareActionButton(iconData: iconData),
         switchInCurve: Curves.elasticOut,
         transitionBuilder: (Widget child, animation) {
           return ScaleTransition(child: child, scale: animation);
@@ -39,11 +38,11 @@ class VoteButton extends StatelessWidget {
   }
 }
 
-class ActiveVoteState extends StatelessWidget {
+class _ActiveSquareActionButton extends StatelessWidget {
   final Color color;
   final IconData iconData;
 
-  ActiveVoteState({@required this.color, @required this.iconData})
+  _ActiveSquareActionButton({@required this.color, @required this.iconData})
       : assert(color != null),
         assert(iconData != null);
 
@@ -55,7 +54,7 @@ class ActiveVoteState extends StatelessWidget {
       width: 32,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Center(
         child:
@@ -65,10 +64,11 @@ class ActiveVoteState extends StatelessWidget {
   }
 }
 
-class NeutralVoteState extends StatelessWidget {
+class _InactiveSquareActionButton extends StatelessWidget {
   final IconData iconData;
 
-  NeutralVoteState({@required this.iconData}) : assert(iconData != null);
+  _InactiveSquareActionButton({@required this.iconData})
+      : assert(iconData != null);
 
   @override
   Widget build(BuildContext context) {

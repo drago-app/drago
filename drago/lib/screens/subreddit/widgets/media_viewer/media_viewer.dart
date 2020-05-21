@@ -1,11 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:drago/common/picture.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helius/common/common.dart';
-import 'package:helius/core/entities/submission_entity.dart';
-import 'dart:math';
 
-import 'package:helius/screens/subreddit/widgets/media_viewer/media_view_bottom_row.dart';
+import 'package:drago/screens/subreddit/widgets/media_viewer/media_view_bottom_row.dart';
 
 class MediaViewerOverlay extends ModalRoute<void> {
   @override
@@ -50,14 +47,6 @@ class MediaViewerOverlay extends ModalRoute<void> {
     return Stack(
       children: <Widget>[
         Positioned(
-          top: 20,
-          left: 20,
-          child: CupertinoButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Icon(CupertinoIcons.add),
-          ),
-        ),
-        Positioned(
           child: Align(
             alignment: Alignment.bottomCenter,
             child: MediaViewerBottomRow(
@@ -68,57 +57,16 @@ class MediaViewerOverlay extends ModalRoute<void> {
         ),
         Hero(
           tag: state.submission,
-          child: Center(
-            child: CachedNetworkImage(
-              imageUrl: state.submission.preview.thumbnailUrl,
-              useOldImageOnUrlChange: true,
-              placeholder: (context, url) => Center(child: LoadingIndicator()),
-              errorWidget: (context, url, error) => Center(
-                  child: Icon(
-                CupertinoIcons.clear,
-                color: CupertinoColors.destructiveRed,
-              )),
-              imageBuilder: (context, ImageProvider imageProvider) {
-                Size size;
-
-                // prep
-                var maxWidth = MediaQuery.of(context).size.width;
-                var maxHeight = MediaQuery.of(context).size.height;
-
-                var newHeight;
-                var newWidth;
-
-                imageProvider.resolve(ImageConfiguration()).addListener(
-                  ImageStreamListener(
-                    (ImageInfo image, bool synchronousCall) {
-                      var myImage = image.image;
-                      size = Size(
-                          myImage.width.toDouble(), myImage.height.toDouble());
-
-                      var imgWidth = size.width;
-                      var imgHeight = size.height;
-
-                      // calc
-                      var widthRatio = maxWidth / imgWidth;
-                      var heightRatio = maxHeight / imgHeight;
-                      var bestRatio = min(widthRatio, heightRatio);
-
-                      // output
-                      newWidth = imgWidth * bestRatio;
-                      newHeight = imgHeight * bestRatio;
-                    },
-                  ),
-                );
-                return Container(
-                  height: newHeight,
-                  width: newWidth,
-                  decoration: BoxDecoration(
-                    image:
-                        DecorationImage(image: imageProvider, fit: BoxFit.fill),
-                  ),
-                );
-              },
-            ),
+          child: Picture(
+              maxHeight: MediaQuery.of(context).size.height,
+              url: state.submission.preview.thumbnailUrl),
+        ),
+        Positioned(
+          top: 20,
+          left: 20,
+          child: CupertinoButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Icon(CupertinoIcons.add),
           ),
         ),
       ],

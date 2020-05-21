@@ -1,18 +1,20 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:helius/models/reddit_user.dart';
-import 'package:helius/reddit_service.dart';
+import 'package:drago/models/reddit_user.dart';
+import 'package:drago/reddit_service.dart';
 import 'package:meta/meta.dart';
+import '../../user_service.dart';
 import './app.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final RedditService reddit;
+  final UserService userService;
 
-  AppBloc({@required this.reddit}) : assert(reddit != null);
+  AppBloc({@required this.reddit, this.userService}) : assert(reddit != null);
 
   @override
-  get initialState => AppUnauthenticated();
+  get initialState => AppUninitialized();
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {
@@ -24,16 +26,19 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Stream<AppState> _mapUserTappedLoginToState() async* {
-    final RedditUser user = await reddit.loginWithNewAccount();
+    final AuthUser user = await userService.logIn();
 
-    yield AppInitialized(user: user);
+    yield AppInitializedWithAuthUser(user: user);
   }
 
   Stream<AppState> _mapAppStartedToState() async* {
     yield AppInitializing();
 
-    final RedditUser user = await reddit.init();
-    yield AppInitialized(user: user);
-    debugPrint(user.toString());
+    final user = await userService.loggedInUser();
+    if (user is UnAuthUser) {
+      yield AppInitializedWithoutAuthUser();
+    } else {
+      yield AppInitializedWithAuthUser(user: user);
+    }
   }
 }

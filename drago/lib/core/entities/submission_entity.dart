@@ -1,7 +1,9 @@
+import 'package:drago/models/num_comments_model.dart';
+import 'package:drago/models/score_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:helius/core/entities/preview.dart';
-import 'package:helius/core/entities/submission_author.dart';
+import 'package:drago/core/entities/preview.dart';
+import 'package:drago/core/entities/submission_author.dart';
 
 enum VoteState_ { Up, Down, Neutral }
 
@@ -11,11 +13,13 @@ class SubmissionModel extends Equatable {
   final SubmissionAuthor author;
   final String authorFlairText;
   final String id;
+  final String subredditName;
+  final String upvoteRatio;
+  final ScoreModel score;
 
   final bool saved;
   final int upvotes;
-  final int score;
-  final int numComments;
+  final NumCommentsModel numComments;
   final ContentPreview preview;
   final VoteState_ voteState;
 
@@ -24,10 +28,12 @@ class SubmissionModel extends Equatable {
       @required this.author,
       @required this.authorFlairText,
       @required this.id,
+      @required this.subredditName,
       @required this.saved,
       @required this.upvotes,
       @required this.score,
       @required this.numComments,
+      @required this.upvoteRatio,
       @required this.age,
       @required this.preview,
       @required this.voteState});
@@ -37,10 +43,12 @@ class SubmissionModel extends Equatable {
       author,
       authorFlairText,
       id,
+      subredditName,
       upvotes,
       saved,
       score,
       numComments,
+      upvoteRatio,
       age,
       preview,
       voteState}) {
@@ -49,8 +57,10 @@ class SubmissionModel extends Equatable {
         author: author ?? this.author,
         authorFlairText: authorFlairText ?? this.authorFlairText,
         id: id ?? this.id,
-        saved: id ?? this.saved,
+        subredditName: subredditName ?? this.subredditName,
+        saved: saved ?? this.saved,
         numComments: numComments ?? this.numComments,
+        upvoteRatio: upvoteRatio ?? this.upvoteRatio,
         preview: preview ?? this.preview,
         score: score ?? this.score,
         title: title ?? this.title,
@@ -64,10 +74,12 @@ class SubmissionModel extends Equatable {
         author,
         authorFlairText,
         id,
+        subredditName,
         saved,
         upvotes,
         score,
         numComments,
+        upvoteRatio,
         age,
         preview,
         voteState
@@ -75,6 +87,6 @@ class SubmissionModel extends Equatable {
 
   @override
   String toString() {
-    return '[SubmissionModel] voteState: ${voteState.toString()}';
+    return '[SubmissionModel] saved: ${saved.toString()} .... voteState: ${voteState.toString()}';
   }
 }

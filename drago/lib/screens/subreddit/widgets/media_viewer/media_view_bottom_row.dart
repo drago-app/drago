@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helius/blocs/submission_bloc.dart/submission.dart';
-import 'package:helius/core/entities/submission_entity.dart';
-import 'package:helius/screens/subreddit/widgets/widgets.dart';
+import 'package:drago/blocs/submission_bloc.dart/submission.dart';
+import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/screens/subreddit/widgets/widgets.dart';
 
 class MediaViewerBottomRow extends StatelessWidget {
   final SubmissionModel submission;
@@ -24,14 +24,14 @@ class MediaViewerBottomRow extends StatelessWidget {
   Widget _votesAndScore(context, submission) {
     return Row(
       children: [
-        VoteButton(
+        SquareActionButton(
           color: CupertinoColors.activeOrange,
           iconData: FontAwesomeIcons.longArrowAltUp,
           onTap: () => bloc.add(Upvote()),
           switchCondition: submission.voteState == VoteState_.Up,
         ),
         Text('${submission.score}'),
-        VoteButton(
+        SquareActionButton(
           color: CupertinoColors.systemPurple,
           iconData: FontAwesomeIcons.longArrowAltDown,
           onTap: () => bloc.add(Downvote()),

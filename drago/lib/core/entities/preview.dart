@@ -1,7 +1,7 @@
 import 'package:draw/draw.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:helius/classes/content_type.dart';
+import 'package:drago/classes/content_type.dart';
 
 enum ImageSourceType { IMAGE, GIF, VIDEO, LINK, NSFW, NONE }
 

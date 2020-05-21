@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:helius/classes/content_type.dart';
-import 'package:helius/classes/image_model.dart';
-import 'package:helius/classes/xkcd_provider.dart';
+import 'package:drago/classes/content_type.dart';
+import 'package:drago/classes/image_model.dart';
+import 'package:drago/classes/xkcd_provider.dart';
 
 class ImageFetcher {
   static Future<ImageModel> fetch({@required url}) async {

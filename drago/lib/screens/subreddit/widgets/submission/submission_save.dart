@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:helius/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/submission_entity.dart';
 
 class SubmissionSave extends StatelessWidget {
   final SubmissionModel submission;

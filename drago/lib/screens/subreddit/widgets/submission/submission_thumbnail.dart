@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helius/blocs/submission_bloc.dart/submission.dart';
-import 'package:helius/common/common.dart';
-import 'package:helius/core/entities/preview.dart';
-import 'package:helius/core/entities/submission_entity.dart';
-import 'package:helius/screens/subreddit/widgets/media_viewer/widgets.dart';
+import 'package:drago/blocs/submission_bloc.dart/submission.dart';
+import 'package:drago/common/common.dart';
+import 'package:drago/core/entities/preview.dart';
+import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/screens/subreddit/widgets/media_viewer/widgets.dart';
 
 class _DefaultThumbnail extends StatelessWidget {
   final SubmissionModel submission;

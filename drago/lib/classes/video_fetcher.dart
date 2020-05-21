@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:helius/classes/content_type.dart';
-import 'package:helius/classes/gfycat_provider.dart';
-import 'package:helius/classes/video_model.dart';
+import 'package:drago/classes/content_type.dart';
+import 'package:drago/classes/gfycat_provider.dart';
+import 'package:drago/classes/video_model.dart';
 
 class VideoFetcher {
   static Future<VideoModel> fetch({@required url}) async {

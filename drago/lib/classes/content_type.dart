@@ -48,16 +48,16 @@ Map<ThumbnailType, String> thumbnailTypeToString = {
 };
 
 class ContentType {
-  /**
-     * Checks if {@code host} is contains by any of the provided {@code bases}
-     * <p/>
-     * For example "www.youtube.com" contains "youtube.com" but not "notyoutube.com" or
-     * "youtube.co.uk"
-     *
-     * @param host  A hostname from e.g. {@link URI#getHost()}
-     * @param bases Any number of hostnames to compare against {@code host}
-     * @return If {@code host} contains any of {@code bases}
-     */
+  ///
+  /// Checks if {@code host} is contains by any of the provided {@code bases}
+  /// <p/>
+  /// For example "www.youtube.com" contains "youtube.com" but not "notyoutube.com" or
+  /// "youtube.co.uk"
+  ///
+  /// @param host  A hostname from e.g. {@link URI#getHost()}
+  /// @param bases Any number of hostnames to compare against {@code host}
+  /// @return If {@code host} contains any of {@code bases}
+  ///
 
   static bool hostContains(String host, List<String> bases) {
     if (host == null || host.isEmpty) return false;
@@ -249,12 +249,12 @@ class ContentType {
         !hostContains(host, ["what-if.xkcd.com"]));
   }
 
-  /**
-     * Attempt to determine the content type of a link from the URL
-     *
-     * @param url URL to get ContentType from
-     * @return ContentType of the URL
-     */
+  ///
+  /// Attempt to determine the content type of a link from the URL
+  ///
+  /// @param url URL to get ContentType from
+  /// @return ContentType of the URL
+  ///
   static Type getContentTypeFromURL(String url) {
     // if (!url.startsWith("//") && ((url.startsWith("/") && url.length < 4) || url.startsWith(
     //         "#spoiler") || url.startsWith("/spoiler") || url.startsWith("#s-") || url ==
@@ -352,13 +352,13 @@ class ContentType {
     }
   }
 
-  /**
-     * Attempts to determine the content of a submission, mostly based on the URL
-     *
-     * @param submission Submission to get the content type from
-     * @return Content type of the Submission
-     * @see #getContentType(String)
-     */
+  ///
+  /// Attempts to determine the content of a submission, mostly based on the URL
+  ///
+  /// @param submission Submission to get the content type from
+  /// @return Content type of the Submission
+  /// @see #getContentType(String)
+  ///
   static Type getContentTypeFromSubmission(Submission submission) {
     if (submission == null) {
       return Type.SELF; //hopefully shouldn't be null, but catch it in case

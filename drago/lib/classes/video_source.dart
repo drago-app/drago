@@ -1,8 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:helius/classes/gfycat_model.dart';
 import 'package:http/http.dart' show Client;
-
-import 'dart:convert';
 
 import 'dart:io';
 

@@ -1,20 +1,31 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:drago/core/error/failures.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/models/sort_option.dart';
 import 'package:flutter/foundation.dart';
-import 'package:helius/core/entities/submission_entity.dart';
-import 'package:helius/reddit_service.dart';
+
 import 'package:meta/meta.dart';
 import './subreddit_page.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
-  final RedditService reddit;
+  final GetSubmissions getSubmissions;
   final String subreddit;
+  final List<SubmissionSortOption> options = [
+    SubmissionSortOption.factory(type: SubmissionSortType.hot, selected: true),
+    SubmissionSortOption.factory(type: SubmissionSortType.top),
+    SubmissionSortOption.factory(type: SubmissionSortType.controversial),
+    SubmissionSortOption.factory(type: SubmissionSortType.newest),
+    SubmissionSortOption.factory(type: SubmissionSortType.rising),
+  ];
 
-  SubredditPageBloc({@required this.reddit, @required this.subreddit});
+  SubredditPageBloc({@required this.getSubmissions, @required this.subreddit});
 
   @override
-  get initialState => SubredditPageInitial(subreddit: this.subreddit);
+  get initialState => SubredditPageInitial(
+      subreddit: this.subreddit, currentSort: SubmissionSortType.hot);
 
   @override
   Stream<Transition<SubredditPageEvent, SubredditPageState>> transformEvents(
@@ -30,25 +41,40 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   @override
   Stream<SubredditPageState> mapEventToState(SubredditPageEvent event) async* {
     if (event is LoadSubmissions) {
-      yield* _mapLoadSubmissionsToState();
+      yield* _mapLoadSubmissionsToState(sort: event.sort);
     } else if (event is LoadMore) {
       yield* _mapLoadMoreToState();
     }
   }
 
-  Stream<SubredditPageState> _mapLoadSubmissionsToState() async* {
-    yield SubredditPageLoading(subreddit: subreddit);
-    final List submissions = await reddit.getSubmissions(this.subreddit);
-    yield SubredditPageLoaded(subreddit: subreddit, submissions: submissions);
+  Stream<SubredditPageState> _mapLoadSubmissionsToState(
+      {SubmissionSortType sort, TimeFilter_ filter}) async* {
+    yield SubredditPageLoading(
+        subreddit: subreddit, currentSort: sort ?? state.currentSort);
+    final Either<Failure, List> failureOrSubmissions = await getSubmissions(
+        GetSubmissionsParams(
+            subreddit: this.subreddit, filter: filter, sort: sort));
+
+    if (failureOrSubmissions is Right) {
+      yield SubredditPageLoaded(
+        subreddit: this.subreddit,
+        submissions: (failureOrSubmissions as Right).value,
+        currentSort: sort ?? state.currentSort,
+      );
+    }
   }
 
   Stream<SubredditPageState> _mapLoadMoreToState() async* {
     if (state is SubredditPageLoaded) {
       final s = state as SubredditPageLoaded;
       final lastSubmission = s.submissions.last;
-      final List moreSubmissions =
-          await reddit.getSubmissions(this.subreddit, after: lastSubmission.id);
-      yield s.copyWith(submissions: s.submissions + moreSubmissions);
+
+      final failureOrSubmissions = getSubmissions(GetSubmissionsParams(
+          subreddit: this.subreddit, after: lastSubmission.id));
+      if (failureOrSubmissions is Right) {
+        yield s.copyWith(
+            submissions: s.submissions + (failureOrSubmissions as Right).value);
+      }
     }
   }
 }
