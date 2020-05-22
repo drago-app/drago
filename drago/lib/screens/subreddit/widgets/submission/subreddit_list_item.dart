@@ -11,15 +11,20 @@ class SubredditListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SubmissionBloc, SubmissionState>(
-      listener: (context, state) {
-        if (state is SubmissionError)
+      listener: (listenercontext, state) {
+        if (state is SubmissionAuthError)
           showCupertinoDialog(
+            context: context,
+            builder: (context) => CupertinoLogInAlert(
               context: context,
-              builder: (context) => CupertinoLogInAlert(
-                    context: context,
-                    titleText: state.title,
-                    contentText: state.content,
-                  ));
+              titleText: state.title,
+              contentText: state.content,
+              onDismiss: () =>
+                  BlocProvider.of<SubmissionBloc>(listenercontext).add(
+                DialogDismissed(),
+              ),
+            ),
+          );
       },
       builder: (context, state) {
         return CupertinoListTile(

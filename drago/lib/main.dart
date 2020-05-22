@@ -32,9 +32,10 @@ final GetUsersModerations _getUsersModerations =
     GetUsersModerations(reddit: _reddit);
 final UpvoteOrClear upvoteOrClear =
     UpvoteOrClear(reddit: _reddit, userService: _userService);
-final DownvoteOrClear downvoteOrClear = DownvoteOrClear(reddit: _reddit);
+final DownvoteOrClear downvoteOrClear =
+    DownvoteOrClear(reddit: _reddit, userService: _userService);
 final SaveOrUnsaveSubmission saveOrUnsave =
-    SaveOrUnsaveSubmission(reddit: _reddit);
+    SaveOrUnsaveSubmission(reddit: _reddit, userService: _userService);
 
 final GetSubmissions getSubmissions = GetSubmissions(reddit: _reddit);
 

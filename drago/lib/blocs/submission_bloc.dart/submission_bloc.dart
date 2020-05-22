@@ -54,6 +54,9 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     if (event is Save) {
       yield* _mapSaveToState();
     }
+    if (event is DialogDismissed) {
+      yield SubmissionInitial(submission: state.submission);
+    }
   }
 
   Stream<SubmissionState> _mapSaveToState() async* {
@@ -61,7 +64,16 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
 
     yield state.copyWith(
         submission: state.submission.copyWith(saved: !state.submission.saved));
-    saveOrUnsave(SaveOrUnsaveParams(submission: oldState.submission));
+    final saveOrFailure =
+        await saveOrUnsave(SaveOrUnsaveParams(submission: oldState.submission));
+    yield* saveOrFailure.fold((left) async* {
+      if (left is NotAuthorizedFailure) {
+        yield SubmissionAuthError(
+            submission: oldState.submission,
+            title: "Sign In to Save",
+            content: 'You need to be signed in to save.');
+      }
+    }, (right) async* {});
   }
 
   Stream<SubmissionState> _mapUpvoteToState() async* {
@@ -85,7 +97,7 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     yield* upvoteOrFailure.fold(
       (left) async* {
         if (left is NotAuthorizedFailure) {
-          yield SubmissionError(
+          yield SubmissionAuthError(
               submission: oldState.submission,
               title: "Sign In to Upvote",
               content: 'You need to be signed in to upvote.');
@@ -97,17 +109,31 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
 
   Stream<SubmissionState> _mapDownvoteToState() async* {
     final oldState = state;
+    final newSubmission = state.submission.copyWith(
+        voteState: (state.submission.voteState == VoteState_.Down)
+            ? VoteState_.Neutral
+            : VoteState_.Down,
+        score: ScoreModel(
+            score: (state.submission.voteState == VoteState_.Up)
+                ? state.submission.score.score + 1
+                : state.submission.score.score - 1));
 
-    yield SubmissionInitial(
-      submission: state.submission.copyWith(
-          voteState: (state.submission.voteState == VoteState_.Down)
-              ? VoteState_.Neutral
-              : VoteState_.Down,
-          score: ScoreModel(
-              score: (state.submission.voteState == VoteState_.Up)
-                  ? state.submission.score.score + 1
-                  : state.submission.score.score - 1)),
+    final newState = state.copyWith(submission: newSubmission);
+    yield newState;
+
+    final downvoteOrFailure =
+        await downvoteOrClear(DownVoteParams(submission: oldState.submission));
+
+    yield* downvoteOrFailure.fold(
+      (left) async* {
+        if (left is NotAuthorizedFailure) {
+          yield SubmissionAuthError(
+              submission: oldState.submission,
+              title: "Sign In to Downvote",
+              content: 'You need to be signed in to downvote.');
+        }
+      },
+      (right) async* {},
     );
-    downvoteOrClear(DownVoteParams(submission: oldState.submission));
   }
 }

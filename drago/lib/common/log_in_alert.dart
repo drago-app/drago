@@ -1,5 +1,6 @@
 import 'package:drago/blocs/app_bloc/app_bloc.dart';
 import 'package:drago/blocs/app_bloc/app_event.dart';
+import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,17 +8,13 @@ class CupertinoLogInAlert extends CupertinoAlertDialog {
   final BuildContext context;
   final String titleText;
   final String contentText;
-  // final Function(BuildContext) logInFunction = (context) {
-  //   print('a');
-  //   Navigator.of(context).pop();
-  //   print('b');
-
-  //   BlocProvider.of<AppBloc>(context).add(UserTappedLogin());
-  //   print('c');
-  // };
+  final onDismiss;
 
   CupertinoLogInAlert(
-      {@required this.context, this.titleText, this.contentText});
+      {@required this.context,
+      this.titleText,
+      this.contentText,
+      this.onDismiss});
   @override
   Widget get title => Text(titleText ?? '');
   @override
@@ -33,6 +30,7 @@ class CupertinoLogInAlert extends CupertinoAlertDialog {
         CupertinoDialogAction(
           onPressed: () {
             Navigator.of(context).pop();
+            onDismiss();
             debugPrint(
                 'Hey you clicked the Create New Account button but that shit isn\t implemented so just fucking chill for a little bit.');
           },
@@ -41,6 +39,7 @@ class CupertinoLogInAlert extends CupertinoAlertDialog {
         CupertinoDialogAction(
           onPressed: () {
             Navigator.of(context).pop();
+            onDismiss();
           },
           child: Text(
             'Cancel',

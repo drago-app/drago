@@ -5,6 +5,45 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 enum SubmissionSortType { hot, top, controversial, newest, rising }
 enum TimeFilter_ { all, day, hour, month, week, year }
 
+class TimeFilterOption extends Equatable {
+  final TimeFilter_ filter;
+  final IconData iconData;
+  final String label;
+
+  TimeFilterOption(this.filter, this.iconData, this.label);
+
+  factory TimeFilterOption.factory(TimeFilter_ filter) {
+    switch (filter) {
+      case TimeFilter_.day:
+        return TimeFilterOption(filter, FontAwesomeIcons.clock,
+            SortUtils.timeFilterToString(filter));
+
+      case TimeFilter_.hour:
+        return TimeFilterOption(filter, FontAwesomeIcons.clock,
+            SortUtils.timeFilterToString(filter));
+
+      case TimeFilter_.month:
+        return TimeFilterOption(filter, FontAwesomeIcons.clock,
+            SortUtils.timeFilterToString(filter));
+
+      case TimeFilter_.week:
+        return TimeFilterOption(filter, FontAwesomeIcons.clock,
+            SortUtils.timeFilterToString(filter));
+
+      case TimeFilter_.year:
+        return TimeFilterOption(filter, FontAwesomeIcons.clock,
+            SortUtils.timeFilterToString(filter));
+      case TimeFilter_.all:
+      default:
+        return TimeFilterOption(filter, FontAwesomeIcons.clock,
+            SortUtils.timeFilterToString(filter));
+    }
+  }
+
+  @override
+  List<Object> get props => [filter, iconData, label];
+}
+
 class SortUtils {
   static String timeFilterToString(TimeFilter_ filter) {
     switch (filter) {

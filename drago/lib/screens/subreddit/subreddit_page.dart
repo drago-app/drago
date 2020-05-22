@@ -34,8 +34,35 @@ class _SubredditPageState extends State<SubredditPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
-      child: BlocBuilder<SubredditPageBloc, SubredditPageState>(
-          builder: (bloccontext, state) {
+      child: BlocConsumer<SubredditPageBloc, SubredditPageState>(
+          listener: (listenerContext, state) {
+        if (state is DisplayingSortOptions) {
+          showCupertinoModalPopup(
+            useRootNavigator: true,
+            context: context,
+            builder: (context) => SubmissionsSortDialog(
+              options: state.options,
+              bloc: listenerContext.bloc<SubredditPageBloc>(),
+            ),
+          );
+        }
+        if (state is DisplayingFilterOptions) {
+          showCupertinoModalPopup(
+              context: listenerContext,
+              builder: (context) => FilterDialog(
+                    bloc: listenerContext.bloc<SubredditPageBloc>(),
+                    filters: state.options,
+                    option: state.sortType,
+                  ));
+        }
+      }, buildWhen: (prev, current) {
+        if (current is DisplayingSortOptions ||
+            current is DisplayingFilterOptions) {
+          return false;
+        } else {
+          return true;
+        }
+      }, builder: (bloccontext, state) {
         return CupertinoPageScaffold(
           child: _buildBody(state),
           navigationBar: CupertinoNavigationBar(
@@ -48,14 +75,17 @@ class _SubredditPageState extends State<SubredditPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 CupertinoButton(
-                    onPressed: () => showCupertinoModalPopup(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              SubmissionsSortDialog(
-                            bloc:
-                                BlocProvider.of<SubredditPageBloc>(bloccontext),
-                          ),
-                        ),
+                    onPressed: () =>
+                        BlocProvider.of<SubredditPageBloc>(bloccontext)
+                            .add(UserTappedSortButton()),
+                    // onPressed: () => showCupertinoModalPopup(
+                    //       context: context,
+                    //       builder: (BuildContext context) =>
+                    //           SubmissionsSortDialog(
+                    //         bloc: BlocProvider.of<SubredditPageBloc>(
+                    //             bloccontext),
+                    //       ),
+                    //     ),
                     padding: EdgeInsets.all(0),
                     child: FaIcon(_mapStateToSortIcon(state.currentSort))),
                 CupertinoButton(
@@ -124,16 +154,10 @@ class _SubredditPageState extends State<SubredditPage> {
 }
 
 class SubmissionsSortDialog extends StatelessWidget {
-  final List<SubmissionSortOption> options = [
-    SubmissionSortOption.factory(type: SubmissionSortType.hot, selected: true),
-    SubmissionSortOption.factory(type: SubmissionSortType.top),
-    SubmissionSortOption.factory(type: SubmissionSortType.controversial),
-    SubmissionSortOption.factory(type: SubmissionSortType.newest),
-    SubmissionSortOption.factory(type: SubmissionSortType.rising),
-  ];
+  final List<SubmissionSortOption> options;
   final SubredditPageBloc bloc;
 
-  SubmissionsSortDialog({@required this.bloc});
+  SubmissionsSortDialog({@required this.bloc, @required this.options});
 
   @override
   Widget build(BuildContext context) {
@@ -144,54 +168,8 @@ class SubmissionsSortDialog extends StatelessWidget {
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: options
-          .map((option) => (option.filterable == true)
-              ? FilterableSubmissionsSortDialogAction(option, bloc)
-              : SubmissionsSortDialogAction(option, bloc))
+          .map((option) => SubmissionsSortDialogAction(option, bloc))
           .toList(),
-    );
-  }
-}
-
-class FilterableSubmissionsSortDialogAction extends StatelessWidget {
-  final SubmissionSortOption option;
-  final SubredditPageBloc bloc;
-  FilterableSubmissionsSortDialogAction(this.option, this.bloc);
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoActionSheetAction(
-      onPressed: () {
-        Navigator.of(context).pop();
-        showCupertinoModalPopup(
-          context: context,
-          builder: (BuildContext context) => FilterDialog(option, bloc),
-        );
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            FaIcon(option.icon),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(left: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${option.label}'),
-                    FaIcon(
-                      FontAwesomeIcons.chevronRight,
-                      color: CupertinoColors.inactiveGray,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }
@@ -205,7 +183,8 @@ class SubmissionsSortDialogAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheetAction(
       onPressed: () {
-        bloc.add(LoadSubmissions(sort: option.type));
+        bloc.add(UserSelectedSortOption(sort: option));
+
         Navigator.of(context).pop();
       },
       child: Container(
@@ -221,11 +200,25 @@ class SubmissionsSortDialogAction extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('${option.label}'),
-                    if (bloc.state.currentSort == option.type)
-                      FaIcon(
-                        FontAwesomeIcons.check,
-                        size: 12,
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        if (bloc.state.currentSort == option.type)
+                          FaIcon(
+                            FontAwesomeIcons.check,
+                            size: 12,
+                          ),
+                        if (option.filterable)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: CupertinoColors.inactiveGray,
+                              size: 12,
+                            ),
+                          ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -238,34 +231,31 @@ class SubmissionsSortDialogAction extends StatelessWidget {
 }
 
 class FilterDialog extends StatelessWidget {
-  final List<TimeFilter_> filters = [
-    TimeFilter_.all,
-    TimeFilter_.day,
-    TimeFilter_.week,
-    TimeFilter_.month,
-    TimeFilter_.year
-  ];
+  final List<TimeFilterOption> filters;
   final SubredditPageBloc bloc;
 
-  final SubmissionSortOption option;
+  final SubmissionSortType option;
 
-  FilterDialog(this.option, this.bloc);
+  FilterDialog(
+      {@required this.option, @required this.bloc, @required this.filters});
 
   @override
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
-      title: Text('Sort by...'),
+      title: Text('Sort for by...'),
       cancelButton: CupertinoActionSheetAction(
         child: Text('Cancel'),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      actions: filters.map((f) => FilterDialogAction(option, f, bloc)).toList(),
+      actions: filters
+          .map((f) => FilterDialogAction(option, f.filter, bloc))
+          .toList(),
     );
   }
 }
 
 class FilterDialogAction extends StatelessWidget {
-  final SubmissionSortOption option;
+  final SubmissionSortType option;
   final TimeFilter_ filter;
   final SubredditPageBloc bloc;
 
@@ -277,7 +267,7 @@ class FilterDialogAction extends StatelessWidget {
       child: Text('${SortUtils.timeFilterToString(filter)}'),
       onPressed: () => {
         Navigator.of(context).pop(),
-        bloc.add(LoadSubmissions(sort: option.type, filter: filter)),
+        bloc.add(LoadSubmissions(sort: option, filter: filter)),
       },
     );
   }

@@ -10,3 +10,5 @@ class Upvote extends SubmissionEvent {}
 class Downvote extends SubmissionEvent {}
 
 class Save extends SubmissionEvent {}
+
+class DialogDismissed extends SubmissionEvent {}

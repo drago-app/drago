@@ -24,17 +24,17 @@ class SubmissionInitial extends SubmissionState {
   List<Object> get props => [submission];
 }
 
-class SubmissionError extends SubmissionState {
+class SubmissionAuthError extends SubmissionState {
   final SubmissionModel submission;
   final String title;
   final String content;
 
-  SubmissionError(
+  SubmissionAuthError(
       {@required this.submission, @required this.title, this.content});
 
   @override
-  SubmissionError copyWith({submission, title}) {
-    return SubmissionError(
+  SubmissionAuthError copyWith({submission, title}) {
+    return SubmissionAuthError(
       submission: submission ?? this.submission,
       title: title ?? this.title,
       content: content ?? this.content,

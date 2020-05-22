@@ -5,13 +5,20 @@ import 'package:drago/core/error/failures.dart';
 import 'package:drago/core/usecases/usecase.dart';
 import 'package:drago/reddit_service.dart';
 
+import '../../user_service.dart';
+
 class DownvoteOrClear implements UseCase<SubmissionModel, DownVoteParams> {
   final RedditService reddit;
+  final UserService userService;
 
-  DownvoteOrClear({@required this.reddit});
+  DownvoteOrClear({@required this.reddit, @required this.userService});
 
   @override
   Future<Either<Failure, SubmissionModel>> call(params) async {
+    if (!await userService.isUserLoggedIn()) {
+      return Left(NotAuthorizedFailure());
+    }
+
     if (params.submission.voteState == VoteState_.Down) {
       reddit.clearVote(params.submission);
 

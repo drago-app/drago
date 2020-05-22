@@ -1,5 +1,6 @@
 import 'package:drago/models/sort_option.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class SubredditPageEvent extends Equatable {
   @override
@@ -15,3 +16,11 @@ class LoadSubmissions extends SubredditPageEvent {
 }
 
 class LoadMore extends SubredditPageEvent {}
+
+class UserTappedSortButton extends SubredditPageEvent {}
+
+class UserSelectedSortOption extends SubredditPageEvent {
+  final SubmissionSortOption sort;
+
+  UserSelectedSortOption({@required this.sort});
+}

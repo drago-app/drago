@@ -23,17 +23,7 @@ class CommentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SubmissionBloc, SubmissionState>(
-        listener: (context, state) {
-          if (state is SubmissionError)
-            showCupertinoDialog(
-                context: context,
-                builder: (context) => CupertinoLogInAlert(
-                      context: context,
-                      titleText: state.title,
-                      contentText: state.content,
-                    ));
-        },
+    return BlocBuilder<SubmissionBloc, SubmissionState>(
         bloc: submissionBloc,
         builder: (context, submissionState) {
           return CupertinoPageScaffold(
