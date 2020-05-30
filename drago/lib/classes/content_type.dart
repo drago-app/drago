@@ -313,11 +313,6 @@ class ContentType {
         return Type.XKCD;
       }
 
-      // if (hostContains(host, ["xkcd.com"]) &&
-      //     !hostContains(host, ["imgs.xkcd.com"]) &&
-      //     !hostContains(host, ["what-if.xkcd.com"])) {
-      //   return Type.XKCD;
-      // }
       if (hostContains(host, ["tumblr.com"]) && uri.path.contains("post")) {
         return Type.TUMBLR;
       }
@@ -385,7 +380,7 @@ class ContentType {
 
   static bool displayImage(Type t) {
     switch (t) {
-      // case Type.ALBUM:
+      case Type.ALBUM:
       // case Type.DEVIANTART:
       case Type.XKCD:
       // case Type.TUMBLR:
@@ -468,8 +463,8 @@ class ContentType {
       case Type.TUMBLR:
       case Type.XKCD:
       case Type.IMGUR:
-      // case Type.VREDDIT_DIRECT:
-      // case Type.VREDDIT_REDIRECT:
+      case Type.VREDDIT_DIRECT:
+      case Type.VREDDIT_REDIRECT:
       case Type.STREAMABLE:
       case Type.VID_ME:
         return true;

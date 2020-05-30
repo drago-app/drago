@@ -1,4 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:drago/common/drag_to_pop_modal/drag_to_pop_modal.dart';
+import 'package:drago/common/picture.dart';
+import 'package:drago/screens/subreddit/widgets/media_viewer/media_view_bottom_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,7 +9,6 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_entity.dart';
-import 'package:drago/screens/subreddit/widgets/media_viewer/widgets.dart';
 
 class _DefaultThumbnail extends StatelessWidget {
   final SubmissionModel submission;
@@ -30,11 +32,16 @@ class _ImageThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: submission,
+      tag: submission.preview.thumbnailUrl,
       child: _ThumbnailBase(
           onTap: () {
-            Navigator.of(context, rootNavigator: false).push(MediaViewerOverlay(
-                bloc: BlocProvider.of<SubmissionBloc>(context)));
+            Navigator.of(context, rootNavigator: true).push(
+              DragToPopPageRoute(
+                builder: (modalcontext) => SecondPage(
+                  bloc: context.bloc<SubmissionBloc>(),
+                ),
+              ),
+            );
           },
           submission: submission),
     );
@@ -98,7 +105,7 @@ class _ThumbnailBase extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(4.0),
             child: CachedNetworkImage(
               imageUrl: submission.preview.thumbnailUrl,
               useOldImageOnUrlChange: true,
@@ -111,8 +118,8 @@ class _ThumbnailBase extends StatelessWidget {
               )),
               imageBuilder: (context, imageProvider) {
                 return Container(
-                  height: 64,
-                  width: 64,
+                  height: 55,
+                  width: 55,
                   decoration: BoxDecoration(
                     image:
                         DecorationImage(image: imageProvider, fit: BoxFit.fill),
@@ -134,17 +141,17 @@ class _VideoThumbnailLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 5,
-      right: 5,
+      bottom: 2,
+      right: 2,
       child: Container(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(6.0),
           decoration: BoxDecoration(
               color: CupertinoColors.lightBackgroundGray,
-              borderRadius: BorderRadius.all(Radius.circular(12))),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
           child: Center(
             child: FaIcon(
               FontAwesomeIcons.play,
-              color: CupertinoColors.darkBackgroundGray,
+              color: CupertinoColors.darkBackgroundGray.withOpacity(.8),
               size: 10,
             ),
           )),
@@ -158,17 +165,17 @@ class _GifThumbnailLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 5,
-      right: 5,
+      bottom: 2,
+      right: 2,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1),
         decoration: BoxDecoration(
-            color: CupertinoColors.lightBackgroundGray,
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+            color: CupertinoColors.extraLightBackgroundGray,
+            borderRadius: BorderRadius.all(Radius.circular(4))),
         child: Center(
           child: Text(
             "GIF",
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
           ),
         ),
       ),
@@ -226,5 +233,59 @@ class SubmissionThumbnail extends StatelessWidget {
     } else {
       return _DefaultThumbnail(submission: submission);
     }
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  final Bloc bloc;
+
+  SecondPage({@required this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder(
+        bloc: bloc,
+        builder: (context, state) => _buildOverlayContent(context, state));
+  }
+
+  Widget _buildOverlayContent(BuildContext context, state) {
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Stack(
+        // fit: StackFit.expand,
+        children: <Widget>[
+          Positioned(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: MediaViewerBottomRow(
+                submission: state.submission,
+                bloc: bloc,
+              ),
+            ),
+          ),
+          Hero(
+            transitionOnUserGestures: true,
+            tag: state.submission.preview.thumbnailUrl,
+            child: Picture(
+                maxHeight: MediaQuery.of(context).size.height,
+                url: state.submission.preview.thumbnailUrl),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            // top: -15,
+            // left: 10,
+            child: CupertinoButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Icon(
+                CupertinoIcons.clear,
+                size: 50,
+                color: CupertinoColors.lightBackgroundGray,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

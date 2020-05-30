@@ -8,11 +8,9 @@ import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_author.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
-import 'package:drago/models/reddit_user.dart';
 import 'package:drago/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dcache/dcache.dart';
 
 import 'models/comment_model.dart';
@@ -182,28 +180,34 @@ class RedditService {
   }
 
   SubmissionModel _mapSubmissionToModel(Submission s) => SubmissionModel(
-      id: s.id,
-      subredditName: s.subreddit.displayName,
-      title: s.title,
-      author: SubmissionAuthor.factory(submission: s),
-      upvotes: s.upvotes,
-      authorFlairText: s.authorFlairText,
-      score: ScoreModel(score: s.score),
-      saved: s.saved,
-      numComments: NumCommentsModel(numComments: s.numComments),
-      upvoteRatio: doubleToString(s.upvoteRatio),
-      age: createdUtcToAge(s.createdUtc),
+      content:
+          SubmissionContent(url: s.url.toString(), selfText: s.selftext ?? ''),
       preview: ContentPreview.factory(submission: s),
-      voteState: _mapVoteState(s.vote));
+      metaData: SubmissionModelMetaData(
+          id: s.id,
+          subredditName: s.subreddit.displayName,
+          title: s.title,
+          author: SubmissionAuthor.factory(submission: s),
+          upvotes: s.upvotes,
+          authorFlairText: s.authorFlairText,
+          score: ScoreModel(score: s.score),
+          saved: s.saved,
+          numComments: NumCommentsModel(numComments: s.numComments),
+          upvoteRatio: doubleToString(s.upvoteRatio),
+          age: createdUtcToAge(s.createdUtc),
+          voteState: _mapVoteState(s.vote)));
 
   Future<List<SubmissionModel>> _hot(
-          String subreddit, Map<String, String> params) async =>
-      await _reddit
-          .subreddit(subreddit)
-          .hot(params: params)
-          .map((s) => s as Submission)
-          .map((s) => _mapSubmissionToModel(s))
-          .toList();
+      String subreddit, Map<String, String> params) async {
+    final List<SubmissionModel> t = await _reddit
+        .subreddit(subreddit)
+        .hot(after: params['after'], params: params)
+        .map((s) => s as Submission)
+        .map((s) => _mapSubmissionToModel(s))
+        .toList();
+
+    return t;
+  }
 
   Future<List<SubmissionModel>> _newest(
           String subreddit, Map<String, String> params) async =>
@@ -222,14 +226,17 @@ class RedditService {
           .map((s) => _mapSubmissionToModel(s))
           .toList();
 
-  Future<List<SubmissionModel>> _controversial(String subreddit,
-          Map<String, String> params, TimeFilter_ filter) async =>
-      await _reddit
-          .subreddit(subreddit)
-          .controversial(params: params, timeFilter: _mapTimeFilter(filter))
-          .map((s) => s as Submission)
-          .map((s) => _mapSubmissionToModel(s))
-          .toList();
+  Future<List<SubmissionModel>> _controversial(
+      String subreddit, Map<String, String> params, TimeFilter_ filter) async {
+    final List<SubmissionModel> t = await _reddit
+        .subreddit(subreddit)
+        .controversial(params: params, timeFilter: _mapTimeFilter(filter))
+        .map((s) => s as Submission)
+        .map((s) => _mapSubmissionToModel(s))
+        .toList();
+
+    return t;
+  }
 
   Future<List<SubmissionModel>> _top(String subreddit,
           Map<String, String> params, TimeFilter_ filter) async =>
@@ -246,8 +253,8 @@ class RedditService {
       SubmissionSortType sort = SubmissionSortType.hot,
       TimeFilter_ filter = TimeFilter_.all}) async {
     var params = Map<String, String>();
-    params['limit'] = '15';
-    params['after'] = after;
+    params['limit'] = '25';
+    params['after'] = 't3_$after';
 
     try {
       List<SubmissionModel> response;
@@ -262,7 +269,7 @@ class RedditService {
       } else if (sort == SubmissionSortType.top) {
         response = await _top(subreddit, params, filter);
       } else {
-        throw Exception('Unknow SubmissionSortType $sort');
+        throw Exception('Unknown SubmissionSortType $sort');
       }
       return Right(response);
     } catch (e) {
@@ -292,11 +299,6 @@ class RedditService {
   final userAgent = 'ios:com.example.helios:v0.0.1 (by /u/pinkywrinkle)';
 
   Future<AuthUser> loginWithNewAccount() async {
-    /* //TODO
-     Currently this allows the user to log in with one account. 
-     Apollo is somehow able to maintain credentials for multiple accounts
-     */
-
     Stream<String> onCode = await _server();
     _reddit = Reddit.createWebFlowInstance(
       userAgent: userAgent,
@@ -314,18 +316,8 @@ class RedditService {
 
     await _reddit.auth.authorize(code);
 
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // await prefs.setString(
-    //     'reddit_auth_token', _reddit.auth.credentials.toJson());
-
-    // debugPrint(_reddit.auth.credentials.toJson());
     Redditor me = await _reddit.user.me();
-    // return RedditUser(
-    //     displayName: me.displayName,
-    //     createdOn: me.createdUtc,
-    //     commentKarma: me.commentKarma,
-    //     postKarma: me.linkKarma);
+
     return AuthUser(
         name: me.displayName, token: _reddit.auth.credentials.toJson());
   }

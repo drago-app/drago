@@ -1,4 +1,4 @@
-// _idParser(String id) => (id[2] == '_') ? id.substring(3, id.length) : id;
+import 'package:html_unescape/html_unescape.dart';
 
 import 'package:number_display/number_display.dart';
 
@@ -25,3 +25,6 @@ final display = createDisplay(length: 3, decimal: 2);
 String truncateLongInt(int upvotes) {
   return display(upvotes);
 }
+
+final unescaper = new HtmlUnescape();
+String unescape(String raw) => unescaper.convert(raw);

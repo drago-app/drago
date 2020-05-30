@@ -78,14 +78,6 @@ class _SubredditPageState extends State<SubredditPage> {
                     onPressed: () =>
                         BlocProvider.of<SubredditPageBloc>(bloccontext)
                             .add(UserTappedSortButton()),
-                    // onPressed: () => showCupertinoModalPopup(
-                    //       context: context,
-                    //       builder: (BuildContext context) =>
-                    //           SubmissionsSortDialog(
-                    //         bloc: BlocProvider.of<SubredditPageBloc>(
-                    //             bloccontext),
-                    //       ),
-                    //     ),
                     padding: EdgeInsets.all(0),
                     child: FaIcon(_mapStateToSortIcon(state.currentSort))),
                 CupertinoButton(

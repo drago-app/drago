@@ -1,88 +1,97 @@
-import 'package:drago/common/picture.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:drago/common/picture.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:drago/screens/subreddit/widgets/media_viewer/media_view_bottom_row.dart';
+// import 'package:drago/screens/subreddit/widgets/media_viewer/media_view_bottom_row.dart';
 
-class MediaViewerOverlay extends ModalRoute<void> {
-  @override
-  Duration get transitionDuration => Duration(milliseconds: 100);
+// class HeroDialogRoute<T> extends PageRoute<T> {
+//   HeroDialogRoute({this.builder}) : super();
 
-  @override
-  bool get opaque => false;
+//   final WidgetBuilder builder;
 
-  @override
-  bool get barrierDismissible => false;
+//   @override
+//   bool get opaque => true;
 
-  @override
-  Color get barrierColor => CupertinoColors.black.withOpacity(1);
+//   @override
+//   bool get barrierDismissible => true;
 
-  @override
-  String get barrierLabel => null;
+//   @override
+//   Duration get transitionDuration => const Duration(milliseconds: 300);
 
-  @override
-  bool get maintainState => true;
+//   @override
+//   bool get maintainState => true;
 
-  // final SubmissionModel submission;
-  final Bloc bloc;
+//   @override
+//   Color get barrierColor => CupertinoColors.black.withOpacity(1);
 
-  MediaViewerOverlay({@required this.bloc}) : assert(bloc != null);
+//   @override
+//   Widget buildTransitions(BuildContext context, Animation<double> animation,
+//       Animation<double> secondaryAnimation, Widget child) {
+//     return const DragDownToPopPageTransitionsBuilder(
+//             backgroundColor: CupertinoColors.black)
+//         .buildTransitions(this, context, animation, secondaryAnimation, child);
 
-  @override
-  Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    // This makes sure that text and other content follows the material style
-    return SafeArea(
-      top: false,
-      child: BlocBuilder(
-          bloc: bloc,
-          builder: (context, state) => _buildOverlayContent(context, state)),
-    );
-  }
+//     // return FadeTransition(
+//     //   opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+//     //   child: child,
+//     // );
+//   }
 
-  Widget _buildOverlayContent(BuildContext context, state) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: MediaViewerBottomRow(
-              submission: state.submission,
-              bloc: bloc,
-            ),
-          ),
-        ),
-        Hero(
-          tag: state.submission,
-          child: Picture(
-              maxHeight: MediaQuery.of(context).size.height,
-              url: state.submission.preview.thumbnailUrl),
-        ),
-        Positioned(
-          top: 20,
-          left: 20,
-          child: CupertinoButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Icon(CupertinoIcons.add),
-          ),
-        ),
-      ],
-    );
-  }
+//   @override
+//   dispose() {
+//     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+//     super.dispose();
+//   }
 
-  @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    // You can add your own animations for the overlay content
-    return FadeTransition(
-      opacity: animation,
-      child: ScaleTransition(
-        scale: animation,
-        child: child,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget buildPage(BuildContext context, Animation<double> animation,
+//       Animation<double> secondaryAnimation) {
+//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
+//     return builder(context);
+//   }
+
+//   @override
+//   String get barrierLabel => null;
+// }
+
+// class ImageViewerPageRoute extends PageRoute<void> {
+//   final WidgetBuilder builder;
+//   ImageViewerPageRoute({@required this.builder});
+//   @override
+//   Widget buildTransitions(BuildContext context, Animation<double> animation,
+//       Animation<double> secondaryAnimation, Widget child) {
+//     return const DragDownToPopPageTransitionsBuilder(
+//             backgroundColor: CupertinoColors.black)
+//         .buildTransitions(this, context, animation, secondaryAnimation, child);
+//   }
+
+//   @override
+//   Color get barrierColor => CupertinoColors.black;
+
+//   @override
+//   bool get barrierDismissible => false;
+
+//   @override
+//   String get barrierLabel => null;
+
+//   @override
+//   Widget buildPage(
+//     BuildContext context,
+//     Animation<double> animation,
+//     Animation<double> secondaryAnimation,
+//   ) {
+//     final Widget child = builder(context);
+//     return child;
+//   }
+
+//   @override
+//   bool get maintainState => true;
+
+//   @override
+//   bool get opaque => false;
+
+//   @override
+//   Duration get transitionDuration => Duration(milliseconds: 1000);
+// }

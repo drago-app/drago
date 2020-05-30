@@ -1,4 +1,5 @@
 import 'package:drago/common/log_in_alert.dart';
+import 'package:drago/common/text_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,6 +41,7 @@ class SubredditListItem extends StatelessWidget {
           ),
           title: Text(
             state.submission.title,
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
           ),
           subtitle: SubredditListItemBottomBar(submission: state.submission),
           trailing: Column(
@@ -78,7 +80,7 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
-        AuthorWidget(author: submission.author, onTap: () => null),
+        AuthorTextButton(author: submission.author, onTap: () => null),
         // FlairWidget(flairText: submission.authorFlairText),
         SubmissionScore(
             submission: submission,
@@ -156,14 +158,9 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        padding: EdgeInsets.only(
-          top: 8,
-          left: 8,
-        ),
+        padding: EdgeInsets.only(top: 8, left: 16, right: 16),
         decoration: BoxDecoration(
-            // border: Border(
-            //     bottom: BorderSide(width: 0, color: CupertinoColors.activeBlue)),
-            color: CupertinoTheme.of(context).barBackgroundColor),
+            color: CupertinoColors.systemBackground.resolveFrom(context)),
         child: Stack(
           children: [
             Container(
@@ -190,14 +187,19 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    widget.title,
-                                    widget.subtitle
-                                  ],
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(minHeight: 60),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      widget.title,
+                                      widget.subtitle
+                                    ],
+                                  ),
                                 ),
                               ),
                               widget.trailing

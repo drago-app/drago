@@ -192,8 +192,8 @@ class AuthenticatedApp extends StatelessWidget {
     return CupertinoApp(
       theme: CupertinoThemeData(
           brightness: Brightness.light,
-          primaryColor: null,
-          primaryContrastingColor: null,
+          primaryColor: CupertinoColors.activeBlue,
+          primaryContrastingColor: CupertinoColors.activeOrange,
           textTheme: CupertinoTextThemeData(
               textStyle: null,
               actionTextStyle: null,
@@ -204,7 +204,7 @@ class AuthenticatedApp extends StatelessWidget {
               pickerTextStyle: null,
               dateTimePickerTextStyle: null),
           barBackgroundColor: null,
-          scaffoldBackgroundColor: CupertinoColors.lightBackgroundGray),
+          scaffoldBackgroundColor: CupertinoColors.systemGrey6),
       home: DialogProvider(
         service: _dialogService,
         child: DialogManager(

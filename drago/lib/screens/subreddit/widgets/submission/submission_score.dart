@@ -19,7 +19,7 @@ class SubmissionScore extends StatelessWidget {
             FaIcon(FontAwesomeIcons.arrowUp,
                 size: 14, color: _mapStateToColor(submission.voteState)),
             Text(
-              ' ${submission.score.scoreAsString}',
+              ' ${submission.score.asString}',
               style: TextStyle(
                   fontSize: 14, color: _mapStateToColor(submission.voteState)),
             )

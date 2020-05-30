@@ -103,13 +103,17 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
     if (state is SubredditPageLoaded) {
       final s = state as SubredditPageLoaded;
       final lastSubmission = s.submissions.last;
+      print('before -- ${s.submissions.length}');
+      final failureOrSubmissions = await getSubmissions(GetSubmissionsParams(
+          sort: state.currentSort,
+          subreddit: this.subreddit,
+          after: lastSubmission.id));
 
-      final failureOrSubmissions = getSubmissions(GetSubmissionsParams(
-          subreddit: this.subreddit, after: lastSubmission.id));
-      if (failureOrSubmissions is Right) {
-        yield s.copyWith(
-            submissions: s.submissions + (failureOrSubmissions as Right).value);
-      }
+      yield* failureOrSubmissions.fold((left) async* {
+        print(left.message);
+      }, (right) async* {
+        yield s.copyWith(submissions: s.submissions + right);
+      });
     }
   }
 }

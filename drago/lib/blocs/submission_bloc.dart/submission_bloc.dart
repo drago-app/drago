@@ -38,7 +38,7 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     TransitionFunction<SubmissionEvent, SubmissionState> transitionFn,
   ) {
     return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
+      events.debounceTime(const Duration(milliseconds: 1)),
       transitionFn,
     );
   }
@@ -63,7 +63,11 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     final oldState = state;
 
     yield state.copyWith(
-        submission: state.submission.copyWith(saved: !state.submission.saved));
+      submission: state.submission.copyWith(
+        metaData:
+            state.submission.metaData.copyWith(saved: !state.submission.saved),
+      ),
+    );
     final saveOrFailure =
         await saveOrUnsave(SaveOrUnsaveParams(submission: oldState.submission));
     yield* saveOrFailure.fold((left) async* {
@@ -79,13 +83,15 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   Stream<SubmissionState> _mapUpvoteToState() async* {
     final oldState = state;
     final newSubmission = state.submission.copyWith(
-      voteState: (state.submission.voteState == VoteState_.Up)
-          ? VoteState_.Neutral
-          : VoteState_.Up,
-      score: ScoreModel(
-          score: (state.submission.voteState == VoteState_.Up)
-              ? state.submission.score.score - 1
-              : state.submission.score.score + 1),
+      metaData: state.submission.metaData.copyWith(
+        voteState: (state.submission.voteState == VoteState_.Up)
+            ? VoteState_.Neutral
+            : VoteState_.Up,
+        score: ScoreModel(
+            score: (state.submission.voteState == VoteState_.Up)
+                ? state.submission.score.score - 1
+                : state.submission.score.score + 1),
+      ),
     );
 
     final newState = state.copyWith(submission: newSubmission);
@@ -110,13 +116,16 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   Stream<SubmissionState> _mapDownvoteToState() async* {
     final oldState = state;
     final newSubmission = state.submission.copyWith(
+      metaData: state.submission.metaData.copyWith(
         voteState: (state.submission.voteState == VoteState_.Down)
             ? VoteState_.Neutral
             : VoteState_.Down,
         score: ScoreModel(
             score: (state.submission.voteState == VoteState_.Up)
                 ? state.submission.score.score + 1
-                : state.submission.score.score - 1));
+                : state.submission.score.score - 1),
+      ),
+    );
 
     final newState = state.copyWith(submission: newSubmission);
     yield newState;

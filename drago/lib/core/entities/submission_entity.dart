@@ -1,3 +1,4 @@
+import 'package:drago/classes/content_type.dart';
 import 'package:drago/models/num_comments_model.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:equatable/equatable.dart';
@@ -5,9 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_author.dart';
 
+import '../../utils.dart';
+
 enum VoteState_ { Up, Down, Neutral }
 
-class SubmissionModel extends Equatable {
+class SubmissionModelMetaData extends Equatable {
   final String age;
   final String title;
   final SubmissionAuthor author;
@@ -20,52 +23,48 @@ class SubmissionModel extends Equatable {
   final bool saved;
   final int upvotes;
   final NumCommentsModel numComments;
-  final ContentPreview preview;
   final VoteState_ voteState;
 
-  SubmissionModel(
-      {@required this.title,
+  SubmissionModelMetaData(
+      {@required this.age,
+      @required this.title,
       @required this.author,
       @required this.authorFlairText,
       @required this.id,
       @required this.subredditName,
+      @required this.upvoteRatio,
+      @required this.score,
       @required this.saved,
       @required this.upvotes,
-      @required this.score,
       @required this.numComments,
-      @required this.upvoteRatio,
-      @required this.age,
-      @required this.preview,
       @required this.voteState});
 
-  SubmissionModel copyWith(
-      {title,
+  SubmissionModelMetaData copyWith(
+      {age,
+      title,
       author,
       authorFlairText,
       id,
       subredditName,
-      upvotes,
-      saved,
-      score,
-      numComments,
       upvoteRatio,
-      age,
-      preview,
+      score,
+      saved,
+      upvotes,
+      numComments,
       voteState}) {
-    return SubmissionModel(
+    return SubmissionModelMetaData(
         age: age ?? this.age,
+        title: title ?? this.title,
         author: author ?? this.author,
         authorFlairText: authorFlairText ?? this.authorFlairText,
         id: id ?? this.id,
         subredditName: subredditName ?? this.subredditName,
-        saved: saved ?? this.saved,
-        numComments: numComments ?? this.numComments,
         upvoteRatio: upvoteRatio ?? this.upvoteRatio,
-        preview: preview ?? this.preview,
         score: score ?? this.score,
-        title: title ?? this.title,
+        upvotes: upvotes ?? this.upvotes,
+        numComments: numComments ?? this.numComments,
         voteState: voteState ?? this.voteState,
-        upvotes: upvotes ?? this.upvotes);
+        saved: saved ?? this.saved);
   }
 
   @override
@@ -81,12 +80,99 @@ class SubmissionModel extends Equatable {
         numComments,
         upvoteRatio,
         age,
-        preview,
         voteState
       ];
+}
+
+class SubmissionModel extends Equatable {
+  final SubmissionModelMetaData metaData;
+  final ContentPreview preview;
+  final SubmissionContent content;
+
+  String get age => metaData.age;
+  String get title => metaData.title;
+  SubmissionAuthor get author => metaData.author;
+  String get authorFlairText => metaData.authorFlairText;
+  String get id => metaData.id;
+  String get subredditName => metaData.subredditName;
+  String get upvoteRatio => metaData.upvoteRatio;
+  ScoreModel get score => metaData.score;
+
+  bool get saved => metaData.saved;
+  int get upvotes => metaData.upvotes;
+  NumCommentsModel get numComments => metaData.numComments;
+  VoteState_ get voteState => metaData.voteState;
+
+  SubmissionModel(
+      {@required this.metaData,
+      @required this.preview,
+      @required this.content});
 
   @override
-  String toString() {
-    return '[SubmissionModel] saved: ${saved.toString()} .... voteState: ${voteState.toString()}';
+  List<Object> get props => [metaData, content, preview];
+
+  SubmissionModel copyWith({metaData, preview, content}) {
+    return SubmissionModel(
+        metaData: metaData ?? this.metaData,
+        content: content ?? this.content,
+        preview: preview ?? this.preview);
   }
+}
+
+abstract class SubmissionContent {
+  dynamic get content;
+  factory SubmissionContent({String url, String selfText}) {
+    final Type type = ContentType.getContentTypeFromURL(url);
+    // print(type);
+
+    if (type == Type.REDDIT) {
+      return SelfSubmissionContent(content: unescape(selfText));
+    }
+    if (type == Type.IMAGE) {
+      return ImageSubmissionContent(
+          content: EmbeddableMediaDataModel(url: url));
+    }
+    if (type == Type.GIF) {
+      return GifSubmissionContent(content: EmbeddableMediaDataModel(url: url));
+    }
+  }
+}
+
+class GifSubmissionContent implements SubmissionContent {
+  final EmbeddableMediaDataModel content;
+
+  GifSubmissionContent({@required this.content});
+}
+
+class SelfSubmissionContent implements SubmissionContent {
+  SelfSubmissionContent({@required this.content});
+
+  @override
+  final String content;
+}
+
+class ImageSubmissionContent implements SubmissionContent {
+  final EmbeddableMediaDataModel content;
+
+  ImageSubmissionContent({@required this.content});
+}
+
+// class VideoSubmissionContent implements SubmissionContent {
+
+//   @override
+//   // TODO: implement content
+//   get content => throw UnimplementedError();
+
+// }
+
+class EmbeddableMediaDataModel extends Equatable {
+  final String url;
+  final String text;
+  final bool inAlbum;
+
+  EmbeddableMediaDataModel(
+      {@required this.url, this.text = '', this.inAlbum = false});
+
+  @override
+  List<Object> get props => [url, text, inAlbum];
 }

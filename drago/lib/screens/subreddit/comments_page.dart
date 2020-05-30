@@ -1,12 +1,14 @@
 import 'package:drago/common/comment.dart';
 import 'package:drago/common/common.dart';
-import 'package:drago/common/log_in_alert.dart';
 import 'package:drago/common/picture.dart';
 import 'package:drago/common/text_button.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/models/comment_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/blocs/comments_page_bloc/comments_page.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
@@ -14,6 +16,111 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'widgets/submission/submission.dart';
 import 'widgets/submission/submission_ratio.dart';
 import 'widgets/submission/vote_button.dart';
+
+class SubmissionContentWidget extends StatelessWidget {
+  final SubmissionModel submission;
+  SubmissionContentWidget({@required this.submission});
+
+  @override
+  Widget build(BuildContext context) {
+    if (submission.content is ImageSubmissionContent) {
+      return MediaSubmissionWidget(
+        mediaWidget: Picture(
+          maxHeight: MediaQuery.of(context).size.height * .5,
+          url: submission.content.content.url,
+        ),
+        titleWidget: SubmissionTitle(
+          submission: submission,
+        ),
+      );
+    } else if (submission.content is GifSubmissionContent) {
+      return MediaSubmissionWidget(
+        titleWidget: SubmissionTitle(submission: submission),
+        mediaWidget: Picture(
+          maxHeight: MediaQuery.of(context).size.height * .5,
+          url: submission.content.content.url,
+        ),
+      );
+    } else if (submission.content is SelfSubmissionContent) {
+      return SelfOrLinkSubmissionWidget(
+        titleWidget: SubmissionTitle(
+          submission: submission,
+        ),
+        submissionWidget: md.MarkdownBody(
+            data: submission.content.content,
+            styleSheet: md.MarkdownStyleSheet.fromCupertinoTheme(
+                CupertinoTheme.of(context))),
+      );
+    }
+  }
+}
+
+class MediaSubmissionWidget extends StatelessWidget {
+  final Widget mediaWidget;
+  final Widget titleWidget;
+  MediaSubmissionWidget(
+      {@required this.mediaWidget, @required this.titleWidget});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        mediaWidget,
+        Container(
+            width: MediaQuery.of(context).size.width,
+            color: CupertinoColors.systemBackground.resolveFrom(context),
+            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+            child: titleWidget),
+      ],
+    );
+  }
+}
+
+class SelfOrLinkSubmissionWidget extends StatelessWidget {
+  final Widget titleWidget;
+  final Widget submissionWidget;
+
+  const SelfOrLinkSubmissionWidget(
+      {Key key, @required this.titleWidget, @required this.submissionWidget})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(16),
+      color: CupertinoColors.systemBackground.resolveFrom(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          titleWidget,
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: submissionWidget,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SubmissionTitle extends StatelessWidget {
+  final SubmissionModel submission;
+
+  const SubmissionTitle({Key key, @required this.submission}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      submission.title,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
 
 class CommentsPage extends StatelessWidget {
   final SubmissionBloc submissionBloc;
@@ -29,16 +136,14 @@ class CommentsPage extends StatelessWidget {
           return CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
               middle: Text(
-                  '${submissionState.submission.numComments.asString} Comments'),
+                  '${submissionState.submission.metaData.numComments.asString} Comments'),
             ),
             child: SafeArea(
               child: SingleChildScrollView(
                   child: Column(
                 children: [
-                  Picture(
-                    maxHeight: MediaQuery.of(context).size.height * .5,
-                    url: submissionState.submission.preview.thumbnailUrl,
-                  ),
+                  SubmissionContentWidget(
+                      submission: submissionState.submission),
                   _SubmissionDetails(
                     bloc: submissionBloc,
                     submission: submissionState.submission,
@@ -81,39 +186,67 @@ class _SubmissionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: CupertinoColors.systemBackground,
-      padding: EdgeInsets.all(8),
+      color: CupertinoColors.systemBackground.resolveFrom(context),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('${submission.title}'),
-          Row(
-            children: [
-              Text('in '),
-              TextButton(
-                '${submission.subredditName}',
-                onTap: () => Navigator.of(context).pushNamed('/subreddit',
-                    arguments: submission.subredditName),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: RichText(
+              text: TextSpan(
+                text: 'in ',
+                style: DefaultTextStyle.of(context).style.copyWith(
+                    fontSize: 14,
+                    letterSpacing: 0,
+                    color: Colors.grey[700].withOpacity(.9)),
+                children: [
+                  TextSpan(
+                    text: '${submission.subredditName}',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          color: Colors.grey[700].withOpacity(.9),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                        ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.of(context).pushNamed(
+                          '/subreddit',
+                          arguments: submission.subredditName),
+                  ),
+                  TextSpan(text: ' by '),
+                  TextSpan(
+                    text: '${submission.author.name}',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          color: Colors.grey[700].withOpacity(.9),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                        ),
+                  ),
+                ],
               ),
-              Text(' by '),
-              AuthorTextButton(
-                onTap: () => print(
-                    '[FROM COMMENTS PAGE] --- need to navigate to a user page when implemented'),
-                author: submission.author,
-              ),
-            ],
+            ),
           ),
-          Row(
-            children: <Widget>[
-              SubmissionScore(
-                onTap: () => bloc.add(Upvote()),
-                submission: submission,
-              ),
-              SubmissionRatio(submission: submission),
-              SubmissionAge(
-                age: submission.age,
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: <Widget>[
+                SubmissionScore(
+                  onTap: () => bloc.add(Upvote()),
+                  submission: submission,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SubmissionRatio(submission: submission),
+                ),
+                SubmissionAge(
+                  age: submission.age,
+                )
+              ],
+            ),
           ),
           _SubmissionActions(bloc: bloc, submission: submission)
         ],
@@ -131,42 +264,48 @@ class _SubmissionActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-          border: Border(
-              top: BorderSide(width: 0, color: CupertinoColors.separator))),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        SquareActionButton(
-          color: CupertinoColors.activeOrange,
-          iconData: FontAwesomeIcons.longArrowAltUp,
-          onTap: () => bloc.add(Upvote()),
-          switchCondition: bloc.state.submission.voteState == VoteState_.Up,
+        // color: CupertinoColors.systemIndigo,
+        border: Border(
+          top: BorderSide(width: 0, color: CupertinoColors.separator),
         ),
-        SquareActionButton(
-          color: CupertinoColors.systemPurple,
-          iconData: FontAwesomeIcons.longArrowAltDown,
-          onTap: () => bloc.add(Downvote()),
-          switchCondition: bloc.state.submission.voteState == VoteState_.Down,
-        ),
-        SquareActionButton(
-          color: CupertinoColors.activeGreen,
-          iconData: FontAwesomeIcons.bookmark,
-          onTap: () => bloc.add(Save()),
-          switchCondition: bloc.state.submission.saved == true,
-        ),
-        SquareActionButton(
-          color: CupertinoColors.activeBlue,
-          iconData: FontAwesomeIcons.reply,
-          onTap: () => null,
-          switchCondition: false,
-        ),
-        SquareActionButton(
-          color: CupertinoColors.activeBlue,
-          iconData: FontAwesomeIcons.shareSquare,
-          onTap: () => null,
-          switchCondition: false,
-        ),
-      ]),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SquareActionButton(
+            color: CupertinoColors.activeOrange,
+            iconData: FontAwesomeIcons.longArrowAltUp,
+            onTap: () => bloc.add(Upvote()),
+            switchCondition: bloc.state.submission.voteState == VoteState_.Up,
+          ),
+          SquareActionButton(
+            color: CupertinoColors.systemPurple,
+            iconData: FontAwesomeIcons.longArrowAltDown,
+            onTap: () => bloc.add(Downvote()),
+            switchCondition: bloc.state.submission.voteState == VoteState_.Down,
+          ),
+          SquareActionButton(
+            color: CupertinoColors.activeGreen,
+            iconData: FontAwesomeIcons.bookmark,
+            onTap: () => bloc.add(Save()),
+            switchCondition: bloc.state.submission.saved == true,
+          ),
+          SquareActionButton(
+            color: CupertinoColors.activeBlue,
+            iconData: FontAwesomeIcons.reply,
+            onTap: () => null,
+            switchCondition: false,
+          ),
+          SquareActionButton(
+            color: CupertinoColors.activeBlue,
+            iconData: FontAwesomeIcons.shareSquare,
+            onTap: () => null,
+            switchCondition: false,
+          ),
+        ],
+      ),
     );
   }
 }

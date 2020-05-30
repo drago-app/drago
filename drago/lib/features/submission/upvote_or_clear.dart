@@ -22,10 +22,14 @@ class UpvoteOrClear implements UseCase<SubmissionModel, VoteParams> {
     if (params.submission.voteState == VoteState_.Up) {
       reddit.clearVote(params.submission);
 
-      return Right(params.submission.copyWith(voteState: VoteState_.Neutral));
+      return Right(params.submission.copyWith(
+          metaData: params.submission.metaData
+              .copyWith(voteState: VoteState_.Neutral)));
     } else {
       reddit.upvote(params.submission);
-      return Right(params.submission.copyWith(voteState: VoteState_.Up));
+      return Right(params.submission.copyWith(
+          metaData:
+              params.submission.metaData.copyWith(voteState: VoteState_.Up)));
     }
   }
 }

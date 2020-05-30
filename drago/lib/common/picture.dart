@@ -5,12 +5,14 @@ import 'package:drago/common/common.dart';
 import 'package:flutter/cupertino.dart';
 
 class Picture extends StatelessWidget {
+  final Key key;
   final double maxHeight;
   final String url;
 
-  Picture({@required this.maxHeight, this.url})
+  Picture({@required this.maxHeight, this.url, this.key})
       : assert(maxHeight != null),
-        assert(url != null);
+        assert(url != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

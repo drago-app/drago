@@ -17,6 +17,7 @@ class MediaViewerBottomRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[_votesAndScore(context, submission)],
     );
   }
@@ -30,7 +31,11 @@ class MediaViewerBottomRow extends StatelessWidget {
           onTap: () => bloc.add(Upvote()),
           switchCondition: submission.voteState == VoteState_.Up,
         ),
-        Text('${submission.score}'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(submission.score.asString,
+              style: TextStyle(color: CupertinoColors.lightBackgroundGray)),
+        ),
         SquareActionButton(
           color: CupertinoColors.systemPurple,
           iconData: FontAwesomeIcons.longArrowAltDown,

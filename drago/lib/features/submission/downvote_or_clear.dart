@@ -22,10 +22,20 @@ class DownvoteOrClear implements UseCase<SubmissionModel, DownVoteParams> {
     if (params.submission.voteState == VoteState_.Down) {
       reddit.clearVote(params.submission);
 
-      return Right(params.submission.copyWith(voteState: VoteState_.Neutral));
+      return Right(
+        params.submission.copyWith(
+          metaData: params.submission.metaData
+              .copyWith(voteState: VoteState_.Neutral),
+        ),
+      );
     } else {
       reddit.downvote(params.submission);
-      return Right(params.submission.copyWith(voteState: VoteState_.Down));
+      return Right(
+        params.submission.copyWith(
+          metaData:
+              params.submission.metaData.copyWith(voteState: VoteState_.Down),
+        ),
+      );
     }
   }
 }
