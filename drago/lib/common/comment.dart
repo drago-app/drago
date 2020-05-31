@@ -5,6 +5,7 @@ import 'package:drago/common/common.dart';
 import 'package:drago/common/custom_expansion_tile.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../theme.dart';
 import './common.dart';
 
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -19,7 +20,7 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomExpansionTile(
-      backgroundColor: CupertinoTheme.of(context).primaryContrastingColor,
+      backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
       indentation: 8.0 * comment.depth,
       trailing: trailing,
       sideBorderColor: (comment.depth == 0)
@@ -61,8 +62,7 @@ class CommentWidget extends StatelessWidget {
 
   Widget _body(BuildContext context, CommentModel comment) {
     return MarkdownBody(
-      styleSheet:
-          MarkdownStyleSheet.fromCupertinoTheme(CupertinoTheme.of(context)),
+      styleSheet: MarkdownTheme.of(context),
       data: unescape.convert(comment.body),
       onTapLink: (url) => _launchURL(url),
     );

@@ -13,6 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/blocs/comments_page_bloc/comments_page.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 
+import '../../theme.dart';
 import 'widgets/submission/submission.dart';
 import 'widgets/submission/submission_ratio.dart';
 import 'widgets/submission/vote_button.dart';
@@ -48,8 +49,7 @@ class SubmissionContentWidget extends StatelessWidget {
         ),
         submissionWidget: md.MarkdownBody(
             data: submission.content.content,
-            styleSheet: md.MarkdownStyleSheet.fromCupertinoTheme(
-                CupertinoTheme.of(context))),
+            styleSheet: MarkdownTheme.of(context)),
       );
     }
   }
@@ -68,7 +68,7 @@ class MediaSubmissionWidget extends StatelessWidget {
         mediaWidget,
         Container(
             width: MediaQuery.of(context).size.width,
-            color: CupertinoColors.systemBackground.resolveFrom(context),
+            color: CupertinoTheme.of(context).barBackgroundColor,
             padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
             child: titleWidget),
       ],
@@ -89,7 +89,7 @@ class SelfOrLinkSubmissionWidget extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(16),
-      color: CupertinoColors.systemBackground.resolveFrom(context),
+      color: CupertinoTheme.of(context).barBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -140,17 +140,18 @@ class CommentsPage extends StatelessWidget {
             ),
             child: SafeArea(
               child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
-                children: [
-                  SubmissionContentWidget(
-                      submission: submissionState.submission),
-                  _SubmissionDetails(
-                    bloc: submissionBloc,
-                    submission: submissionState.submission,
-                  ),
-                  _comments()
-                ],
-              )),
+                    children: [
+                      SubmissionContentWidget(
+                          submission: submissionState.submission),
+                      _SubmissionDetails(
+                        bloc: submissionBloc,
+                        submission: submissionState.submission,
+                      ),
+                      _comments()
+                    ],
+                  )),
             ),
           );
         });
@@ -186,7 +187,7 @@ class _SubmissionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: CupertinoColors.systemBackground.resolveFrom(context),
+      color: CupertinoTheme.of(context).barBackgroundColor,
       padding: EdgeInsets.symmetric(
         horizontal: 16,
       ),

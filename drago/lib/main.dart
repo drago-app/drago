@@ -1,3 +1,4 @@
+import 'package:drago/theme.dart';
 import 'package:drago/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -73,21 +74,7 @@ class UnAuthenticatedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      theme: CupertinoThemeData(
-          brightness: Brightness.light,
-          primaryColor: null,
-          primaryContrastingColor: null,
-          textTheme: CupertinoTextThemeData(
-              textStyle: null,
-              actionTextStyle: null,
-              tabLabelTextStyle: null,
-              navTitleTextStyle: null,
-              navLargeTitleTextStyle: null,
-              navActionTextStyle: null,
-              pickerTextStyle: null,
-              dateTimePickerTextStyle: null),
-          barBackgroundColor: null,
-          scaffoldBackgroundColor: CupertinoColors.lightBackgroundGray),
+      theme: appThemeData[AppTheme.light],
       home: DialogProvider(
         service: _dialogService,
         child: DialogManager(
@@ -190,21 +177,7 @@ class AuthenticatedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      theme: CupertinoThemeData(
-          brightness: Brightness.light,
-          primaryColor: CupertinoColors.activeBlue,
-          primaryContrastingColor: CupertinoColors.activeOrange,
-          textTheme: CupertinoTextThemeData(
-              textStyle: null,
-              actionTextStyle: null,
-              tabLabelTextStyle: null,
-              navTitleTextStyle: null,
-              navLargeTitleTextStyle: null,
-              navActionTextStyle: null,
-              pickerTextStyle: null,
-              dateTimePickerTextStyle: null),
-          barBackgroundColor: null,
-          scaffoldBackgroundColor: CupertinoColors.systemGrey6),
+      theme: appThemeData[AppTheme.light],
       home: DialogProvider(
         service: _dialogService,
         child: DialogManager(

@@ -185,7 +185,6 @@ class _ExpansionTileState extends State<CustomExpansionTile>
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: CupertinoColors.systemBackground,
                     border: Border(
                       top: BorderSide(color: Colors.grey, width: 0),
                     ),
