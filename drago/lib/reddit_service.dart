@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:drago/models/sort_option.dart';
+import 'package:drago/sandbox/types.dart';
 import 'package:draw/draw.dart';
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_author.dart';
@@ -56,8 +57,8 @@ class RedditService {
         .toList();
   }
 
-  Future<List<BaseCommentModel>> getComments(SubmissionModel submission) async {
-    final sub = await _reddit.submission(id: submission.id).populate();
+  Future<List<BaseCommentModel>> getComments(String submissionId) async {
+    final sub = await _reddit.submission(id: submissionId).populate();
     submissions.set(sub.id, sub);
     return sub.comments.comments
         .map((c) => BaseCommentModel.factory(c))
@@ -94,8 +95,8 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, SubmissionModel>> saveSubmission(
-      SubmissionModel submissionModel) async {
+  Future<Either<Failure, RedditLink>> saveSubmission(
+      RedditLink submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -106,8 +107,8 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, SubmissionModel>> unsaveSubmission(
-      SubmissionModel submissionModel) async {
+  Future<Either<Failure, RedditLink>> unsaveSubmission(
+      RedditLink submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -118,8 +119,7 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, Unit>> downvote(
-      SubmissionModel submissionModel) async {
+  Future<Either<Failure, Unit>> downvote(RedditLink submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -130,8 +130,7 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, Unit>> clearVote(
-      SubmissionModel submissionModel) async {
+  Future<Either<Failure, Unit>> clearVote(RedditLink submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -142,7 +141,7 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, Unit>> upvote(SubmissionModel submissionModel) async {
+  Future<Either<Failure, Unit>> upvote(RedditLink submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -179,37 +178,42 @@ class RedditService {
     }
   }
 
-  SubmissionModel _mapSubmissionToModel(Submission s) => SubmissionModel(
-      content:
-          SubmissionContent(url: s.url.toString(), selfText: s.selftext ?? ''),
-      preview: ContentPreview.factory(submission: s),
-      metaData: SubmissionModelMetaData(
-          id: s.id,
-          subredditName: s.subreddit.displayName,
-          title: s.title,
-          author: SubmissionAuthor.factory(submission: s),
-          upvotes: s.upvotes,
-          authorFlairText: s.authorFlairText,
-          score: ScoreModel(score: s.score),
-          saved: s.saved,
-          numComments: NumCommentsModel(numComments: s.numComments),
-          upvoteRatio: doubleToString(s.upvoteRatio),
-          age: createdUtcToAge(s.createdUtc),
-          voteState: _mapVoteState(s.vote)));
+  RedditLink _mapSubmissionToModel(Submission s) {
+    final r = RedditLink(
+      author: s.author,
+      createdUtc: s.createdUtc,
+      edited: s.edited,
+      isSelf: s.isSelf,
+      domain: s.domain,
+      distinguished: s.distinguished,
+      body: s.selftext,
+      id: s.id,
+      saved: s.saved,
+      numComments: s.numComments,
+      score: s.score,
+      title: s.title,
+      url: s.url.toString(),
+      previewUrl: (s.preview.isEmpty)
+          ? null
+          : s.preview?.first?.source?.url?.toString(),
+      subreddit: s.subreddit.displayName,
+    );
 
-  Future<List<SubmissionModel>> _hot(
+    return r;
+  }
+
+  Future<List<RedditLink>> _hot(
       String subreddit, Map<String, String> params) async {
-    final List<SubmissionModel> t = await _reddit
+    final List<RedditLink> t = await _reddit
         .subreddit(subreddit)
         .hot(after: params['after'], params: params)
         .map((s) => s as Submission)
         .map((s) => _mapSubmissionToModel(s))
         .toList();
-
     return t;
   }
 
-  Future<List<SubmissionModel>> _newest(
+  Future<List<RedditLink>> _newest(
           String subreddit, Map<String, String> params) async =>
       await _reddit
           .subreddit(subreddit)
@@ -217,7 +221,7 @@ class RedditService {
           .map((s) => s as Submission)
           .map((s) => _mapSubmissionToModel(s))
           .toList();
-  Future<List<SubmissionModel>> _rising(
+  Future<List<RedditLink>> _rising(
           String subreddit, Map<String, String> params) async =>
       await _reddit
           .subreddit(subreddit)
@@ -226,9 +230,9 @@ class RedditService {
           .map((s) => _mapSubmissionToModel(s))
           .toList();
 
-  Future<List<SubmissionModel>> _controversial(
+  Future<List<RedditLink>> _controversial(
       String subreddit, Map<String, String> params, TimeFilter_ filter) async {
-    final List<SubmissionModel> t = await _reddit
+    final List<RedditLink> t = await _reddit
         .subreddit(subreddit)
         .controversial(params: params, timeFilter: _mapTimeFilter(filter))
         .map((s) => s as Submission)
@@ -238,8 +242,8 @@ class RedditService {
     return t;
   }
 
-  Future<List<SubmissionModel>> _top(String subreddit,
-          Map<String, String> params, TimeFilter_ filter) async =>
+  Future<List<RedditLink>> _top(String subreddit, Map<String, String> params,
+          TimeFilter_ filter) async =>
       await _reddit
           .subreddit(subreddit)
           .top(params: params, timeFilter: _mapTimeFilter(filter))
@@ -247,17 +251,16 @@ class RedditService {
           .map((s) => _mapSubmissionToModel(s))
           .toList();
 
-  Future<Either<Failure, List<SubmissionModel>>> getSubmissions(
-      String subreddit,
+  Future<Either<Failure, List<RedditLink>>> getSubmissions(String subreddit,
       {String after,
       SubmissionSortType sort = SubmissionSortType.hot,
       TimeFilter_ filter = TimeFilter_.all}) async {
     var params = Map<String, String>();
     params['limit'] = '25';
-    params['after'] = 't3_$after';
+    params['after'] = (after == null) ? null : 't3_$after';
 
     try {
-      List<SubmissionModel> response;
+      List<RedditLink> response;
       if (sort == SubmissionSortType.hot) {
         response = await _hot(subreddit, params);
       } else if (sort == SubmissionSortType.newest) {
@@ -273,6 +276,7 @@ class RedditService {
       }
       return Right(response);
     } catch (e) {
+      print('failed in redditSerivce -- ${e.toString()}');
       return Left(SomeFailure(message: e.toString()));
     }
   }

@@ -10,6 +10,7 @@ import 'package:drago/common/common.dart';
 import 'package:drago/main.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubredditPage extends StatefulWidget {
   SubredditPage();

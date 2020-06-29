@@ -1,4 +1,4 @@
-name: helius
+name: drago
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -27,7 +27,7 @@ dependencies:
   draw:
     git:
       url: https://github.com/drago-app/DRAW
-      ref: morecomments
+      ref: master
       # url: https://github.com/draw-dev/DRAW
   flutter_webview_plugin: ^0.3.5
   shared_preferences: ^0.5.2
@@ -36,6 +36,9 @@ dependencies:
   video_provider: ^1.2.3+1
   cached_network_image: ^2.2.0
   flutter_cupertino_settings: ^0.3.0
+  flutter_markdown: ^0.4.1
+  number_display: ^2.2.1
+  dcache: ^0.3.0
 
   # flutter_markdown: ^0.2.0
   # flutter_markdown:

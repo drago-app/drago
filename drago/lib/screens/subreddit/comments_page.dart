@@ -17,41 +17,43 @@ import '../../theme.dart';
 import 'widgets/submission/submission.dart';
 import 'widgets/submission/submission_ratio.dart';
 import 'widgets/submission/vote_button.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionContentWidget extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   SubmissionContentWidget({@required this.submission});
 
   @override
   Widget build(BuildContext context) {
-    if (submission.content is ImageSubmissionContent) {
-      return MediaSubmissionWidget(
-        mediaWidget: Picture(
-          maxHeight: MediaQuery.of(context).size.height * .5,
-          url: submission.content.content.url,
-        ),
-        titleWidget: SubmissionTitle(
-          submission: submission,
-        ),
-      );
-    } else if (submission.content is GifSubmissionContent) {
-      return MediaSubmissionWidget(
-        titleWidget: SubmissionTitle(submission: submission),
-        mediaWidget: Picture(
-          maxHeight: MediaQuery.of(context).size.height * .5,
-          url: submission.content.content.url,
-        ),
-      );
-    } else if (submission.content is SelfSubmissionContent) {
-      return SelfOrLinkSubmissionWidget(
-        titleWidget: SubmissionTitle(
-          submission: submission,
-        ),
-        submissionWidget: md.MarkdownBody(
-            data: submission.content.content,
-            styleSheet: MarkdownTheme.of(context)),
-      );
-    }
+    return SizedBox.shrink();
+    // if (submission.content is ImageSubmissionContent) {
+    //   return MediaSubmissionWidget(
+    //     mediaWidget: Picture(
+    //       maxHeight: MediaQuery.of(context).size.height * .5,
+    //       url: submission.content.content.url,
+    //     ),
+    //     titleWidget: SubmissionTitle(
+    //       submission: submission,
+    //     ),
+    //   );
+    // } else if (submission.content is GifSubmissionContent) {
+    //   return MediaSubmissionWidget(
+    //     titleWidget: SubmissionTitle(submission: submission),
+    //     mediaWidget: Picture(
+    //       maxHeight: MediaQuery.of(context).size.height * .5,
+    //       url: submission.content.content.url,
+    //     ),
+    //   );
+    // } else if (submission.content is SelfSubmissionContent) {
+    //   return SelfOrLinkSubmissionWidget(
+    //     titleWidget: SubmissionTitle(
+    //       submission: submission,
+    //     ),
+    //     submissionWidget: md.MarkdownBody(
+    //         data: submission.content.content,
+    //         styleSheet: MarkdownTheme.of(context)),
+    //   );
+    // }
   }
 }
 
@@ -106,7 +108,7 @@ class SelfOrLinkSubmissionWidget extends StatelessWidget {
 }
 
 class SubmissionTitle extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   const SubmissionTitle({Key key, @required this.submission}) : super(key: key);
 
@@ -135,8 +137,8 @@ class CommentsPage extends StatelessWidget {
         builder: (context, submissionState) {
           return CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
-              middle: Text(
-                  '${submissionState.submission.metaData.numComments.asString} Comments'),
+              middle:
+                  Text('${submissionState.submission.numComments} Comments'),
             ),
             child: SafeArea(
               child: SingleChildScrollView(
@@ -179,7 +181,7 @@ class CommentsPage extends StatelessWidget {
 }
 
 class _SubmissionDetails extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   final SubmissionBloc bloc;
 
   const _SubmissionDetails({this.submission, this.bloc});
@@ -205,7 +207,7 @@ class _SubmissionDetails extends StatelessWidget {
                     color: Colors.grey[700].withOpacity(.9)),
                 children: [
                   TextSpan(
-                    text: '${submission.subredditName}',
+                    text: '${submission.subreddit}',
                     style: DefaultTextStyle.of(context).style.copyWith(
                           color: Colors.grey[700].withOpacity(.9),
                           fontSize: 14,
@@ -215,7 +217,7 @@ class _SubmissionDetails extends StatelessWidget {
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => Navigator.of(context).pushNamed(
                           '/subreddit',
-                          arguments: submission.subredditName),
+                          arguments: submission.subreddit),
                   ),
                   TextSpan(text: ' by '),
                   TextSpan(
@@ -235,17 +237,17 @@ class _SubmissionDetails extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
               children: <Widget>[
-                SubmissionScore(
-                  onTap: () => bloc.add(Upvote()),
-                  submission: submission,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SubmissionRatio(submission: submission),
-                ),
-                SubmissionAge(
-                  age: submission.age,
-                )
+                // SubmissionScore(
+                //   onTap: () => bloc.add(Upvote()),
+                //   submission: submission,
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                //   child: SubmissionRatio(submission: submission),
+                // ),
+                // SubmissionAge(
+                //   age: submission.age,
+                // )
               ],
             ),
           ),
@@ -257,7 +259,7 @@ class _SubmissionDetails extends StatelessWidget {
 }
 
 class _SubmissionActions extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   final SubmissionBloc bloc;
 
   const _SubmissionActions({this.submission, this.bloc});
@@ -275,36 +277,36 @@ class _SubmissionActions extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SquareActionButton(
-            color: CupertinoColors.activeOrange,
-            iconData: FontAwesomeIcons.longArrowAltUp,
-            onTap: () => bloc.add(Upvote()),
-            switchCondition: bloc.state.submission.voteState == VoteState_.Up,
-          ),
-          SquareActionButton(
-            color: CupertinoColors.systemPurple,
-            iconData: FontAwesomeIcons.longArrowAltDown,
-            onTap: () => bloc.add(Downvote()),
-            switchCondition: bloc.state.submission.voteState == VoteState_.Down,
-          ),
-          SquareActionButton(
-            color: CupertinoColors.activeGreen,
-            iconData: FontAwesomeIcons.bookmark,
-            onTap: () => bloc.add(Save()),
-            switchCondition: bloc.state.submission.saved == true,
-          ),
-          SquareActionButton(
-            color: CupertinoColors.activeBlue,
-            iconData: FontAwesomeIcons.reply,
-            onTap: () => null,
-            switchCondition: false,
-          ),
-          SquareActionButton(
-            color: CupertinoColors.activeBlue,
-            iconData: FontAwesomeIcons.shareSquare,
-            onTap: () => null,
-            switchCondition: false,
-          ),
+          // SquareActionButton(
+          //   color: CupertinoColors.activeOrange,
+          //   iconData: FontAwesomeIcons.longArrowAltUp,
+          //   onTap: () => bloc.add(Upvote()),
+          //   switchCondition: bloc.state.submission.voteState == VoteState_.Up,
+          // ),
+          // SquareActionButton(
+          //   color: CupertinoColors.systemPurple,
+          //   iconData: FontAwesomeIcons.longArrowAltDown,
+          //   onTap: () => bloc.add(Downvote()),
+          //   switchCondition: bloc.state.submission.voteState == VoteState_.Down,
+          // ),
+          // SquareActionButton(
+          //   color: CupertinoColors.activeGreen,
+          //   iconData: FontAwesomeIcons.bookmark,
+          //   onTap: () => bloc.add(Save()),
+          //   switchCondition: bloc.state.submission.saved == true,
+          // ),
+          // SquareActionButton(
+          //   color: CupertinoColors.activeBlue,
+          //   iconData: FontAwesomeIcons.reply,
+          //   onTap: () => null,
+          //   switchCondition: false,
+          // ),
+          // SquareActionButton(
+          //   color: CupertinoColors.activeBlue,
+          //   iconData: FontAwesomeIcons.shareSquare,
+          //   onTap: () => null,
+          //   switchCondition: false,
+          // ),
         ],
       ),
     );

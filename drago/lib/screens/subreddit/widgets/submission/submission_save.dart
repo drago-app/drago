@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionSave extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   const SubmissionSave({@required this.submission})
       : assert(submission != null);

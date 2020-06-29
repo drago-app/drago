@@ -15,22 +15,22 @@ class UpvoteOrClear implements UseCase<SubmissionModel, VoteParams> {
 
   @override
   Future<Either<Failure, SubmissionModel>> call(params) async {
-    if (!await userService.isUserLoggedIn()) {
-      return Left(NotAuthorizedFailure());
-    }
+    // if (!await userService.isUserLoggedIn()) {
+    //   return Left(NotAuthorizedFailure());
+    // }
 
-    if (params.submission.voteState == VoteState_.Up) {
-      reddit.clearVote(params.submission);
+    // if (params.submission.voteState == VoteState_.Up) {
+    //   reddit.clearVote(params.submission);
 
-      return Right(params.submission.copyWith(
-          metaData: params.submission.metaData
-              .copyWith(voteState: VoteState_.Neutral)));
-    } else {
-      reddit.upvote(params.submission);
-      return Right(params.submission.copyWith(
-          metaData:
-              params.submission.metaData.copyWith(voteState: VoteState_.Up)));
-    }
+    //   return Right(params.submission.copyWith(
+    //       metaData: params.submission.metaData
+    //           .copyWith(voteState: VoteState_.Neutral)));
+    // } else {
+    //   reddit.upvote(params.submission);
+    //   return Right(params.submission.copyWith(
+    //       metaData:
+    //           params.submission.metaData.copyWith(voteState: VoteState_.Up)));
+    // }
   }
 }
 

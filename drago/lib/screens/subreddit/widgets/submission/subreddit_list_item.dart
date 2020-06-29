@@ -7,6 +7,7 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubredditListItem extends StatelessWidget {
   @override
@@ -43,25 +44,25 @@ class SubredditListItem extends StatelessWidget {
             state.submission.title,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
           ),
-          subtitle: SubredditListItemBottomBar(submission: state.submission),
-          trailing: Column(
-            children: <Widget>[
-              SquareActionButton(
-                color: CupertinoColors.systemOrange,
-                iconData: FontAwesomeIcons.longArrowAltUp,
-                onTap: () =>
-                    BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-                switchCondition: state.submission.voteState == VoteState_.Up,
-              ),
-              SquareActionButton(
-                color: CupertinoColors.systemPurple,
-                iconData: FontAwesomeIcons.longArrowAltDown,
-                onTap: () =>
-                    BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-                switchCondition: state.submission.voteState == VoteState_.Down,
-              )
-            ],
-          ),
+          // subtitle: SubredditListItemBottomBar(submission: state.submission),
+          // trailing: Column(
+          //   children: <Widget>[
+          //     SquareActionButton(
+          //       color: CupertinoColors.systemOrange,
+          //       iconData: FontAwesomeIcons.longArrowAltUp,
+          //       onTap: () =>
+          //           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+          //       switchCondition: state.submission.voteState == VoteState_.Up,
+          //     ),
+          //     SquareActionButton(
+          //       color: CupertinoColors.systemPurple,
+          //       iconData: FontAwesomeIcons.longArrowAltDown,
+          //       onTap: () =>
+          //           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+          //       switchCondition: state.submission.voteState == VoteState_.Down,
+          //     )
+          //   ],
+          // ),
         );
       },
     );
@@ -69,7 +70,7 @@ class SubredditListItem extends StatelessWidget {
 }
 
 class SubredditListItemBottomBar extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   SubredditListItemBottomBar({@required this.submission});
 
@@ -80,14 +81,14 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
-        AuthorTextButton(author: submission.author, onTap: () => null),
+        // AuthorTextButton(author: submission.author, onTap: () => null),
         // FlairWidget(flairText: submission.authorFlairText),
         SubmissionScore(
             submission: submission,
             onTap: () =>
                 BlocProvider.of<SubmissionBloc>(context).add(Upvote())),
-        SubmissionNumComments(submission: submission),
-        SubmissionAge(age: submission.age),
+        // SubmissionNumComments(submission: submission),
+        // SubmissionAge(age: submission.age),
         _optionsButton(context, submission)
       ],
     );
@@ -196,13 +197,13 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      widget.title,
-                                      widget.subtitle
+                                      widget.title ?? SizedBox.shrink(),
+                                      widget.subtitle ?? SizedBox.shrink()
                                     ],
                                   ),
                                 ),
                               ),
-                              widget.trailing
+                              widget.trailing ?? SizedBox.shrink()
                             ],
                           ),
                         ),

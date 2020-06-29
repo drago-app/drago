@@ -16,15 +16,15 @@ class SaveOrUnsaveSubmission
 
   @override
   Future<Either<Failure, SubmissionModel>> call(params) async {
-    if (!await userService.isUserLoggedIn()) {
-      return Left(NotAuthorizedFailure());
-    }
+    // if (!await userService.isUserLoggedIn()) {
+    //   return Left(NotAuthorizedFailure());
+    // }
 
-    if (params.submission.saved) {
-      return await reddit.unsaveSubmission(params.submission);
-    } else {
-      return await reddit.saveSubmission(params.submission);
-    }
+    // if (params.submission.saved) {
+    //   return await reddit.unsaveSubmission(params.submission);
+    // } else {
+    //   return await reddit.saveSubmission(params.submission);
+    // }
   }
 }
 

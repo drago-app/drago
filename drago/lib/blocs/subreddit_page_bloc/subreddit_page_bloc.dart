@@ -100,20 +100,19 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   }
 
   Stream<SubredditPageState> _mapLoadMoreToState() async* {
-    if (state is SubredditPageLoaded) {
-      final s = state as SubredditPageLoaded;
-      final lastSubmission = s.submissions.last;
-      print('before -- ${s.submissions.length}');
-      final failureOrSubmissions = await getSubmissions(GetSubmissionsParams(
-          sort: state.currentSort,
-          subreddit: this.subreddit,
-          after: lastSubmission.id));
+    // if (state is SubredditPageLoaded) {
+    //   final s = state as SubredditPageLoaded;
+    //   final lastSubmission = s.submissions.last;
+    //   final failureOrSubmissions = await getSubmissions(GetSubmissionsParams(
+    //       sort: state.currentSort,
+    //       subreddit: this.subreddit,
+    //       after: lastSubmission.id));
 
-      yield* failureOrSubmissions.fold((left) async* {
-        print(left.message);
-      }, (right) async* {
-        yield s.copyWith(submissions: s.submissions + right);
-      });
-    }
+    //   yield* failureOrSubmissions.fold((left) async* {
+    //     print(left.message);
+    //   }, (right) async* {
+    //     yield s.copyWith(submissions: s.submissions + right);
+    //   });
+    // }
   }
 }

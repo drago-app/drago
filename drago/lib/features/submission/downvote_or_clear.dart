@@ -15,28 +15,28 @@ class DownvoteOrClear implements UseCase<SubmissionModel, DownVoteParams> {
 
   @override
   Future<Either<Failure, SubmissionModel>> call(params) async {
-    if (!await userService.isUserLoggedIn()) {
-      return Left(NotAuthorizedFailure());
-    }
+    // if (!await userService.isUserLoggedIn()) {
+    //   return Left(NotAuthorizedFailure());
+    // }
 
-    if (params.submission.voteState == VoteState_.Down) {
-      reddit.clearVote(params.submission);
+    // if (params.submission.voteState == VoteState_.Down) {
+    //   reddit.clearVote(params.submission);
 
-      return Right(
-        params.submission.copyWith(
-          metaData: params.submission.metaData
-              .copyWith(voteState: VoteState_.Neutral),
-        ),
-      );
-    } else {
-      reddit.downvote(params.submission);
-      return Right(
-        params.submission.copyWith(
-          metaData:
-              params.submission.metaData.copyWith(voteState: VoteState_.Down),
-        ),
-      );
-    }
+    //   return Right(
+    //     params.submission.copyWith(
+    //       metaData: params.submission.metaData
+    //           .copyWith(voteState: VoteState_.Neutral),
+    //     ),
+    //   );
+    // } else {
+    //   reddit.downvote(params.submission);
+    //   return Right(
+    //     params.submission.copyWith(
+    //       metaData:
+    //           params.submission.metaData.copyWith(voteState: VoteState_.Down),
+    //     ),
+    //   );
+    // }
   }
 }
 

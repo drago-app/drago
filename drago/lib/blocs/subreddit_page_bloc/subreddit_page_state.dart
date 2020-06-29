@@ -2,11 +2,12 @@ import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 abstract class SubredditPageState extends Equatable {
   String get subreddit;
   SubmissionSortType get currentSort;
-  List<SubmissionModel> get submissions;
+  List<Submission> get submissions;
 
   @override
   List<Object> get props => [subreddit, currentSort];
@@ -15,7 +16,7 @@ abstract class SubredditPageState extends Equatable {
 class SubredditPageInitial extends SubredditPageState {
   final String subreddit;
   final SubmissionSortType currentSort;
-  final List<SubmissionModel> submissions;
+  final List<Submission> submissions;
 
   SubredditPageInitial(
       {@required this.subreddit,
@@ -27,7 +28,7 @@ class SubredditPageInitial extends SubredditPageState {
 class SubredditPageLoading extends SubredditPageState {
   final String subreddit;
   final SubmissionSortType currentSort;
-  final List<SubmissionModel> submissions;
+  final List<Submission> submissions;
 
   SubredditPageLoading(
       {@required this.subreddit,
@@ -37,7 +38,7 @@ class SubredditPageLoading extends SubredditPageState {
 }
 
 class SubredditPageLoaded extends SubredditPageState {
-  final List<SubmissionModel> submissions;
+  final List<Submission> submissions;
   final String subreddit;
   final SubmissionSortType currentSort;
 
@@ -62,7 +63,7 @@ class DisplayingSortOptions extends SubredditPageState {
   final String subreddit;
   final SubmissionSortType currentSort;
   final List<SubmissionSortOption> options;
-  final List<SubmissionModel> submissions;
+  final List<Submission> submissions;
 
   DisplayingSortOptions(
       {@required this.subreddit,
@@ -77,7 +78,7 @@ class DisplayingFilterOptions extends SubredditPageState {
   final String subreddit;
   final SubmissionSortType currentSort;
   final List<TimeFilterOption> options;
-  final List<SubmissionModel> submissions;
+  final List<Submission> submissions;
   final SubmissionSortType sortType;
 
   DisplayingFilterOptions(

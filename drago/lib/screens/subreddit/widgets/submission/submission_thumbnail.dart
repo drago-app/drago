@@ -9,9 +9,10 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 class _DefaultThumbnail extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   _DefaultThumbnail({@required this.submission}) : assert(submission != null);
 
@@ -25,14 +26,14 @@ class _DefaultThumbnail extends StatelessWidget {
 }
 
 class _ImageThumbnail extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   _ImageThumbnail({@required this.submission}) : assert(submission != null);
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: submission.preview.thumbnailUrl,
+      tag: submission.previewUrl,
       child: _ThumbnailBase(
           onTap: () {
             Navigator.of(context, rootNavigator: true).push(
@@ -49,7 +50,7 @@ class _ImageThumbnail extends StatelessWidget {
 }
 
 class _LinkThumbnail extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   _LinkThumbnail({@required this.submission}) : assert(submission != null);
 
@@ -63,7 +64,7 @@ class _LinkThumbnail extends StatelessWidget {
 }
 
 class _VideoThumbnail extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   _VideoThumbnail({@required this.submission}) : assert(submission != null);
 
@@ -77,7 +78,7 @@ class _VideoThumbnail extends StatelessWidget {
 }
 
 class _GifThumbnail extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   _GifThumbnail({@required this.submission}) : assert(submission != null);
 
@@ -92,7 +93,7 @@ class _GifThumbnail extends StatelessWidget {
 
 class _ThumbnailBase extends StatelessWidget {
   final Widget thumbnailLabel;
-  final SubmissionModel submission;
+  final Submission submission;
   final Function onTap;
 
   _ThumbnailBase(
@@ -107,7 +108,7 @@ class _ThumbnailBase extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4.0),
             child: CachedNetworkImage(
-              imageUrl: submission.preview.thumbnailUrl,
+              imageUrl: submission.previewUrl,
               useOldImageOnUrlChange: true,
               placeholder: (context, submission) =>
                   Center(child: LoadingIndicator()),
@@ -211,28 +212,31 @@ class _LinkThumbnailLabel extends StatelessWidget {
 }
 
 class SubmissionThumbnail extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   const SubmissionThumbnail({@required this.submission});
 
   @override
   Widget build(BuildContext context) {
-    if (submission.preview.sourceType == ImageSourceType.LINK) {
-      return _LinkThumbnail(
-        submission: submission,
-      );
-    } else if (submission.preview.sourceType == ImageSourceType.GIF) {
-      return _GifThumbnail(
-        submission: submission,
-      );
-    } else if (submission.preview.sourceType == ImageSourceType.VIDEO) {
-      return _VideoThumbnail(
-        submission: submission,
-      );
-    } else if (submission.preview.sourceType == ImageSourceType.IMAGE) {
-      return _ImageThumbnail(submission: submission);
-    } else {
-      return _DefaultThumbnail(submission: submission);
-    }
+    return _ImageThumbnail(
+      submission: submission,
+    );
+    // if (submission.preview.sourceType == ImageSourceType.LINK) {
+    //   return _LinkThumbnail(
+    //     submission: submission,
+    //   );
+    // } else if (submission.preview.sourceType == ImageSourceType.GIF) {
+    //   return _GifThumbnail(
+    //     submission: submission,
+    //   );
+    // } else if (submission.preview.sourceType == ImageSourceType.VIDEO) {
+    //   return _VideoThumbnail(
+    //     submission: submission,
+    //   );
+    // } else if (submission.preview.sourceType == ImageSourceType.IMAGE) {
+    //   return _ImageThumbnail(submission: submission);
+    // } else {
+    //   return _DefaultThumbnail(submission: submission);
+    // }
   }
 }
 
@@ -266,10 +270,10 @@ class SecondPage extends StatelessWidget {
           ),
           Hero(
             transitionOnUserGestures: true,
-            tag: state.submission.preview.thumbnailUrl,
+            tag: state.submission.previewUrl,
             child: Picture(
                 maxHeight: MediaQuery.of(context).size.height,
-                url: state.submission.preview.thumbnailUrl),
+                url: state.submission.previewUrl),
           ),
           Align(
             alignment: Alignment.topLeft,

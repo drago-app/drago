@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionScore extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   final Function onTap;
 
   SubmissionScore({@required this.submission, @required this.onTap});
@@ -16,13 +17,13 @@ class SubmissionScore extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            FaIcon(FontAwesomeIcons.arrowUp,
-                size: 14, color: _mapStateToColor(submission.voteState)),
-            Text(
-              ' ${submission.score.asString}',
-              style: TextStyle(
-                  fontSize: 14, color: _mapStateToColor(submission.voteState)),
-            )
+            // FaIcon(FontAwesomeIcons.arrowUp,
+            //     size: 14, color: _mapStateToColor(submission.voteState)),
+            // Text(
+            //   ' ${submission.score.asString}',
+            //   style: TextStyle(
+            //       fontSize: 14, color: _mapStateToColor(submission.voteState)),
+            // )
           ],
         ));
   }
