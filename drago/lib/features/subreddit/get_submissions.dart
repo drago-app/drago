@@ -32,17 +32,20 @@ class GetSubmissions
     final linksOrFailure = await reddit.getSubmissions(params.subreddit,
         sort: params.sort, after: params.after, filter: params.filter);
 
-    return linksOrFailure.fold(
-      (left) => Left(left),
-      (right) => Right(
-        right.map((link) => _mapLinkToSubmission(link)).toList(),
-      ),
-    );
+    // return linksOrFailure.fold(
+    //   (left) => Left(left),
+    //   (right) => Right(
+    //     right.map( (link)  =>   _mapLinkToSubmission(link)).toList(),
+    //   ),
+    // );
   }
 
-  Submission _mapLinkToSubmission(RedditLink link) {
+  Future<Submission> _mapLinkToSubmission(RedditLink link) async {
     final defaultHosts = [defaultHost, defaultVideo];
     if (link.isSelf) return SelfSubmission(link: link);
+    final media = await HostManager.getMedia(link);
+    if(media != null) 
+    
 
     return Submission.fromRedditLink(link: link);
   }
@@ -50,12 +53,17 @@ class GetSubmissions
 
 class HostManager {
   static List<Host> hosts = [defaultHost, defaultVideo];
-  static Stream<ExpandoMedia> getMedia(url) async* {
-    for (var host in hosts) {
-      var media = await host.handleLink(url, host.detect(url));
-      yield media;
+
+  static Host _getHost(url) => hosts.firstWhere((host) => host.detect(url) != null);
+  static Future<ExpandoMedia> getMedia(url) async {
+    final host =  _getHost(url);
+    if (host == null) return null;
+    else {
+      final media = await host.handleLink(url, host.detect(url));
+      return media;
     }
-  }
+  } 
+
 }
 
 class Submission extends Equatable {
