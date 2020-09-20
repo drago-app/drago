@@ -11,13 +11,13 @@ import 'package:drago/core/usecases/usecase.dart';
 import 'package:drago/reddit_service.dart';
 
 class GetSubmissions
-    implements UseCase<List<Submission>, GetSubmissionsParams> {
+    implements UseCase<List<Future<Submission>>, GetSubmissionsParams> {
   final RedditService reddit;
 
   GetSubmissions({@required this.reddit});
 
   @override
-  Future<Either<Failure, List<Submission>>> call(
+  Future<Either<Failure, List<Future<Submission>>>> call(
       GetSubmissionsParams params) async {
     // What do I need to do here?
     // Take a RedditLink and transform into a submission
@@ -32,38 +32,38 @@ class GetSubmissions
     final linksOrFailure = await reddit.getSubmissions(params.subreddit,
         sort: params.sort, after: params.after, filter: params.filter);
 
-    // return linksOrFailure.fold(
-    //   (left) => Left(left),
-    //   (right) => Right(
-    //     right.map( (link)  =>   _mapLinkToSubmission(link)).toList(),
-    //   ),
-    // );
+    return linksOrFailure.fold(
+      (left) => Left(left),
+      (right) => Right(
+        right.map((link) => _mapLinkToSubmission(link)).toList(),
+      ),
+    );
   }
 
   Future<Submission> _mapLinkToSubmission(RedditLink link) async {
     final defaultHosts = [defaultHost, defaultVideo];
-    if (link.isSelf) return SelfSubmission(link: link);
-    final media = await HostManager.getMedia(link);
-    if(media != null) 
-    
+    if (link.isSelf) return Future.value(SelfSubmission(link: link));
+    // final media = await HostManager.getMedia(link);
+    // if(media != null)
 
-    return Submission.fromRedditLink(link: link);
+    // return Submission.fromRedditLink(link: link);
   }
 }
 
 class HostManager {
   static List<Host> hosts = [defaultHost, defaultVideo];
 
-  static Host _getHost(url) => hosts.firstWhere((host) => host.detect(url) != null);
+  static Host _getHost(url) =>
+      hosts.firstWhere((host) => host.detect(url) != null);
   static Future<ExpandoMedia> getMedia(url) async {
-    final host =  _getHost(url);
-    if (host == null) return null;
+    final host = _getHost(url);
+    if (host == null)
+      return null;
     else {
       final media = await host.handleLink(url, host.detect(url));
       return media;
     }
-  } 
-
+  }
 }
 
 class Submission extends Equatable {
