@@ -1,7 +1,7 @@
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:drago/core/entities/submission_author.dart';
 
 class TextButton extends StatelessWidget {
   final String text;
@@ -26,7 +26,7 @@ class TextButton extends StatelessWidget {
 enum AuthorTextButtonSize { small, medium, large }
 
 class AuthorTextButton extends StatelessWidget {
-  final SubmissionAuthor author;
+  final Author author;
   final AuthorTextButtonSize size;
   final Function onTap;
 
@@ -49,12 +49,14 @@ class AuthorTextButton extends StatelessWidget {
   }
 
   static Color _mapTypeToColor(AuthorType type) {
-    if (type == AuthorType.Admin) {
+    if (type == AuthorType.admin) {
       return CupertinoColors.systemRed;
-    } else if (type == AuthorType.Moderator) {
+    } else if (type == AuthorType.moderator) {
       return CupertinoColors.systemGreen;
-    } else if (type == AuthorType.Special) {
+    } else if (type == AuthorType.developer) {
       return CupertinoColors.systemPink;
+    } else if (type == AuthorType.friend) {
+      return CupertinoColors.activeOrange;
     } else {
       return Colors.grey[600];
     }

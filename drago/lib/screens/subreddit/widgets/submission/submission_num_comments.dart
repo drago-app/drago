@@ -1,9 +1,9 @@
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SubmissionNumComments extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   SubmissionNumComments({@required this.submission});
 
   @override
@@ -17,7 +17,7 @@ class SubmissionNumComments extends StatelessWidget {
           color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
         ),
         Text(
-          '${submission.numComments.asString}',
+          ' ${submission.numComments}',
           style: TextStyle(
             color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
             fontSize: 14.0,

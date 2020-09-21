@@ -9,7 +9,7 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_entity.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class _DefaultThumbnail extends StatelessWidget {
   final Submission submission;
@@ -263,17 +263,17 @@ class SecondPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: MediaViewerBottomRow(
-                submission: state.submission,
+                submission: state.redditLink,
                 bloc: bloc,
               ),
             ),
           ),
           Hero(
             transitionOnUserGestures: true,
-            tag: state.submission.previewUrl,
+            tag: state.redditLink.previewUrl,
             child: Picture(
                 maxHeight: MediaQuery.of(context).size.height,
-                url: state.submission.previewUrl),
+                url: state.redditLink.previewUrl),
           ),
           Align(
             alignment: Alignment.topLeft,

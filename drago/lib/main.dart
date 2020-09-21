@@ -17,7 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dialog/dialog_manager.dart';
 import 'dialog/dialog_provider.dart';
 import 'dialog/dialog_service.dart';
-import 'features/subreddit/get_submissions.dart';
+import 'features/subreddit/get_reddit_links.dart';
 import 'features/user/usecases.dart';
 import 'screens/screens.dart';
 import 'screens/subreddit/comments_page.dart';
@@ -38,7 +38,7 @@ final DownvoteOrClear downvoteOrClear =
 final SaveOrUnsaveSubmission saveOrUnsave =
     SaveOrUnsaveSubmission(reddit: _reddit, userService: _userService);
 
-final GetSubmissions getSubmissions = GetSubmissions(reddit: _reddit);
+final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
 
 final DialogService _dialogService = DialogService();
 
@@ -276,7 +276,7 @@ class RouteGenerator {
         return CupertinoPageRoute(
           builder: (context) => BlocProvider<SubredditPageBloc>(
             create: (context) => SubredditPageBloc(
-                getSubmissions: getSubmissions, subreddit: args as String)
+                getRedditLinks: getRedditLinks, subreddit: args as String)
               ..add(LoadSubmissions()),
             child: SubredditPage(),
           ),
@@ -289,7 +289,8 @@ class RouteGenerator {
             ),
             create: (BuildContext context) => CommentsPageBloc(
                 reddit: _reddit,
-                submission: (args as SubmissionBloc).submission)
+                submission: Submission.fromRedditLink(
+                    link: (args as SubmissionBloc).redditLink))
               ..add(LoadComments()),
           ),
         );

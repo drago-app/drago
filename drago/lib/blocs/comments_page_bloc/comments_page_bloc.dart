@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:drago/core/entities/submission_entity.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 import 'package:drago/models/comment_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:drago/reddit_service.dart';
@@ -37,10 +37,10 @@ class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
   }
 
   Stream<CommentsPageState> _mapLoadCommentsToState() async* {
-    final List<BaseCommentModel> comments =
-        await reddit.getComments(submission.id);
+    // final List<BaseCommentModel> comments =
+    //     await reddit.getComments(submission.id);
 
-    yield CommentsLoaded(comments: comments);
+    // yield CommentsLoaded(comments: comments);
   }
 
   Stream<CommentsPageState> _mapExpandCommentToState(

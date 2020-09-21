@@ -17,7 +17,7 @@ import '../../theme.dart';
 import 'widgets/submission/submission.dart';
 import 'widgets/submission/submission_ratio.dart';
 import 'widgets/submission/vote_button.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class SubmissionContentWidget extends StatelessWidget {
   final Submission submission;

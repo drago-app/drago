@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:drago/core/entities/submission_entity.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class SubmissionSave extends StatelessWidget {
   final Submission submission;

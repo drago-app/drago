@@ -7,7 +7,7 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class SubredditListItem extends StatelessWidget {
   @override
@@ -31,8 +31,9 @@ class SubredditListItem extends StatelessWidget {
       builder: (context, state) {
         return CupertinoListTile(
           onTap: () {
-            Navigator.of(context).pushNamed('/comments',
-                arguments: BlocProvider.of<SubmissionBloc>(context));
+            print('Don\'t forget to comment back in nagivation');
+            // Navigator.of(context).pushNamed('/comments',
+            //     arguments: BlocProvider.of<SubmissionBloc>(context));
           },
           bottomRightCorner: SubmissionSave(
             submission: state.submission,
@@ -44,25 +45,25 @@ class SubredditListItem extends StatelessWidget {
             state.submission.title,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
           ),
-          // subtitle: SubredditListItemBottomBar(submission: state.submission),
-          // trailing: Column(
-          //   children: <Widget>[
-          //     SquareActionButton(
-          //       color: CupertinoColors.systemOrange,
-          //       iconData: FontAwesomeIcons.longArrowAltUp,
-          //       onTap: () =>
-          //           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-          //       switchCondition: state.submission.voteState == VoteState_.Up,
-          //     ),
-          //     SquareActionButton(
-          //       color: CupertinoColors.systemPurple,
-          //       iconData: FontAwesomeIcons.longArrowAltDown,
-          //       onTap: () =>
-          //           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-          //       switchCondition: state.submission.voteState == VoteState_.Down,
-          //     )
-          //   ],
-          // ),
+          subtitle: SubredditListItemBottomBar(submission: state.submission),
+          trailing: Column(
+            children: <Widget>[
+              SquareActionButton(
+                color: CupertinoColors.systemOrange,
+                iconData: FontAwesomeIcons.longArrowAltUp,
+                onTap: () =>
+                    BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+                switchCondition: state.submission.voteState == VoteState.Up,
+              ),
+              SquareActionButton(
+                color: CupertinoColors.systemPurple,
+                iconData: FontAwesomeIcons.longArrowAltDown,
+                onTap: () =>
+                    BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+                switchCondition: state.submission.voteState == VoteState.Down,
+              )
+            ],
+          ),
         );
       },
     );
@@ -81,13 +82,13 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
-        // AuthorTextButton(author: submission.author, onTap: () => null),
+        AuthorTextButton(author: submission.author, onTap: () => null),
         // FlairWidget(flairText: submission.authorFlairText),
         SubmissionScore(
             submission: submission,
             onTap: () =>
                 BlocProvider.of<SubmissionBloc>(context).add(Upvote())),
-        // SubmissionNumComments(submission: submission),
+        SubmissionNumComments(submission: submission),
         // SubmissionAge(age: submission.age),
         _optionsButton(context, submission)
       ],

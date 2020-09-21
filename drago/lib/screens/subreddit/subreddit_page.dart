@@ -10,7 +10,7 @@ import 'package:drago/common/common.dart';
 import 'package:drago/main.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class SubredditPage extends StatefulWidget {
   SubredditPage();
@@ -118,11 +118,11 @@ class _SubredditPageState extends State<SubredditPage> {
       return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
-        itemCount: state.submissions.length,
+        itemCount: state.redditLinks.length,
         itemBuilder: (BuildContext context, int index) => BlocProvider(
           create: (BuildContext context) => SubmissionBloc(
               service: _service,
-              submission: state.submissions[index],
+              redditLink: state.redditLinks[index],
               upvoteOrClear: upvoteOrClear,
               downvoteOrClear: downvoteOrClear,
               saveOrUnsave: saveOrUnsave),
