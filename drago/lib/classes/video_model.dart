@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 
-class VideoModel {
-  final String url;
-  // final String domain;
+// class VideoModel {
+//   final String url;
+//   // final String domain;
 
-  VideoModel({@required this.url});
-}
+//   VideoModel({@required this.url});
+// }

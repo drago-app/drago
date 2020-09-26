@@ -5,11 +5,11 @@ import 'package:flutter/widgets.dart';
 
 class TextButton extends StatelessWidget {
   final String text;
-  final Function onTap;
+  final GestureTapCallback? onTap;
   final TextStyle style;
-  static TextStyle defaultTextStyle = const TextStyle();
+  static const TextStyle defaultTextStyle = const TextStyle();
 
-  TextButton(this.text, {this.onTap, this.style}) : assert(text != null);
+  TextButton(this.text, {this.onTap, this.style = defaultTextStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class TextButton extends StatelessWidget {
       onTap: onTap,
       child: Text(
         text,
-        style: style ?? defaultTextStyle,
+        style: style,
       ),
     );
   }
@@ -28,14 +28,12 @@ enum AuthorTextButtonSize { small, medium, large }
 class AuthorTextButton extends StatelessWidget {
   final Author author;
   final AuthorTextButtonSize size;
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
   AuthorTextButton(
-      {@required this.author,
-      @required this.onTap,
-      this.size = AuthorTextButtonSize.small})
-      : assert(author != null),
-        assert(onTap != null);
+      {required this.author,
+      required this.onTap,
+      this.size = AuthorTextButtonSize.small});
 
   @override
   Widget build(BuildContext context) {

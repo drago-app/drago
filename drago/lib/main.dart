@@ -40,8 +40,6 @@ final SaveOrUnsaveSubmission saveOrUnsave =
 
 final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
 
-final DialogService _dialogService = DialogService();
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -75,27 +73,20 @@ class UnAuthenticatedApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
       theme: appThemeData[AppTheme.light],
-      home: DialogProvider(
-        service: _dialogService,
-        child: DialogManager(
-          dialogService: _dialogService,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<HomePageBloc>(create: (context) {
-                return HomePageBloc(
-                  dialogService: _dialogService,
-                  getUsersModerations: _getUsersModerations,
-                  getUsersSubscriptions: _getUsersSubscriptions,
-                  getDefaultSubreddits: _getDefaultSubreddits,
-                )..add(UserNotAuthenticated());
-              }),
-              // BlocProvider<AccountPageBloc>(create: (context) {
-              //   return AccountPageBloc();
-              // })
-            ],
-            child: _unAuthscaffold(),
-          ),
-        ),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<HomePageBloc>(create: (context) {
+            return HomePageBloc(
+              getUsersModerations: _getUsersModerations,
+              getUsersSubscriptions: _getUsersSubscriptions,
+              getDefaultSubreddits: _getDefaultSubreddits,
+            )..add(UserNotAuthenticated());
+          }),
+          // BlocProvider<AccountPageBloc>(create: (context) {
+          //   return AccountPageBloc();
+          // })
+        ],
+        child: _unAuthscaffold(),
       ),
     );
   }
@@ -178,27 +169,20 @@ class AuthenticatedApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
       theme: appThemeData[AppTheme.light],
-      home: DialogProvider(
-        service: _dialogService,
-        child: DialogManager(
-          dialogService: _dialogService,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<HomePageBloc>(create: (context) {
-                return HomePageBloc(
-                  dialogService: _dialogService,
-                  getUsersModerations: _getUsersModerations,
-                  getUsersSubscriptions: _getUsersSubscriptions,
-                  getDefaultSubreddits: _getDefaultSubreddits,
-                )..add(UserAuthenticated());
-              }),
-              BlocProvider<AccountPageBloc>(create: (context) {
-                return AccountPageBloc();
-              })
-            ],
-            child: _scaffold(),
-          ),
-        ),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<HomePageBloc>(create: (context) {
+            return HomePageBloc(
+              getUsersModerations: _getUsersModerations,
+              getUsersSubscriptions: _getUsersSubscriptions,
+              getDefaultSubreddits: _getDefaultSubreddits,
+            )..add(UserAuthenticated());
+          }),
+          BlocProvider<AccountPageBloc>(create: (context) {
+            return AccountPageBloc();
+          })
+        ],
+        child: _scaffold(),
       ),
     );
   }
@@ -245,7 +229,7 @@ class AuthenticatedApp extends StatelessWidget {
             });
           case 2:
             return CupertinoTabView(builder: (context) {
-              return AccountsPage();
+              return SizedBox.shrink(); //AccountsPage();
             });
           case 3:
             return CupertinoTabView(builder: (context) {

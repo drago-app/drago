@@ -7,7 +7,7 @@ import 'package:drago/reddit_service.dart';
 class GetDefaultSubreddits implements UseCase<List, NoParams> {
   final RedditService reddit;
 
-  GetDefaultSubreddits({@required this.reddit});
+  GetDefaultSubreddits({required this.reddit});
 
   @override
   Future<Either<Failure, List>> call(params) async {

@@ -30,7 +30,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
     TimeFilterOption.factory(TimeFilter_.year),
   ];
 
-  SubredditPageBloc({@required this.getRedditLinks, @required this.subreddit});
+  SubredditPageBloc({required this.getRedditLinks, required this.subreddit});
 
   @override
   get initialState => SubredditPageInitial(
@@ -83,7 +83,8 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   }
 
   Stream<SubredditPageState> _mapLoadSubmissionsToState(
-      {SubmissionSortType sort, TimeFilter_ filter}) async* {
+      {SubmissionSortType sort = SubmissionSortType.hot,
+      TimeFilter_ filter = TimeFilter_.all}) async* {
     yield SubredditPageLoading(
         subreddit: subreddit, currentSort: sort ?? state.currentSort);
     final Either<Failure, List> failureOrLinks = await getRedditLinks(

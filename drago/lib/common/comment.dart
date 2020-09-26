@@ -15,7 +15,8 @@ class CommentWidget extends StatelessWidget {
   final Widget trailing;
   final unescape = new HtmlUnescape();
 
-  CommentWidget({@required this.comment, this.trailing});
+  CommentWidget(
+      {required this.comment, this.trailing = const SizedBox.shrink()});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
 import 'package:drago/reddit_service.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,7 +10,7 @@ class UserService {
   // SharedPreferences prefs;
   final RedditService reddit;
 
-  UserService({@required this.reddit}) : assert(reddit != null);
+  UserService({required this.reddit});
 
   Future<bool> isUserLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
@@ -37,7 +36,8 @@ class UserService {
     return authUser;
   }
 
-  Future<AuthUser> loggedInUser() async {
+  Future<User> loggedInUser() async {
+    // (Donovan)  this function needs to be refactored
     final prefs = await SharedPreferences.getInstance();
 
     try {
@@ -57,19 +57,25 @@ class UserService {
         return UnAuthUser();
       }
     }
+    return UnAuthUser();
   }
 }
 
-class AuthUser extends Equatable {
+abstract class User extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+class AuthUser extends User {
   final String name;
   final String token;
 
-  AuthUser({@required this.name, @required this.token});
+  AuthUser({required this.name, required this.token});
 
   @override
   List<Object> get props => [name, token];
 
-  AuthUser copyWith({String name, String token}) {
+  AuthUser copyWith({String? name, String? token}) {
     return AuthUser(name: name ?? this.name, token: token ?? this.token);
   }
 
@@ -83,6 +89,4 @@ class AuthUser extends Equatable {
   }
 }
 
-class UnAuthUser extends AuthUser {
-  // UnAuthUser();
-}
+class UnAuthUser extends User {}

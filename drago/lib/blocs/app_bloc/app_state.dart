@@ -16,7 +16,7 @@ class AppInitializing extends AppState {}
 class AppInitializedWithAuthUser extends AppState {
   final AuthUser user;
 
-  AppInitializedWithAuthUser({@required this.user}) : assert(user != null);
+  AppInitializedWithAuthUser({required this.user});
 
   @override
   List<Object> get props => [user];

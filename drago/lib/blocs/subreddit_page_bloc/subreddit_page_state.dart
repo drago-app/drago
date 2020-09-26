@@ -20,10 +20,9 @@ class SubredditPageInitial extends SubredditPageState {
   final List<RedditLink> redditLinks;
 
   SubredditPageInitial(
-      {@required this.subreddit,
-      @required this.currentSort,
-      this.redditLinks = const []})
-      : assert(subreddit != null);
+      {required this.subreddit,
+      required this.currentSort,
+      this.redditLinks = const []});
 }
 
 class SubredditPageLoading extends SubredditPageState {
@@ -32,10 +31,9 @@ class SubredditPageLoading extends SubredditPageState {
   final List<RedditLink> redditLinks;
 
   SubredditPageLoading(
-      {@required this.subreddit,
-      @required this.currentSort,
-      this.redditLinks = const []})
-      : assert(subreddit != null);
+      {required this.subreddit,
+      required this.currentSort,
+      this.redditLinks = const []});
 }
 
 class SubredditPageLoaded extends SubredditPageState {
@@ -44,10 +42,9 @@ class SubredditPageLoaded extends SubredditPageState {
   final SubmissionSortType currentSort;
 
   SubredditPageLoaded(
-      {@required this.redditLinks,
-      @required this.subreddit,
-      @required this.currentSort})
-      : assert(redditLinks != null);
+      {required this.redditLinks,
+      required this.subreddit,
+      required this.currentSort});
 
   SubredditPageLoaded copyWith({submissions, subreddit}) {
     return SubredditPageLoaded(
@@ -67,10 +64,10 @@ class DisplayingSortOptions extends SubredditPageState {
   final List<RedditLink> redditLinks;
 
   DisplayingSortOptions(
-      {@required this.subreddit,
+      {required this.subreddit,
       this.redditLinks = const [],
-      @required this.currentSort,
-      @required this.options});
+      required this.currentSort,
+      required this.options});
   @override
   List<Object> get props => [subreddit, currentSort, options, redditLinks];
 }
@@ -83,11 +80,11 @@ class DisplayingFilterOptions extends SubredditPageState {
   final SubmissionSortType sortType;
 
   DisplayingFilterOptions(
-      {@required this.subreddit,
+      {required this.subreddit,
       this.redditLinks = const [],
-      @required this.sortType,
-      @required this.currentSort,
-      @required this.options});
+      required this.sortType,
+      required this.currentSort,
+      required this.options});
   @override
   List<Object> get props => [subreddit, currentSort, options, redditLinks];
 }

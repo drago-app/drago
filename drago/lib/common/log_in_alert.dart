@@ -10,9 +10,9 @@ class CupertinoLogInAlert extends CupertinoAlertDialog {
   final onDismiss;
 
   CupertinoLogInAlert(
-      {@required this.context,
-      this.titleText,
-      this.contentText,
+      {required this.context,
+      this.titleText = '',
+      this.contentText = '',
       this.onDismiss});
   @override
   Widget get title => Text(titleText ?? '');

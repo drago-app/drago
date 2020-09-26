@@ -15,7 +15,7 @@ class GetRedditLinks
     implements UseCase<List<RedditLink>, GetRedditLinksParams> {
   final RedditService reddit;
 
-  GetRedditLinks({@required this.reddit});
+  GetRedditLinks({required this.reddit});
 
   @override
   Future<Either<Failure, List<RedditLink>>> call(
@@ -36,7 +36,7 @@ class GetRedditLinks
 }
 
 class Submission extends Equatable {
-  static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
+  // static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
   final Author author;
   final String domain, title, url, id, previewUrl, subreddit;
   final DateTime createdUtc;
@@ -46,20 +46,22 @@ class Submission extends Equatable {
   final VoteState voteState;
 
   Submission(
-      {@required this.author,
-      @required this.createdUtc,
-      @required this.edited,
-      @required this.domain,
-      @required this.id,
-      @required this.numComments,
-      @required this.score,
-      @required this.title,
-      @required this.url,
-      @required this.previewUrl,
-      @required this.saved,
-      @required this.subreddit,
-      @required this.voteState});
-  Submission.fromRedditLink({@required RedditLink link, String previewUrl})
+      {required this.author,
+      required this.createdUtc,
+      required this.edited,
+      required this.domain,
+      required this.id,
+      required this.numComments,
+      required this.score,
+      required this.title,
+      required this.url,
+      required this.previewUrl,
+      required this.saved,
+      required this.subreddit,
+      required this.voteState});
+  Submission.fromRedditLink(
+      {required RedditLink link,
+      String previewUrl = "https://via.placeholder.com/150"})
       : author = Author.fromRedditLink(link: link),
         createdUtc = link.createdUtc,
         edited = link.edited,
@@ -71,7 +73,7 @@ class Submission extends Equatable {
         title = link.title,
         subreddit = link.subreddit,
         url = link.url,
-        previewUrl = previewUrl ?? link.previewUrl ?? _defaultPreviewUrl,
+        previewUrl = previewUrl,
         voteState = link.voteState;
   Submission copyWith({score, numComments, edited, voteState, saved}) {
     return Submission(
@@ -113,7 +115,7 @@ class SelfSubmission extends Submission {
       'https://via.placeholder.com/150/0000FF/808080?Text=SELF';
   final String body;
 
-  SelfSubmission({@required RedditLink link})
+  SelfSubmission({required RedditLink link})
       : body = link.body,
         super.fromRedditLink(link: link, previewUrl: _defaultPreview);
 }
@@ -121,7 +123,7 @@ class SelfSubmission extends Submission {
 class MediaSubmission extends Submission {
   final ExpandoMedia media;
 
-  MediaSubmission({@required RedditLink link, @required ExpandoMedia media})
+  MediaSubmission({required RedditLink link, required ExpandoMedia media})
       : media = media,
         super.fromRedditLink(link: link);
 }
@@ -134,8 +136,8 @@ class Author {
   /// This is the of the form:
   /// spez
   final String name;
-  Author({this.type = AuthorType.regular, @required this.name});
-  factory Author.fromRedditLink({@required RedditLink link}) {
+  Author({this.type = AuthorType.regular, required this.name});
+  factory Author.fromRedditLink({required RedditLink link}) {
     if (link.distinguished == 'admin')
       return Author(name: link.author, type: AuthorType.admin);
     if (link.distinguished == 'moderator')
@@ -151,11 +153,14 @@ class Author {
 }
 
 class GetRedditLinksParams {
-  final String after;
+  final String? after;
   final String subreddit;
   final SubmissionSortType sort;
   final TimeFilter_ filter;
 
   GetRedditLinksParams(
-      {@required this.subreddit, this.sort, this.filter, this.after});
+      {required this.subreddit,
+      this.sort = SubmissionSortType.hot,
+      this.filter = TimeFilter_.all,
+      this.after});
 }

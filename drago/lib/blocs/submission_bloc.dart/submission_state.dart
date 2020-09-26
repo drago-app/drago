@@ -15,7 +15,7 @@ abstract class SubmissionState extends Equatable {
 class SubmissionInitial extends SubmissionState {
   final Submission submission;
 
-  SubmissionInitial({@required this.submission}) : assert(submission != null);
+  SubmissionInitial({required this.submission});
 
   SubmissionInitial copyWith({submission}) {
     return SubmissionInitial(submission: submission ?? this.submission);
@@ -31,10 +31,10 @@ class SubmissionAuthError extends SubmissionState {
   final String content;
 
   SubmissionAuthError(
-      {@required this.submission, @required this.title, this.content});
+      {required this.submission, required this.title, this.content = ''});
 
   @override
-  SubmissionAuthError copyWith({submission, title}) {
+  SubmissionAuthError copyWith({submission, title, content}) {
     return SubmissionAuthError(
       submission: submission ?? this.submission,
       title: title ?? this.title,

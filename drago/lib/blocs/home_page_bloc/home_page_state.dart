@@ -14,14 +14,12 @@ class HomePageLoaded extends HomePageState {
   final List subscriptions;
   final List moderatedSubs;
 
-  HomePageLoaded({@required this.subscriptions, @required this.moderatedSubs})
-      : assert(subscriptions != null),
-        assert(moderatedSubs != null);
+  HomePageLoaded({required this.subscriptions, required this.moderatedSubs});
 
   @override
   List<Object> get props => [subscriptions, moderatedSubs];
 
-  HomePageLoaded copyWith({List subscriptions, List moderatedSubs}) {
+  HomePageLoaded copyWith({List? subscriptions, List? moderatedSubs}) {
     return HomePageLoaded(
         subscriptions: subscriptions ?? this.subscriptions,
         moderatedSubs: moderatedSubs ?? this.moderatedSubs);

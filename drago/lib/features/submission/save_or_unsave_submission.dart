@@ -13,7 +13,7 @@ class SaveOrUnsaveSubmission
   final RedditService reddit;
   final UserService userService;
 
-  SaveOrUnsaveSubmission({@required this.reddit, @required this.userService});
+  SaveOrUnsaveSubmission({required this.reddit, required this.userService});
 
   @override
   Future<Either<Failure, RedditLink>> call(params) async {
@@ -32,5 +32,5 @@ class SaveOrUnsaveSubmission
 class SaveOrUnsaveParams {
   final Submission submission;
 
-  SaveOrUnsaveParams({@required this.submission}) : assert(submission != null);
+  SaveOrUnsaveParams({required this.submission});
 }

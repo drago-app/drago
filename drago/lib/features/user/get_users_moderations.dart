@@ -7,7 +7,7 @@ import 'package:drago/reddit_service.dart';
 class GetUsersModerations implements UseCase<List, NoParams> {
   final RedditService reddit;
 
-  GetUsersModerations({@required this.reddit});
+  GetUsersModerations({required this.reddit});
 
   @override
   Future<Either<Failure, List>> call(params) async {

@@ -14,7 +14,7 @@ import 'package:drago/features/subreddit/get_reddit_links.dart';
 class _DefaultThumbnail extends StatelessWidget {
   final Submission submission;
 
-  _DefaultThumbnail({@required this.submission}) : assert(submission != null);
+  _DefaultThumbnail({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _DefaultThumbnail extends StatelessWidget {
 class _ImageThumbnail extends StatelessWidget {
   final Submission submission;
 
-  _ImageThumbnail({@required this.submission}) : assert(submission != null);
+  _ImageThumbnail({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _ImageThumbnail extends StatelessWidget {
 class _LinkThumbnail extends StatelessWidget {
   final Submission submission;
 
-  _LinkThumbnail({@required this.submission}) : assert(submission != null);
+  _LinkThumbnail({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _LinkThumbnail extends StatelessWidget {
 class _VideoThumbnail extends StatelessWidget {
   final Submission submission;
 
-  _VideoThumbnail({@required this.submission}) : assert(submission != null);
+  _VideoThumbnail({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class _VideoThumbnail extends StatelessWidget {
 class _GifThumbnail extends StatelessWidget {
   final Submission submission;
 
-  _GifThumbnail({@required this.submission}) : assert(submission != null);
+  _GifThumbnail({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +94,12 @@ class _GifThumbnail extends StatelessWidget {
 class _ThumbnailBase extends StatelessWidget {
   final Widget thumbnailLabel;
   final Submission submission;
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
   _ThumbnailBase(
-      {this.thumbnailLabel, @required this.submission, @required this.onTap});
+      {this.thumbnailLabel = const SizedBox.shrink(),
+      required this.submission,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +215,7 @@ class _LinkThumbnailLabel extends StatelessWidget {
 
 class SubmissionThumbnail extends StatelessWidget {
   final Submission submission;
-  const SubmissionThumbnail({@required this.submission});
+  const SubmissionThumbnail({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +245,7 @@ class SubmissionThumbnail extends StatelessWidget {
 class SecondPage extends StatelessWidget {
   final Bloc bloc;
 
-  SecondPage({@required this.bloc});
+  SecondPage({required this.bloc});
 
   @override
   Widget build(BuildContext context) {

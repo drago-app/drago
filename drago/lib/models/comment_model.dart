@@ -85,16 +85,16 @@ class CommentModel extends BaseCommentModel {
       ];
 
   CommentModel(
-      {@required this.id,
-      @required this.depth,
-      @required this.edited,
-      @required this.author,
-      @required this.score,
-      @required this.body,
-      @required this.authorFlairText,
-      @required this.age,
-      @required this.submissionId,
-      @required this.children});
+      {required this.id,
+      required this.depth,
+      required this.edited,
+      required this.author,
+      required this.score,
+      required this.body,
+      required this.authorFlairText,
+      required this.age,
+      required this.submissionId,
+      required this.children});
 }
 
 class ContinueThreadModel extends BaseCommentModel {
@@ -103,7 +103,7 @@ class ContinueThreadModel extends BaseCommentModel {
   final String id;
 
   ContinueThreadModel(
-      {@required this.id, @required this.depth, @required this.submissionId})
+      {required this.id, required this.depth, required this.submissionId})
       : assert(depth != null);
 
   List<Object> get props => [id, depth, submissionId];
@@ -119,11 +119,11 @@ class MoreCommentsModel extends BaseCommentModel {
   // MoreCommentsModel();
 
   MoreCommentsModel(
-      {@required this.id,
-      @required this.depth,
-      @required this.numReplies,
-      @required this.submissionId
-      //  @required this.submissionId,
+      {required this.id,
+      required this.depth,
+      required this.numReplies,
+      required this.submissionId
+      //  required this.submissionId,
       }) //: assert(depth != null)
   // assert(submissionId != null)
   ;

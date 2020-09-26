@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'page_transition.dart';
 
 class DragToPopPageRoute<T> extends PageRoute<T> {
-  DragToPopPageRoute({this.builder}) : super();
+  DragToPopPageRoute({required this.builder}) : super();
 
   final WidgetBuilder builder;
 
@@ -26,8 +26,8 @@ class DragToPopPageRoute<T> extends PageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return const DragDownToPopPageTransitionsBuilder(
-            backgroundColor: CupertinoColors.black)
+    return DragDownToPopPageTransitionsBuilder(
+            backgroundBuilder: kDefaultTransitionBackgroundBuilder)
         .buildTransitions(this, context, animation, secondaryAnimation, child);
 
     // return FadeTransition(
@@ -51,5 +51,5 @@ class DragToPopPageRoute<T> extends PageRoute<T> {
   }
 
   @override
-  String get barrierLabel => null;
+  String get barrierLabel => '';
 }

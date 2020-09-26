@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SubmissionNumComments extends StatelessWidget {
   final Submission submission;
-  SubmissionNumComments({@required this.submission});
+  SubmissionNumComments({required this.submission});
 
   @override
   Widget build(BuildContext context) {

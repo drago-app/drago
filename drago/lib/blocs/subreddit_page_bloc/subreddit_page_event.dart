@@ -22,5 +22,5 @@ class UserTappedSortButton extends SubredditPageEvent {}
 class UserSelectedSortOption extends SubredditPageEvent {
   final SubmissionSortOption sort;
 
-  UserSelectedSortOption({@required this.sort});
+  UserSelectedSortOption({required this.sort});
 }

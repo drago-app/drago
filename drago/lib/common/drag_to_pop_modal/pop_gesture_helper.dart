@@ -49,14 +49,11 @@ class PopGestureHelper {
 
 class _BackGestureDetector<T> extends StatefulWidget {
   const _BackGestureDetector({
-    Key key,
-    @required this.enabledCallback,
-    @required this.onStartPopGesture,
-    @required this.child,
-  })  : assert(enabledCallback != null),
-        assert(onStartPopGesture != null),
-        assert(child != null),
-        super(key: key);
+    // Key key,
+    required this.enabledCallback,
+    required this.onStartPopGesture,
+    required this.child,
+  });
 
   final Widget child;
 
@@ -69,8 +66,8 @@ class _BackGestureDetector<T> extends StatefulWidget {
 }
 
 class _BackGestureDetectorState<T> extends State<_BackGestureDetector<T>> {
-  _BackGestureController<T> _backGestureController;
-  VerticalDragGestureRecognizer _recognizer;
+  late _BackGestureController<T> _backGestureController;
+  late VerticalDragGestureRecognizer _recognizer;
   int _lastPointer = -1;
   bool _rejected = false;
 
@@ -112,13 +109,13 @@ class _BackGestureDetectorState<T> extends State<_BackGestureDetector<T>> {
     } else {
       _backGestureController.dragEnd(0.0, cancel: true);
     }
-    _backGestureController = null;
+    // _backGestureController = null;
   }
 
   void _handleDragCancel() {
     assert(mounted);
-    _backGestureController?.dragEnd(0.0, cancel: true);
-    _backGestureController = null;
+    _backGestureController.dragEnd(0.0, cancel: true);
+    // _backGestureController = null;
   }
 
   void _handlePointerDown(PointerDownEvent event) {
@@ -145,9 +142,10 @@ class _BackGestureDetectorState<T> extends State<_BackGestureDetector<T>> {
       case TextDirection.rtl:
         return -value;
       case TextDirection.ltr:
+      default:
         return value;
     }
-    return null;
+    // return null;
   }
 
   @override
@@ -176,9 +174,9 @@ class _BackGestureDetectorState<T> extends State<_BackGestureDetector<T>> {
 
 class _BackGestureController<T> {
   _BackGestureController({
-    @required this.navigator,
-    @required this.controller,
-  })  : assert(navigator != null),
+    required this.navigator,
+    required this.controller,
+  })   : assert(navigator != null),
         assert(controller != null) {
     navigator.didStartUserGesture();
   }
@@ -201,8 +199,9 @@ class _BackGestureController<T> {
 
     if (animateForward) {
       final int droppedPageForwardAnimationTime = min(
-        lerpDouble(
-                _kMaxDroppedSwipePageForwardAnimationTime, 0, controller.value)
+        (lerpDouble(_kMaxDroppedSwipePageForwardAnimationTime, 0,
+                    controller.value) ??
+                0)
             .floor(),
         _kMaxPageBackAnimationTime,
       );
@@ -226,7 +225,7 @@ class _BackGestureController<T> {
       AnimationStatusListener animationStatusCallback;
       animationStatusCallback = (AnimationStatus status) {
         navigator.didStopUserGesture();
-        controller.removeStatusListener(animationStatusCallback);
+        // controller.removeStatusListener(animationStatusCallback);
       };
       controller.addStatusListener(animationStatusCallback);
     } else {

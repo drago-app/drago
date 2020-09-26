@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ContinueThreadWidget extends StatelessWidget {
   final ContinueThreadModel continueThread;
 
-  ContinueThreadWidget({@required this.continueThread});
+  ContinueThreadWidget({required this.continueThread});
 
   @override
   Widget build(BuildContext context) {

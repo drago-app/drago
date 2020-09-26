@@ -1,3 +1,5 @@
 analyzer:
   enable-experiment:
     - non-nullable
+  exclude:
+    - lib/common/custum_expansion_tile.dart

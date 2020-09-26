@@ -23,6 +23,8 @@ class HomePage extends StatelessWidget {
         ));
       } else if (state is HomePageInitial) {
         return CupertinoPageScaffold(child: Center(child: Placeholder()));
+      } else {
+        return Center(child: Text('AHH SOMETHING WENT WRONG ON HOME PAGE'));
       }
     });
   }
@@ -38,7 +40,7 @@ class ListItem extends StatelessWidget {
   final String text;
   final bool last;
 
-  ListItem({@required this.text, this.last = false});
+  ListItem({required this.text, this.last = false});
 
   @override
   Widget build(BuildContext context) {

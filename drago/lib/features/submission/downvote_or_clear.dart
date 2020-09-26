@@ -12,7 +12,7 @@ class DownvoteOrClear implements UseCase<Submission, DownVoteParams> {
   final RedditService reddit;
   final UserService userService;
 
-  DownvoteOrClear({@required this.reddit, @required this.userService});
+  DownvoteOrClear({required this.reddit, required this.userService});
 
   @override
   Future<Either<Failure, Submission>> call(params) async {
@@ -38,5 +38,5 @@ class DownvoteOrClear implements UseCase<Submission, DownVoteParams> {
 class DownVoteParams {
   final Submission submission;
 
-  DownVoteParams({@required this.submission}) : assert(submission != null);
+  DownVoteParams({required this.submission});
 }

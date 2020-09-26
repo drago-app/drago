@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:drago/core/error/failures.dart';
-import 'package:drago/dialog/dialog_service.dart';
 import 'package:drago/features/subreddit/get_reddit_links.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:drago/sandbox/host.dart';
 import 'package:drago/sandbox/types.dart';
-import 'package:flutter/foundation.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/features/submission/usecases.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dartz/dartz.dart';
 
@@ -20,18 +17,12 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   final DownvoteOrClear downvoteOrClear;
   final SaveOrUnsaveSubmission saveOrUnsave;
 
-  final DialogService service;
-
-  SubmissionBloc(
-      {@required this.redditLink,
-      @required this.upvoteOrClear,
-      @required this.downvoteOrClear,
-      @required this.saveOrUnsave,
-      @required this.service})
-      : assert(redditLink != null),
-        assert(upvoteOrClear != null),
-        assert(downvoteOrClear != null),
-        assert(saveOrUnsave != null) {
+  SubmissionBloc({
+    required this.redditLink,
+    required this.upvoteOrClear,
+    required this.downvoteOrClear,
+    required this.saveOrUnsave,
+  }) {
     _getSubmissionFromRedditLink(redditLink);
   }
 
@@ -40,12 +31,12 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
       submission: Submission.fromRedditLink(link: redditLink));
 
   _getSubmissionFromRedditLink(RedditLink redditLink) async {
-    Option<Host> optionalHost = HostManager._getHost(
-        redditLink.url); //HostManager.getMedia(redditLink.url);
+    Option<Host> optionalHost =
+        Host.getHost(redditLink.url); //HostManager.getMedia(redditLink.url);
 
     var x = await optionalHost.fold(
       () => {},
-      (Host host) async => HostManager.getMedia(host, redditLink.url),
+      (Host host) async => Host.getMedia(host, redditLink.url),
     );
   }
 
@@ -159,18 +150,19 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   }
 }
 
-class HostManager {
-  static List<Host> hosts = [defaultHost, defaultVideo];
+// class HostManager {
+//   static List<Host> hosts = [defaultHost, defaultVideo];
 
-  static Option<Host> _getHost(url) {
-    List<Host> x =
-        hosts.where((host) => host.detect(url) is RegExpMatch).toList();
+//   static Option<Host> _getHost(url) {
+//     List<Host> x =
+//         hosts.where((host) => host.detect(url) is RegExpMatch).toList();
 
-    return catching(() => x.first).toOption();
-  }
+//     return catching(() => x.first).toOption();
+//   }
 
-  static Future<ExpandoMedia> getMedia(Host host, String url) async {
-    final media = await host.handleLink(url, host.detect(url));
-    return media;
-  }
-}
+//   static Future<Option<ExpandoMedia>> getMedia(Host host, String url) async {
+//     final media = await host.handleLink(url, host.detect(url));
+
+//     return catching(() => media).toOption();
+//   }
+// }

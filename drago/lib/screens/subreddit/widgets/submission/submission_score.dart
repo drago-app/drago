@@ -5,9 +5,9 @@ import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class SubmissionScore extends StatelessWidget {
   final Submission submission;
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
-  SubmissionScore({@required this.submission, @required this.onTap});
+  SubmissionScore({required this.submission, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

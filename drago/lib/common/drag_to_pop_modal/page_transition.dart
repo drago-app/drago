@@ -12,13 +12,19 @@ import 'pop_gesture_helper.dart';
 typedef TransitionBackgroundBuilder = Widget Function(
     BuildContext context, Widget child);
 
+TransitionBackgroundBuilder kDefaultTransitionBackgroundBuilder =
+    (BuildContext context, Widget child) => DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: child,
+        );
+
 class DragDownToPopPageTransitionsBuilder extends PageTransitionsBuilder {
   const DragDownToPopPageTransitionsBuilder({
-    this.backgroundColor,
-    this.backgroundBuilder,
+    required this.backgroundBuilder,
   });
 
-  final Color backgroundColor;
   final TransitionBackgroundBuilder backgroundBuilder;
 
   @override
@@ -34,55 +40,45 @@ class DragDownToPopPageTransitionsBuilder extends PageTransitionsBuilder {
       secondaryRouteAnimation: secondaryAnimation,
       linearTransition: PopGestureHelper.isPopGestureInProgress(route),
       child: PopGestureHelper.buildPopGestureDetector(route, child),
-      backgroundColor: backgroundColor,
       backgroundBuilder: backgroundBuilder,
     );
   }
 }
 
 class SlideAndFadeTransition extends StatelessWidget {
-  SlideAndFadeTransition({
-    Key key,
-    @required Animation<double> primaryRouteAnimation,
-    @required Animation<double> secondaryRouteAnimation,
-    @required bool linearTransition,
-    @required this.child,
-    Color backgroundColor,
-    TransitionBackgroundBuilder backgroundBuilder,
-  })  : assert(linearTransition != null),
-        _primaryAnimation1 = (linearTransition
+  SlideAndFadeTransition(
+      {required Animation<double> primaryRouteAnimation,
+      required Animation<double> secondaryRouteAnimation,
+      required bool linearTransition,
+      required this.child,
+      required this.backgroundBuilder})
+      : _primaryAnimation1 = (linearTransition
                 ? primaryRouteAnimation
                 : CurvedAnimation(
                     parent: primaryRouteAnimation,
-                    curve: Curves.linearToEaseOut,
-                  ))
+                    curve: Curves.linearToEaseOut))
             .drive(Tween<double>(
           begin: 0.0,
           end: 1.0,
-        )),
-        // _primaryAnimation2 = (linearTransition
-        //         ? primaryRouteAnimation
-        //         : CurvedAnimation(
-        //             parent: primaryRouteAnimation,
-        //             curve: Curves.linearToEaseOut,
-        //           ))
-        //     .drive(Tween<Offset>(
-        //   begin: Offset(0.0, 0.1),
-        //   end: Offset(0.0, 0.0),
-        // )),
-        _backgroundBuilder = (backgroundBuilder ??
-            (context, child) => DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: backgroundColor ?? Colors.white,
-                  ),
-                  child: child,
-                )),
-        super(key: key);
+        ))
+  // _primaryAnimation2 = (linearTransition
+  //         ? primaryRouteAnimation
+  //         : CurvedAnimation(
+  //             parent: primaryRouteAnimation,
+  //             curve: Curves.linearToEaseOut,
+  //           ))
+  //     .drive(Tween<Offset>(
+  //   begin: Offset(0.0, 0.1),
+  //   end: Offset(0.0, 0.0),
+  // )),
+
+  // super(key: key)
+  ;
 
   final Animation<double> _primaryAnimation1;
   // final Animation<Offset> _primaryAnimation2;
 
-  final TransitionBackgroundBuilder _backgroundBuilder;
+  late final TransitionBackgroundBuilder backgroundBuilder;
   final Widget child;
 
   @override
@@ -90,7 +86,7 @@ class SlideAndFadeTransition extends StatelessWidget {
     assert(debugCheckHasDirectionality(context));
     return FadeTransition(
       opacity: _primaryAnimation1,
-      child: _backgroundBuilder(
+      child: backgroundBuilder(
         context,
         child,
       ),

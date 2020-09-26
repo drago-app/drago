@@ -6,7 +6,7 @@ import '../utils.dart';
 class NumComments extends Equatable {
   final int numComments;
 
-  NumComments({@required this.numComments});
+  NumComments({required this.numComments});
 
   @override
   String toString() => truncateLongInt(numComments);

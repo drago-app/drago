@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart = 2.8
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -32,16 +34,15 @@ class CustomExpansionTile extends StatefulWidget {
     Key key,
     this.indentation = 4.0,
     this.sideBorderColor = Colors.transparent,
-    this.leading,
-    @required this.title,
-    this.backgroundColor,
+    this.leading = const SizedBox.shrink(),
+    this.title,
+    this.backgroundColor = Colors.black,
     this.onExpansionChanged,
     this.body,
     this.children = const <Widget>[],
-    this.trailing,
+    this.trailing = const SizedBox.shrink(),
     this.initiallyExpanded = false,
-  })  : assert(initiallyExpanded != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// A widget to display before the title.
   ///

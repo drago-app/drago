@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 
-class ImageModel {
-  final String url;
-  // final String domain;
+// class ImageModel {
+//   final String url;
+//   // final String domain;
 
-  ImageModel({@required this.url});
-}
+//   ImageModel({@required this.url});
+// }

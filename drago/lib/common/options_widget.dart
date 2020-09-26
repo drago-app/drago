@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class OptionsWidget extends StatelessWidget {
   final VoidCallback onTap;
 
-  OptionsWidget({@required this.onTap});
+  OptionsWidget({required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,7 @@ class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
   final RedditService reddit;
   final Submission submission;
 
-  CommentsPageBloc({@required this.reddit, @required this.submission});
+  CommentsPageBloc({required this.reddit, required this.submission});
 
   @override
   get initialState => CommentsPageInitial();

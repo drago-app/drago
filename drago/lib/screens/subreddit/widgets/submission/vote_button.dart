@@ -2,20 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SquareActionButton extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final IconData iconData;
   final Color color;
   final bool switchCondition;
 
   SquareActionButton(
-      {@required this.onTap,
-      @required this.iconData,
-      @required this.color,
-      @required this.switchCondition})
-      : assert(onTap != null),
-        assert(iconData != null),
-        assert(color != null),
-        assert(switchCondition != null);
+      {required this.onTap,
+      required this.iconData,
+      required this.color,
+      required this.switchCondition});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +38,7 @@ class _ActiveSquareActionButton extends StatelessWidget {
   final Color color;
   final IconData iconData;
 
-  _ActiveSquareActionButton({@required this.color, @required this.iconData})
+  _ActiveSquareActionButton({required this.color, required this.iconData})
       : assert(color != null),
         assert(iconData != null);
 
@@ -67,7 +63,7 @@ class _ActiveSquareActionButton extends StatelessWidget {
 class _InactiveSquareActionButton extends StatelessWidget {
   final IconData iconData;
 
-  _InactiveSquareActionButton({@required this.iconData})
+  _InactiveSquareActionButton({required this.iconData})
       : assert(iconData != null);
 
   @override

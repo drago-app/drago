@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -33,7 +33,7 @@ dependencies:
   shared_preferences: ^0.5.2
   url_launcher: ^5.0.2
   html_unescape: ^1.0.1+2
-  video_provider: ^1.2.3+1
+  # video_provider: ^1.2.3+1flutter
   cached_network_image: ^2.2.0
   flutter_cupertino_settings: ^0.3.0
   flutter_markdown: ^0.4.1

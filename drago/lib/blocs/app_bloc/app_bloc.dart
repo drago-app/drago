@@ -11,7 +11,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final RedditService reddit;
   final UserService userService;
 
-  AppBloc({@required this.reddit, this.userService}) : assert(reddit != null);
+  AppBloc({required this.reddit, required this.userService});
 
   @override
   get initialState => AppUninitialized();
@@ -37,7 +37,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     final user = await userService.loggedInUser();
     if (user is UnAuthUser) {
       yield AppInitializedWithoutAuthUser();
-    } else {
+    } else if (user is AuthUser) {
       yield AppInitializedWithAuthUser(user: user);
     }
   }

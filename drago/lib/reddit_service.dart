@@ -5,8 +5,6 @@ import 'package:dartz/dartz.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
 import 'package:draw/draw.dart' as draw;
-// import 'package:drago/core/entities/preview.dart';
-// import 'package:drago/core/entities/submission_author.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/utils.dart';
@@ -24,7 +22,7 @@ class RedditService {
   String _secret = '';
   String _identifier = 'Hp4M9q3bOeds3w';
   String _deviceID = 'pooppooppooppooppooppoop1';
-  draw.Reddit _reddit;
+  late draw.Reddit _reddit;
   String _state = 'thisisarandomstring';
   Cache submissions = new SimpleCache(storage: new SimpleStorage(size: 20));
 
@@ -207,7 +205,7 @@ class RedditService {
       String subreddit, Map<String, String> params) async {
     final List<RedditLink> t = await _reddit
         .subreddit(subreddit)
-        .hot(after: params['after'], params: params)
+        .hot(after: params['after'] ?? '', params: params)
         .map((s) => s as draw.Submission)
         .map((s) => _mapSubmissionToModel(s))
         .toList();
@@ -253,12 +251,12 @@ class RedditService {
           .toList();
 
   Future<Either<Failure, List<RedditLink>>> getSubmissions(String subreddit,
-      {String after,
+      {String? after,
       SubmissionSortType sort = SubmissionSortType.hot,
       TimeFilter_ filter = TimeFilter_.all}) async {
     var params = Map<String, String>();
     params['limit'] = '25';
-    params['after'] = (after == null) ? null : 't3_$after';
+    params['after'] = 't3_$after';
 
     try {
       List<RedditLink> response;
@@ -387,7 +385,11 @@ class RedditService {
         await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
 
     server.listen((HttpRequest request) async {
-      final String code = request.uri.queryParameters["code"];
+      final String? code = request.uri.queryParameters["code"];
+      // (Donovan) make this null throw error thing better. Maybe use an Option? Either?
+      if (code == null) {
+        throw NullThrownError();
+      }
 
       request.response
         ..statusCode = 200

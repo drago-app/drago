@@ -10,13 +10,12 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final GetUsersModerations getUsersModerations;
   final GetUsersSubscriptions getUsersSubscriptions;
   final GetDefaultSubreddits getDefaultSubreddits;
-  final DialogService dialogService;
 
-  HomePageBloc(
-      {@required this.getUsersModerations,
-      @required this.getUsersSubscriptions,
-      @required this.getDefaultSubreddits,
-      @required this.dialogService});
+  HomePageBloc({
+    required this.getUsersModerations,
+    required this.getUsersSubscriptions,
+    required this.getDefaultSubreddits,
+  });
 
   @override
   get initialState => HomePageInitial();
@@ -33,10 +32,6 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   Stream<HomePageState> _mapUserNotAuthenticatedToState() async* {
     yield HomePageLoading();
-
-    // dialogService.showDialog(
-    //     title: 'Dialog Manager',
-    //     description: 'FilledStacks architecture is always awesome');
 
     final failureOrDefaults = await getDefaultSubreddits(NoParams());
     yield failureOrDefaults.fold(

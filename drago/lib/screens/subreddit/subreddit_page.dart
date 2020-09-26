@@ -114,14 +114,12 @@ class _SubredditPageState extends State<SubredditPage> {
     } else if (state is SubredditPageLoading) {
       return Center(child: LoadingIndicator());
     } else if (state is SubredditPageLoaded) {
-      final _service = DialogProvider.of(context).service;
       return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         itemCount: state.redditLinks.length,
         itemBuilder: (BuildContext context, int index) => BlocProvider(
           create: (BuildContext context) => SubmissionBloc(
-              service: _service,
               redditLink: state.redditLinks[index],
               upvoteOrClear: upvoteOrClear,
               downvoteOrClear: downvoteOrClear,
@@ -129,6 +127,8 @@ class _SubredditPageState extends State<SubredditPage> {
           child: SubredditListItem(),
         ),
       );
+    } else {
+      return SizedBox.shrink();
     }
   }
 
@@ -150,7 +150,7 @@ class SubmissionsSortDialog extends StatelessWidget {
   final List<SubmissionSortOption> options;
   final SubredditPageBloc bloc;
 
-  SubmissionsSortDialog({@required this.bloc, @required this.options});
+  SubmissionsSortDialog({required this.bloc, required this.options});
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +230,7 @@ class FilterDialog extends StatelessWidget {
   final SubmissionSortType option;
 
   FilterDialog(
-      {@required this.option, @required this.bloc, @required this.filters});
+      {required this.option, required this.bloc, required this.filters});
 
   @override
   Widget build(BuildContext context) {

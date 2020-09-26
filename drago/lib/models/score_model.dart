@@ -6,7 +6,7 @@ import '../utils.dart';
 class ScoreModel extends Equatable {
   final int score;
 
-  ScoreModel({@required this.score});
+  ScoreModel({required this.score});
   String get asString => truncateLongInt(score);
 
   @override

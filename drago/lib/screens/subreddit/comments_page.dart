@@ -21,7 +21,7 @@ import 'package:drago/features/subreddit/get_reddit_links.dart';
 
 class SubmissionContentWidget extends StatelessWidget {
   final Submission submission;
-  SubmissionContentWidget({@required this.submission});
+  SubmissionContentWidget({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +60,7 @@ class SubmissionContentWidget extends StatelessWidget {
 class MediaSubmissionWidget extends StatelessWidget {
   final Widget mediaWidget;
   final Widget titleWidget;
-  MediaSubmissionWidget(
-      {@required this.mediaWidget, @required this.titleWidget});
+  MediaSubmissionWidget({required this.mediaWidget, required this.titleWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +82,7 @@ class SelfOrLinkSubmissionWidget extends StatelessWidget {
   final Widget submissionWidget;
 
   const SelfOrLinkSubmissionWidget(
-      {Key key, @required this.titleWidget, @required this.submissionWidget})
-      : super(key: key);
-
+      {required this.titleWidget, required this.submissionWidget});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -110,7 +107,7 @@ class SelfOrLinkSubmissionWidget extends StatelessWidget {
 class SubmissionTitle extends StatelessWidget {
   final Submission submission;
 
-  const SubmissionTitle({Key key, @required this.submission}) : super(key: key);
+  const SubmissionTitle({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +124,7 @@ class SubmissionTitle extends StatelessWidget {
 class CommentsPage extends StatelessWidget {
   final SubmissionBloc submissionBloc;
 
-  CommentsPage({@required this.submissionBloc})
-      : assert(submissionBloc != null);
+  CommentsPage({required this.submissionBloc}) : assert(submissionBloc != null);
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +180,7 @@ class _SubmissionDetails extends StatelessWidget {
   final Submission submission;
   final SubmissionBloc bloc;
 
-  const _SubmissionDetails({this.submission, this.bloc});
+  const _SubmissionDetails({required this.submission, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +258,7 @@ class _SubmissionActions extends StatelessWidget {
   final Submission submission;
   final SubmissionBloc bloc;
 
-  const _SubmissionActions({this.submission, this.bloc});
+  const _SubmissionActions({required this.submission, required this.bloc});
 
   @override
   Widget build(BuildContext context) {

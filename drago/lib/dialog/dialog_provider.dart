@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 
-import 'dialog_service.dart';
+// import 'dialog_service.dart';
 
-class DialogProvider extends InheritedWidget {
-  final DialogService service;
+// class DialogProvider extends InheritedWidget {
+//   final DialogService service;
 
-  DialogProvider({this.service, Widget child}) : super(child: child);
+//   DialogProvider({this.service, Widget child}) : super(child: child);
 
-  static DialogProvider of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<DialogProvider>();
+//   static DialogProvider of(BuildContext context) =>
+//       context.dependOnInheritedWidgetOfExactType<DialogProvider>();
 
-  @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => true;
-}
+//   @override
+//   bool updateShouldNotify(InheritedWidget oldWidget) => true;
+// }

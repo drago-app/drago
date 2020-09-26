@@ -5,8 +5,7 @@ import 'package:drago/features/subreddit/get_reddit_links.dart';
 class SubmissionSave extends StatelessWidget {
   final Submission submission;
 
-  const SubmissionSave({@required this.submission})
-      : assert(submission != null);
+  const SubmissionSave({required this.submission}) : assert(submission != null);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class SubmissionSave extends StatelessWidget {
 }
 
 class DrawTriangle extends CustomPainter {
-  Paint _paint;
+  late Paint _paint;
 
   DrawTriangle() {
     _paint = Paint()

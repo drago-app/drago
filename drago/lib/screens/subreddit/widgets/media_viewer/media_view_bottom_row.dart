@@ -11,10 +11,9 @@ class MediaViewerBottomRow extends StatelessWidget {
   final Bloc bloc;
 
   MediaViewerBottomRow({
-    @required this.submission,
-    this.bloc,
-  })  : assert(submission != null),
-        assert(bloc != null);
+    required this.submission,
+    required this.bloc,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(

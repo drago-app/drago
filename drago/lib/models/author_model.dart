@@ -6,7 +6,7 @@ class AuthorModel extends Equatable {
   final String name;
   final Color color;
 
-  const AuthorModel({@required this.name, @required this.color});
+  const AuthorModel({required this.name, required this.color});
 
   @override
   List<Object> get props => [name, color];

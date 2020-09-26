@@ -85,13 +85,13 @@ class SubmissionSortOption extends Equatable {
   final bool filterable;
 
   SubmissionSortOption(
-      {@required this.icon,
-      @required this.selected,
-      @required this.type,
-      @required this.label,
+      {required this.icon,
+      required this.selected,
+      required this.type,
+      required this.label,
       this.filterable = false});
 
-  factory SubmissionSortOption.factory({@required type, selected = false}) {
+  factory SubmissionSortOption.factory({required type, selected = false}) {
     switch (type) {
       case SubmissionSortType.hot:
         {

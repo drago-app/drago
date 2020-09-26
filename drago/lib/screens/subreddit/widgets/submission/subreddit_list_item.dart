@@ -73,7 +73,7 @@ class SubredditListItem extends StatelessWidget {
 class SubredditListItemBottomBar extends StatelessWidget {
   final Submission submission;
 
-  SubredditListItemBottomBar({@required this.submission});
+  SubredditListItemBottomBar({required this.submission});
 
   @override
   Widget build(BuildContext context) {
@@ -138,15 +138,15 @@ class CupertinoListTile extends StatefulWidget {
   final Widget subtitle;
   final Widget trailing;
   final Widget bottomRightCorner;
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
   CupertinoListTile({
-    Key key,
-    this.leading,
-    this.title,
-    this.subtitle,
-    this.trailing,
-    this.bottomRightCorner,
+    Key? key,
+    this.leading = const SizedBox.shrink(),
+    this.title = const SizedBox.shrink(),
+    this.subtitle = const SizedBox.shrink(),
+    this.trailing = const SizedBox.shrink(),
+    this.bottomRightCorner = const SizedBox.shrink(),
     this.onTap,
   }) : super(key: key);
 
@@ -198,13 +198,13 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      widget.title ?? SizedBox.shrink(),
-                                      widget.subtitle ?? SizedBox.shrink()
+                                      widget.title,
+                                      widget.subtitle
                                     ],
                                   ),
                                 ),
                               ),
-                              widget.trailing ?? SizedBox.shrink()
+                              widget.trailing,
                             ],
                           ),
                         ),
