@@ -23,14 +23,20 @@ class Host {
     this.getVideoData,
   });
 
-  static Option<Host> getHost(url) {
-    List<Host> x =
-        hosts.where((host) => host.detect(url) is RegExpMatch).toList();
-    return catching(() => x.first).toOption();
+  static Stream<Host> _getHost(String url) async* {
+    for (var host in hosts) {
+      if (host.detect(url) is RegExpMatch) {
+        yield host;
+      }
+    }
   }
 
-  static Future<ExpandoMedia> getMedia(Host host, String url) async {
-    return await host.handleLink(url, host.detect(url));
+  static Stream<ExpandoMedia> _getMedia(Stream<Host> hosts, String url) async* {
+    yield* hosts.asyncMap((host) => host.handleLink(url, host.detect(url)));
+  }
+
+  static Stream<ExpandoMedia> getMedia(String url) async* {
+    yield* _getMedia(_getHost(url), url);
   }
 }
 
