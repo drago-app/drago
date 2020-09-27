@@ -6,18 +6,13 @@ import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
 import 'package:draw/draw.dart' as draw;
-import 'package:drago/core/entities/preview.dart';
-import 'package:drago/core/entities/submission_author.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
-import 'package:drago/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:dcache/dcache.dart';
 
 import 'models/comment_model.dart';
-import 'models/num_comments_model.dart';
-import 'models/score_model.dart';
 import 'user_service.dart';
 
 class RedditService {

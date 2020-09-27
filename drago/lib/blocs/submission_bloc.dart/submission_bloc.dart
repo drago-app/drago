@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/dialog/dialog_service.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:drago/sandbox/host.dart';
@@ -14,7 +12,6 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/features/submission/usecases.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   final RedditLink redditLink;

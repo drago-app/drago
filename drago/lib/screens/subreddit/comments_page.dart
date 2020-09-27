@@ -1,22 +1,13 @@
 import 'package:drago/common/comment.dart';
 import 'package:drago/common/common.dart';
-import 'package:drago/common/picture.dart';
-import 'package:drago/common/text_button.dart';
-import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/models/comment_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart' as md;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/blocs/comments_page_bloc/comments_page.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 
-import '../../theme.dart';
-import 'widgets/submission/submission.dart';
-import 'widgets/submission/submission_ratio.dart';
-import 'widgets/submission/vote_button.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionContentWidget extends StatelessWidget {

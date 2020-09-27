@@ -1,9 +1,7 @@
-import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
 
 abstract class SubredditPageState extends Equatable {
   String get subreddit;

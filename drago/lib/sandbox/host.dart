@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
 typedef RegExpMatch Detect(String url);

@@ -366,15 +366,6 @@ class ContentType {
     final String url = submission.url.toString();
     final Type basicType = getContentTypeFromURL(url);
 
-    // TODO: Decide whether internal youtube links should be EMBEDDED or LINK
-    //! A DRAW submission doesn't have getDataNode(). do I care about embedded media? delete ?
-    // if (basicType == Type.LINK && submission.getDataNode().has("media_embed") && submission
-    //         .getDataNode()
-    //         .get("media_embed")
-    //         .has("content")) {
-    //     return Type.EMBEDDED;
-    // }
-
     return basicType;
   }
 

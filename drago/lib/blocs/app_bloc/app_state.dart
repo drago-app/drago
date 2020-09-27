@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:drago/models/reddit_user.dart';
 
 import '../../user_service.dart';
 
