@@ -2,9 +2,10 @@ import 'dart:collection';
 import 'dart:io';
 import 'dart:async';
 import 'package:dartz/dartz.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
-import 'package:draw/draw.dart';
+import 'package:draw/draw.dart' as draw;
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/core/entities/submission_author.dart';
 import 'package:drago/core/entities/submission_entity.dart';
@@ -23,7 +24,7 @@ class RedditService {
   String _secret = '';
   String _identifier = 'Hp4M9q3bOeds3w';
   String _deviceID = 'pooppooppooppooppooppoop1';
-  Reddit _reddit;
+  draw.Reddit _reddit;
   String _state = 'thisisarandomstring';
   Cache submissions = new SimpleCache(storage: new SimpleStorage(size: 20));
 
@@ -32,7 +33,7 @@ class RedditService {
     var fromCache = submissions.get(targetSubId);
     if (fromCache == null) {
       final submission =
-          await SubmissionRef.withID(_reddit, targetSubId).populate();
+          await draw.SubmissionRef.withID(_reddit, targetSubId).populate();
       fromCache = submission;
       submissions.set(fromCache.id, fromCache);
     }
@@ -40,7 +41,7 @@ class RedditService {
     fromCache.comments.comments.forEach((c) => nodes.add(c));
     while (nodes.isNotEmpty) {
       var n = nodes.removeFirst();
-      if (n is MoreComments) {
+      if (n is draw.MoreComments) {
         if (n.id == moreComments.id) {
           await fromCache.comments.replaceMore(specificMoreComments: n);
           break;
@@ -96,7 +97,7 @@ class RedditService {
   }
 
   Future<Either<Failure, RedditLink>> saveSubmission(
-      RedditLink submissionModel) async {
+      Submission submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -108,7 +109,7 @@ class RedditService {
   }
 
   Future<Either<Failure, RedditLink>> unsaveSubmission(
-      RedditLink submissionModel) async {
+      Submission submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -119,7 +120,7 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, Unit>> downvote(RedditLink submissionModel) async {
+  Future<Either<Failure, Unit>> downvote(Submission submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -130,7 +131,7 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, Unit>> clearVote(RedditLink submissionModel) async {
+  Future<Either<Failure, Unit>> clearVote(Submission submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -141,7 +142,7 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, Unit>> upvote(RedditLink submissionModel) async {
+  Future<Either<Failure, Unit>> upvote(Submission submissionModel) async {
     try {
       final submission =
           await _reddit.submission(id: submissionModel.id).populate();
@@ -152,33 +153,33 @@ class RedditService {
     }
   }
 
-  VoteState_ _mapVoteState(VoteState state) {
-    if (state == VoteState.upvoted) {
-      return VoteState_.Up;
-    } else if (state == VoteState.downvoted) {
-      return VoteState_.Down;
+  VoteState _mapVoteState(draw.VoteState state) {
+    if (state == draw.VoteState.upvoted) {
+      return VoteState.Up;
+    } else if (state == draw.VoteState.downvoted) {
+      return VoteState.Down;
     } else {
-      return VoteState_.Neutral;
+      return VoteState.Neutral;
     }
   }
 
-  TimeFilter _mapTimeFilter(TimeFilter_ filter) {
+  draw.TimeFilter _mapTimeFilter(TimeFilter_ filter) {
     if (filter == TimeFilter_.all) {
-      return TimeFilter.all;
+      return draw.TimeFilter.all;
     } else if (filter == TimeFilter_.day) {
-      return TimeFilter.day;
+      return draw.TimeFilter.day;
     } else if (filter == TimeFilter_.hour) {
-      return TimeFilter.hour;
+      return draw.TimeFilter.hour;
     } else if (filter == TimeFilter_.month) {
-      return TimeFilter.month;
+      return draw.TimeFilter.month;
     } else if (filter == TimeFilter_.week) {
-      return TimeFilter.week;
+      return draw.TimeFilter.week;
     } else {
-      return TimeFilter.year;
+      return draw.TimeFilter.year;
     }
   }
 
-  RedditLink _mapSubmissionToModel(Submission s) {
+  RedditLink _mapSubmissionToModel(draw.Submission s) {
     final r = RedditLink(
       author: s.author,
       createdUtc: s.createdUtc,
@@ -207,7 +208,7 @@ class RedditService {
     final List<RedditLink> t = await _reddit
         .subreddit(subreddit)
         .hot(after: params['after'], params: params)
-        .map((s) => s as Submission)
+        .map((s) => s as draw.Submission)
         .map((s) => _mapSubmissionToModel(s))
         .toList();
     return t;
@@ -218,7 +219,7 @@ class RedditService {
       await _reddit
           .subreddit(subreddit)
           .newest(params: params)
-          .map((s) => s as Submission)
+          .map((s) => s as draw.Submission)
           .map((s) => _mapSubmissionToModel(s))
           .toList();
   Future<List<RedditLink>> _rising(
@@ -226,7 +227,7 @@ class RedditService {
       await _reddit
           .subreddit(subreddit)
           .rising(params: params)
-          .map((s) => s as Submission)
+          .map((s) => s as draw.Submission)
           .map((s) => _mapSubmissionToModel(s))
           .toList();
 
@@ -235,7 +236,7 @@ class RedditService {
     final List<RedditLink> t = await _reddit
         .subreddit(subreddit)
         .controversial(params: params, timeFilter: _mapTimeFilter(filter))
-        .map((s) => s as Submission)
+        .map((s) => s as draw.Submission)
         .map((s) => _mapSubmissionToModel(s))
         .toList();
 
@@ -247,11 +248,11 @@ class RedditService {
       await _reddit
           .subreddit(subreddit)
           .top(params: params, timeFilter: _mapTimeFilter(filter))
-          .map((s) => s as Submission)
+          .map((s) => s as draw.Submission)
           .map((s) => _mapSubmissionToModel(s))
           .toList();
 
-  Future<Either<Failure, List<RedditLink>>> getSubmissions(String subreddit,
+  Future<Either<Failure, List<RedditLink>>> getRedditLinks(String subreddit,
       {String after,
       SubmissionSortType sort = SubmissionSortType.hot,
       TimeFilter_ filter = TimeFilter_.all}) async {
@@ -304,7 +305,7 @@ class RedditService {
 
   Future<AuthUser> loginWithNewAccount() async {
     Stream<String> onCode = await _server();
-    _reddit = Reddit.createWebFlowInstance(
+    _reddit = draw.Reddit.createWebFlowInstance(
       userAgent: userAgent,
       clientId: _identifier,
       clientSecret: _secret,
@@ -320,14 +321,14 @@ class RedditService {
 
     await _reddit.auth.authorize(code);
 
-    Redditor me = await _reddit.user.me();
+    draw.Redditor me = await _reddit.user.me();
 
     return AuthUser(
         name: me.displayName, token: _reddit.auth.credentials.toJson());
   }
 
   initializeWithoutAuth() async {
-    _reddit = await Reddit.createUntrustedReadOnlyInstance(
+    _reddit = await draw.Reddit.createUntrustedReadOnlyInstance(
       userAgent: userAgent,
       clientId: _identifier,
       deviceId: _deviceID,
@@ -335,7 +336,7 @@ class RedditService {
   }
 
   String initializeWithAuth(String token) {
-    _reddit = Reddit.restoreAuthenticatedInstance(
+    _reddit = draw.Reddit.restoreAuthenticatedInstance(
       token,
       userAgent: userAgent,
       redirectUri: Uri.parse('http://localhost:8080'),

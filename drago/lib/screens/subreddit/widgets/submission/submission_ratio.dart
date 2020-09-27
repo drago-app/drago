@@ -1,16 +1,14 @@
+import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:drago/core/entities/submission_entity.dart';
 
 class SubmissionRatio extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
 
   SubmissionRatio({@required this.submission});
 
   @override
   Widget build(BuildContext context) {
-    print('[SubmissionRatio ] -- ${submission.upvoteRatio}');
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,7 +17,8 @@ class SubmissionRatio extends StatelessWidget {
             size: 14,
             color: CupertinoColors.darkBackgroundGray.withOpacity(.7)),
         Text(
-          ' ${submission.upvoteRatio}',
+          'fix me',
+          // ' ${submission.upvoteRatio}',
           style: TextStyle(
               fontSize: 14,
               color: CupertinoColors.darkBackgroundGray.withOpacity(.7)),

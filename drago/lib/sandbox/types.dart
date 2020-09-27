@@ -1,4 +1,6 @@
 //https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/master/lib/types/reddit.js
+import 'package:drago/core/entities/submission_entity.dart';
+
 abstract class RedditThing {
   static String kind;
 }
@@ -88,24 +90,25 @@ class RedditLink implements RedditThing {
   final String distinguished;
   final int score;
   final int numComments;
+  final VoteState voteState;
 
-  RedditLink({
-    this.author,
-    this.createdUtc,
-    this.edited,
-    this.isSelf,
-    this.saved,
-    this.domain,
-    this.body,
-    this.distinguished,
-    this.id,
-    this.numComments,
-    this.score,
-    this.subreddit,
-    this.title,
-    this.url,
-    this.previewUrl,
-  });
+  RedditLink(
+      {this.author,
+      this.createdUtc,
+      this.edited,
+      this.isSelf,
+      this.saved,
+      this.domain,
+      this.body,
+      this.distinguished,
+      this.id,
+      this.numComments,
+      this.score,
+      this.subreddit,
+      this.title,
+      this.url,
+      this.previewUrl,
+      this.voteState});
 }
 
 class RedditMessage implements RedditThing {

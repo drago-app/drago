@@ -28,10 +28,10 @@ class SubmissionScore extends StatelessWidget {
         ));
   }
 
-  Color _mapStateToColor(VoteState_ state) {
-    if (state == VoteState_.Up) {
+  Color _mapStateToColor(VoteState state) {
+    if (state == VoteState.Up) {
       return CupertinoColors.activeOrange;
-    } else if (state == VoteState_.Down) {
+    } else if (state == VoteState.Down) {
       return CupertinoColors.systemPurple;
     } else {
       return CupertinoColors.darkBackgroundGray.withOpacity(.7);

@@ -118,11 +118,11 @@ class _SubredditPageState extends State<SubredditPage> {
       return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
-        itemCount: state.submissions.length,
+        itemCount: state.redditLinks.length,
         itemBuilder: (BuildContext context, int index) => BlocProvider(
           create: (BuildContext context) => SubmissionBloc(
               service: _service,
-              submission: state.submissions[index],
+              redditLink: state.redditLinks[index],
               upvoteOrClear: upvoteOrClear,
               downvoteOrClear: downvoteOrClear,
               saveOrUnsave: saveOrUnsave),

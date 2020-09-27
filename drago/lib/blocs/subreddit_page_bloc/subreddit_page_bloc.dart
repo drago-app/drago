@@ -11,7 +11,7 @@ import './subreddit_page.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
-  final GetSubmissions getSubmissions;
+  final GetRedditLinks getRedditLinks;
   final String subreddit;
   final List<SubmissionSortOption> options = [
     SubmissionSortOption.factory(
@@ -30,7 +30,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
     TimeFilterOption.factory(TimeFilter_.year),
   ];
 
-  SubredditPageBloc({@required this.getSubmissions, @required this.subreddit});
+  SubredditPageBloc({@required this.getRedditLinks, @required this.subreddit});
 
   @override
   get initialState => SubredditPageInitial(
@@ -67,7 +67,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
           sortType: event.sort.type,
           options: filters,
           subreddit: state.subreddit,
-          submissions: state.submissions,
+          redditLinks: state.redditLinks,
           currentSort: state.currentSort);
     } else {
       yield* _mapLoadSubmissionsToState(sort: event.sort.type);
@@ -76,7 +76,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
 
   Stream<SubredditPageState> _mapUserTappedSortButtonToState() async* {
     yield DisplayingSortOptions(
-        submissions: state.submissions,
+        redditLinks: state.redditLinks,
         currentSort: state.currentSort,
         subreddit: state.subreddit,
         options: options);
@@ -86,14 +86,14 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
       {SubmissionSortType sort, TimeFilter_ filter}) async* {
     yield SubredditPageLoading(
         subreddit: subreddit, currentSort: sort ?? state.currentSort);
-    final Either<Failure, List> failureOrSubmissions = await getSubmissions(
-        GetSubmissionsParams(
+    final Either<Failure, List> failureOrSubmissions = await getRedditLinks(
+        GetRedditLinksParams(
             subreddit: this.subreddit, filter: filter, sort: sort));
 
     if (failureOrSubmissions is Right) {
       yield SubredditPageLoaded(
         subreddit: this.subreddit,
-        submissions: (failureOrSubmissions as Right).value,
+        redditLinks: (failureOrSubmissions as Right).value,
         currentSort: sort ?? state.currentSort,
       );
     }

@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
 typedef RegExpMatch Detect(String url);
@@ -5,6 +6,7 @@ typedef Future<ExpandoMedia> HandleLink(String href, RegExpMatch detectResult);
 typedef Future<VideoData> GetVideoData(String id);
 
 class Host {
+  static List<Host> hosts = []; // [defaultHost, defaultVideo];
   final String moduleId;
   final String name;
   final List<String> domains;
@@ -20,6 +22,17 @@ class Host {
     @required this.handleLink,
     this.getVideoData,
   });
+
+  static Option<Host> getHost(url) {
+    List<Host> x =
+        hosts.where((host) => host.detect(url) is RegExpMatch).toList();
+    return catching(() => x.first).toOption();
+  }
+
+  static Future<Option<ExpandoMedia>> getMedia(Host host, String url) async {
+    final ExpandoMedia media = await host.handleLink(url, host.detect(url));
+    return optionOf(media);
+  }
 }
 
 class VideoData {

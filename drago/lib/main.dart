@@ -38,7 +38,7 @@ final DownvoteOrClear downvoteOrClear =
 final SaveOrUnsaveSubmission saveOrUnsave =
     SaveOrUnsaveSubmission(reddit: _reddit, userService: _userService);
 
-final GetSubmissions getSubmissions = GetSubmissions(reddit: _reddit);
+final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
 
 final DialogService _dialogService = DialogService();
 
@@ -276,23 +276,23 @@ class RouteGenerator {
         return CupertinoPageRoute(
           builder: (context) => BlocProvider<SubredditPageBloc>(
             create: (context) => SubredditPageBloc(
-                getSubmissions: getSubmissions, subreddit: args as String)
+                getRedditLinks: getRedditLinks, subreddit: args as String)
               ..add(LoadSubmissions()),
             child: SubredditPage(),
           ),
         );
-      case '/comments':
-        return CupertinoPageRoute(
-          builder: (context) => BlocProvider<CommentsPageBloc>(
-            child: CommentsPage(
-              submissionBloc: args as SubmissionBloc,
-            ),
-            create: (BuildContext context) => CommentsPageBloc(
-                reddit: _reddit,
-                submission: (args as SubmissionBloc).submission)
-              ..add(LoadComments()),
-          ),
-        );
+      // case '/comments':
+      //   return CupertinoPageRoute(
+      //     builder: (context) => BlocProvider<CommentsPageBloc>(
+      //       child: CommentsPage(
+      //         submissionBloc: args as SubmissionBloc,
+      //       ),
+      //       create: (BuildContext context) => CommentsPageBloc(
+      //           reddit: _reddit,
+      //           submission: (args as SubmissionBloc).subm)
+      //         ..add(LoadComments()),
+      //     ),
+      //   );
       default:
         return _errorRoute();
     }

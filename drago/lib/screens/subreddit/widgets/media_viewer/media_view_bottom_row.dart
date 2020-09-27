@@ -1,12 +1,13 @@
+import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
-import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
 
 class MediaViewerBottomRow extends StatelessWidget {
-  final SubmissionModel submission;
+  final Submission submission;
   final Bloc bloc;
 
   MediaViewerBottomRow({
@@ -29,7 +30,7 @@ class MediaViewerBottomRow extends StatelessWidget {
           color: CupertinoColors.activeOrange,
           iconData: FontAwesomeIcons.longArrowAltUp,
           onTap: () => bloc.add(Upvote()),
-          switchCondition: submission.voteState == VoteState_.Up,
+          switchCondition: submission.voteState == VoteState.Up,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -40,7 +41,7 @@ class MediaViewerBottomRow extends StatelessWidget {
           color: CupertinoColors.systemPurple,
           iconData: FontAwesomeIcons.longArrowAltDown,
           onTap: () => bloc.add(Downvote()),
-          switchCondition: submission.voteState == VoteState_.Down,
+          switchCondition: submission.voteState == VoteState.Down,
         )
       ],
     );
