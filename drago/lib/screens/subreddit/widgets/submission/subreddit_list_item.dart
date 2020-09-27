@@ -44,25 +44,25 @@ class SubredditListItem extends StatelessWidget {
             state.submission.title,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
           ),
-          // subtitle: SubredditListItemBottomBar(submission: state.submission),
-          // trailing: Column(
-          //   children: <Widget>[
-          //     SquareActionButton(
-          //       color: CupertinoColors.systemOrange,
-          //       iconData: FontAwesomeIcons.longArrowAltUp,
-          //       onTap: () =>
-          //           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-          //       switchCondition: state.submission.voteState == VoteState_.Up,
-          //     ),
-          //     SquareActionButton(
-          //       color: CupertinoColors.systemPurple,
-          //       iconData: FontAwesomeIcons.longArrowAltDown,
-          //       onTap: () =>
-          //           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-          //       switchCondition: state.submission.voteState == VoteState_.Down,
-          //     )
-          //   ],
-          // ),
+          subtitle: SubredditListItemBottomBar(submission: state.submission),
+          trailing: Column(
+            children: <Widget>[
+              SquareActionButton(
+                color: CupertinoColors.systemOrange,
+                iconData: FontAwesomeIcons.longArrowAltUp,
+                onTap: () =>
+                    BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+                switchCondition: state.submission.voteState == VoteState.Up,
+              ),
+              SquareActionButton(
+                color: CupertinoColors.systemPurple,
+                iconData: FontAwesomeIcons.longArrowAltDown,
+                onTap: () =>
+                    BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+                switchCondition: state.submission.voteState == VoteState.Down,
+              )
+            ],
+          ),
         );
       },
     );
@@ -81,13 +81,13 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
-        // AuthorTextButton(author: submission.author, onTap: () => null),
+        AuthorTextButton(author: submission.author, onTap: () => null),
         // FlairWidget(flairText: submission.authorFlairText),
         SubmissionScore(
             submission: submission,
             onTap: () =>
                 BlocProvider.of<SubmissionBloc>(context).add(Upvote())),
-        // SubmissionNumComments(submission: submission),
+        SubmissionNumComments(submission: submission),
         // SubmissionAge(age: submission.age),
         _optionsButton(context, submission)
       ],

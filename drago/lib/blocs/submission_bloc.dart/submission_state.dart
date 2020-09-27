@@ -1,7 +1,6 @@
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:drago/core/entities/submission_entity.dart';
 
 abstract class SubmissionState extends Equatable {
   Submission get submission;

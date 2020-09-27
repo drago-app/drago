@@ -7,7 +7,9 @@ class ScoreModel extends Equatable {
   final int score;
 
   ScoreModel({@required this.score});
-  String get asString => truncateLongInt(score);
+
+  @override
+  String toString() => truncateLongInt(score);
 
   @override
   List<Object> get props => [score];

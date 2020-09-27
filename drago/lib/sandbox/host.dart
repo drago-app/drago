@@ -6,7 +6,7 @@ typedef Future<ExpandoMedia> HandleLink(String href, RegExpMatch detectResult);
 typedef Future<VideoData> GetVideoData(String id);
 
 class Host {
-  static List<Host> hosts = []; // [defaultHost, defaultVideo];
+  static List<Host> hosts = [defaultHost, defaultVideo];
   final String moduleId;
   final String name;
   final List<String> domains;
@@ -29,9 +29,8 @@ class Host {
     return catching(() => x.first).toOption();
   }
 
-  static Future<Option<ExpandoMedia>> getMedia(Host host, String url) async {
-    final ExpandoMedia media = await host.handleLink(url, host.detect(url));
-    return optionOf(media);
+  static Future<ExpandoMedia> getMedia(Host host, String url) async {
+    return await host.handleLink(url, host.detect(url));
   }
 }
 

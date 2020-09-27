@@ -42,13 +42,15 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
       submission: Submission.fromRedditLink(link: redditLink));
 
   _getSubmissionFromRedditLink(RedditLink redditLink) async {
-    Option<Host> optionalHost =
-        Host.getHost(redditLink.url); //HostManager.getMedia(redditLink.url);
+    Host.getHost(redditLink.url)
+        .map((Host h) => Task(() => Host.getMedia(h, redditLink.url)))
+        .map((Task t) => t
+            .attempt()
+            .run()
+            .then((media) => media.fold((_) {}, (m) => print('asd $m'))));
 
-    var x = await optionalHost.fold(
-      () => {},
-      (Host host) async => Host.getMedia(host, redditLink.url),
-    );
+    // Host.getMedia(redditLink.url)
+    //     .forEach((media) => print('${redditLink.url} -- $media'));
   }
 
   @override

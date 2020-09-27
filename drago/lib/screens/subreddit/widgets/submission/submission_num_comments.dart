@@ -17,7 +17,7 @@ class SubmissionNumComments extends StatelessWidget {
           color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
         ),
         Text(
-          '${submission.numComments.toString}',
+          '${submission.numComments.toString()}',
           style: TextStyle(
             color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
             fontSize: 14.0,
