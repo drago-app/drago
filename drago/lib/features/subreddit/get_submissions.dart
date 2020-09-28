@@ -25,87 +25,6 @@ class GetRedditLinks
   }
 }
 
-// class RedditLink extends Equatable {
-//   static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
-//   final String author;
-//   final String domain, title, url, id, previewUrl, subreddit;
-//   final DateTime createdUtc;
-//   final bool edited, saved;
-//   final int numComments;
-//   final String distinguished;
-//   final String body;
-//   final VoteState voteState;
-
-//   final int score;
-//   RedditLink(
-//       {@required this.author,
-//       @required this.createdUtc,
-//       @required this.edited,
-//       @required this.domain,
-//       @required this.id,
-//       @required this.numComments,
-//       @required this.score,
-//       @required this.title,
-//       @required this.url,
-//       @required this.previewUrl,
-//       @required this.saved,
-//       @required this.subreddit,
-//       @required this.distinguished,
-//       @required this.body,
-//       @required this.voteState});
-//   // RedditLink.fromRedditLink({@required RedditLink link, String previewUrl})
-//   //     : author = Author.fromRedditLink(link: link),
-//   //       createdUtc = link.createdUtc,
-//   //       edited = link.edited,
-//   //       domain = link.domain,
-//   //       id = link.id,
-//   //       saved = link.saved,
-//   //       numComments = link.numComments,
-//   //       score = link.score,
-//   //       title = link.title,
-//   //       subreddit = link.subreddit,
-//   //       url = link.url,
-//   //       distinguished = link.distinguished,
-//   //       body = link.body,
-//   //       voteState = link.voteState,
-//   //       previewUrl = previewUrl ?? link.previewUrl ?? _defaultPreviewUrl;
-
-//   RedditLink copyWith({score, numComments, edited, voteState}) {
-//     return RedditLink(
-//         author: this.author,
-//         createdUtc: this.createdUtc,
-//         edited: edited ?? this.edited,
-//         domain: this.domain,
-//         id: this.id,
-//         subreddit: this.subreddit,
-//         numComments: numComments ?? this.numComments,
-//         score: score ?? this.score,
-//         title: this.title,
-//         url: this.url,
-//         previewUrl: this.previewUrl,
-//         saved: saved ?? this.saved,
-//         distinguished: this.distinguished,
-//         body: body ?? this.body,
-//         voteState: voteState ?? this.voteState);
-//   }
-
-//   @override
-//   List<Object> get props => [
-//         author,
-//         createdUtc,
-//         edited,
-//         domain,
-//         id,
-//         numComments,
-//         score,
-//         title,
-//         url,
-//         previewUrl,
-//         saved,
-//         subreddit
-//       ];
-// }
-
 class Submission extends Equatable {
   // static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
   final Author author;
@@ -182,6 +101,10 @@ class Submission extends Equatable {
       ];
 }
 
+class WebSubmission extends Submission {
+  WebSubmission({@required RedditLink link}) : super.fromRedditLink(link: link);
+}
+
 class SelfSubmission extends Submission {
   static String _defaultPreview =
       'https://via.placeholder.com/150/0000FF/808080?Text=SELF';
@@ -198,6 +121,16 @@ class MediaSubmission extends Submission {
   MediaSubmission({@required RedditLink link, @required ExpandoMedia media})
       : media = media,
         super.fromRedditLink(link: link);
+
+  @override
+  List<Object> get props => [
+        media,
+        super.id,
+        super.saved,
+        super.score,
+        super.voteState,
+        super.edited
+      ];
 }
 
 enum AuthorType { admin, moderator, regular, developer, loggedInUser, friend }

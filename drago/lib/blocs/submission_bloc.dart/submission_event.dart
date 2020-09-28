@@ -1,4 +1,6 @@
+import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class SubmissionEvent extends Equatable {
   @override
@@ -12,3 +14,12 @@ class Downvote extends SubmissionEvent {}
 class Save extends SubmissionEvent {}
 
 class DialogDismissed extends SubmissionEvent {}
+
+class SubmissionResolved extends SubmissionEvent {
+  final Submission submission;
+
+  SubmissionResolved({@required this.submission});
+
+  @override
+  List<Object> get props => [submission];
+}

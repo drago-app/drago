@@ -21,7 +21,6 @@ class Host {
     @required this.handleLink,
     this.getVideoData,
   });
-
   static Stream<Host> _getHost(String url) async* {
     for (var host in hosts) {
       if (host.detect(url) is RegExpMatch) {

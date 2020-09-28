@@ -38,9 +38,23 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   get initialState => SubmissionInitial(
       submission: Submission.fromRedditLink(link: redditLink));
 
-  _getSubmissionFromRedditLink(RedditLink redditLink) {
-    Host.getMedia(redditLink.url)
-        .forEach((a) => print('${redditLink.url} -- $a'));
+  _getSubmissionFromRedditLink(RedditLink redditLink) async {
+    // HostService hostService = HostService();
+
+    final Stream<ExpandoMedia> mediaStream = Host.getMedia(redditLink.url);
+    //Can this cause ui bugs? Like voting then  this causes a rebuild which would then hide the vote?
+    if (redditLink.isSelf) {
+      this.add(
+          SubmissionResolved(submission: SelfSubmission(link: redditLink)));
+    } else {
+      this.add(SubmissionResolved(submission: WebSubmission(link: redditLink)));
+    }
+    mediaStream.forEach((media) {
+      this.add(
+        SubmissionResolved(
+            submission: MediaSubmission(link: redditLink, media: media)),
+      );
+    });
   }
 
   @override
@@ -67,6 +81,10 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     }
     if (event is DialogDismissed) {
       yield SubmissionInitial(submission: state.submission);
+    }
+    if (event is SubmissionResolved) {
+      print('asdasd');
+      yield state.copyWith(submission: event.submission);
     }
   }
 

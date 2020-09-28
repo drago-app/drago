@@ -37,9 +37,9 @@ class SubredditListItem extends StatelessWidget {
           bottomRightCorner: SubmissionSave(
             submission: state.submission,
           ),
-          // leading: SubmissionThumbnail(
-          //   submission: state.submission,
-          // ),
+          leading: SubmissionThumbnail(
+            submission: state.submission,
+          ),
           title: Text(
             state.submission.title,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
