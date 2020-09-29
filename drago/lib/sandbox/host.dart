@@ -5,7 +5,7 @@ typedef Future<ExpandoMedia> HandleLink(String href, RegExpMatch detectResult);
 typedef Future<VideoData> GetVideoData(String id);
 
 class Host {
-  static List<Host> hosts = [defaultHost, defaultVideo];
+  static List<Host> hosts = [defaultHost, defaultVideo, defaultGifHost];
   final String moduleId;
   final String name;
   final List<String> domains;
@@ -69,6 +69,17 @@ class ImageMedia implements ExpandoMedia {
   final String src;
   final String href;
   ImageMedia(
+      {this.title, this.caption, this.credits, @required this.src, this.href});
+}
+
+class GifMedia implements ExpandoMedia {
+  static ExpandoMediaType type = ExpandoMediaType.Image;
+  final String title;
+  final String caption;
+  final String credits;
+  final String src;
+  final String href;
+  GifMedia(
       {this.title, this.caption, this.credits, @required this.src, this.href});
 }
 
@@ -174,6 +185,14 @@ final Host defaultHost = Host(
   name: 'default',
   domains: [],
   detect: (String url) => RegExp(r'\.(gif|jpe?g|png|svg)$').firstMatch(url),
+  handleLink: (String href, _) => Future.value(ImageMedia(src: href)),
+);
+
+final Host defaultGifHost = Host(
+  moduleId: 'default',
+  name: 'default',
+  domains: [],
+  detect: (String url) => RegExp(r'\.(gif)$').firstMatch(url),
   handleLink: (String href, _) => Future.value(ImageMedia(src: href)),
 );
 

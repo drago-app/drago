@@ -83,7 +83,6 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
       yield SubmissionInitial(submission: state.submission);
     }
     if (event is SubmissionResolved) {
-      print('asdasd');
       yield state.copyWith(submission: event.submission);
     }
   }

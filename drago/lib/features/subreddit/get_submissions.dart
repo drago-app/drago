@@ -26,7 +26,7 @@ class GetRedditLinks
 }
 
 class Submission extends Equatable {
-  // static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
+  static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
   final Author author;
   final String domain, title, url, id, previewUrl, subreddit;
   final DateTime createdUtc;
@@ -50,9 +50,7 @@ class Submission extends Equatable {
       @required this.subreddit,
       @required this.voteState});
 
-  Submission.fromRedditLink(
-      {@required RedditLink link,
-      String previewUrl = "https://via.placeholder.com/150"})
+  Submission.fromRedditLink({@required RedditLink link, String previewUrl})
       : author = Author.fromRedditLink(link: link),
         createdUtc = link.createdUtc,
         edited = link.edited,
@@ -64,7 +62,7 @@ class Submission extends Equatable {
         title = link.title,
         subreddit = link.subreddit,
         url = link.url,
-        previewUrl = previewUrl,
+        previewUrl = link.previewUrl ?? _defaultPreviewUrl,
         voteState = link.voteState;
   Submission copyWith({score, numComments, edited, voteState, saved}) {
     return Submission(
