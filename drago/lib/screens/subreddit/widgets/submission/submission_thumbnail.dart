@@ -10,134 +10,10 @@ import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/preview.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-// class _DefaultThumbnail extends StatelessWidget {
-//   final Submission submission;
-
-//   _DefaultThumbnail({@required this.submission}) : assert(submission != null);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return _ThumbnailBase(
-//       onTap: () => null,
-//       submission: submission,
-//     );
-//   }
-// }
-
-// class _ImageThumbnail extends StatelessWidget {
-//   final Submission submission;
-
-//   _ImageThumbnail({@required this.submission}) : assert(submission != null);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Hero(
-//       tag: submission.previewUrl,
-//       child: _ThumbnailBase(
-//           onTap: () {
-//             Navigator.of(context, rootNavigator: true).push(
-//               DragToPopPageRoute(
-//                 builder: (modalcontext) => SecondPage(
-//                   bloc: context.bloc<SubmissionBloc>(),
-//                 ),
-//               ),
-//             );
-//           },
-//           submission: submission),
-//     );
-//   }
-// }
-
-// class _LinkThumbnail extends StatelessWidget {
-//   final Submission submission;
-
-//   _LinkThumbnail({@required this.submission}) : assert(submission != null);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return _ThumbnailBase(
-//         onTap: () => null,
-//         thumbnailLabel: const _LinkThumbnailLabel(),
-//         submission: submission);
-//   }
-// }
-
-// class _VideoThumbnail extends StatelessWidget {
-//   final Submission submission;
-
-//   _VideoThumbnail({@required this.submission}) : assert(submission != null);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return _ThumbnailBase(
-//         onTap: () => null,
-//         thumbnailLabel: const _VideoThumbnailLabel(),
-//         submission: submission);
-//   }
-// }
-
-// class _GifThumbnail extends StatelessWidget {
-//   final Submission submission;
-
-//   _GifThumbnail({@required this.submission}) : assert(submission != null);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return _ThumbnailBase(
-//         onTap: () => null,
-//         thumbnailLabel: const _GifThumbnailLabel(),
-//         submission: submission);
-//   }
-// }
-
-// class _ThumbnailBase extends StatelessWidget {
-//   final Widget thumbnailLabel;
-//   final Submission submission;
-//   final Function onTap;
-
-//   _ThumbnailBase(
-//       {this.thumbnailLabel, @required this.submission, @required this.onTap});
-
-// @override
-// Widget build(BuildContext context) {
-//   return GestureDetector(
-//     onTap: onTap,
-//     child: Stack(
-//       children: <Widget>[
-//         ClipRRect(
-//           borderRadius: BorderRadius.circular(4.0),
-//           child: CachedNetworkImage(
-//             imageUrl: submission.previewUrl,
-//             useOldImageOnUrlChange: true,
-//             placeholder: (context, submission) =>
-//                 Center(child: LoadingIndicator()),
-//             errorWidget: (context, submission, error) => Center(
-//                 child: Icon(
-//               CupertinoIcons.clear,
-//               color: CupertinoColors.destructiveRed,
-//             )),
-//             imageBuilder: (context, imageProvider) {
-//               return Container(
-//                 height: 55,
-//                 width: 55,
-//                 decoration: BoxDecoration(
-//                   image:
-//                       DecorationImage(image: imageProvider, fit: BoxFit.fill),
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//         thumbnailLabel ?? SizedBox.shrink(),
-//       ],
-//     ),
-//   );
-// }
-// }
-
-class _VideoThumbnailLabel extends StatelessWidget {
-  const _VideoThumbnailLabel();
+class VideoThumbnailLabel extends StatelessWidget {
+  const VideoThumbnailLabel();
 
   @override
   Widget build(BuildContext context) {
@@ -160,8 +36,8 @@ class _VideoThumbnailLabel extends StatelessWidget {
   }
 }
 
-class _GifThumbnailLabel extends StatelessWidget {
-  const _GifThumbnailLabel();
+class GifThumbnailLabel extends StatelessWidget {
+  const GifThumbnailLabel();
 
   @override
   Widget build(BuildContext context) {
@@ -184,10 +60,10 @@ class _GifThumbnailLabel extends StatelessWidget {
   }
 }
 
-class _GalleryThumbnailLabel extends StatelessWidget {
+class GalleryThumbnailLabel extends StatelessWidget {
   final GalleryMedia galleryMedia;
 
-  const _GalleryThumbnailLabel(this.galleryMedia);
+  const GalleryThumbnailLabel(this.galleryMedia);
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +77,7 @@ class _GalleryThumbnailLabel extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(4))),
         child: Center(
           child: Text(
-            "${galleryMedia.src.length}",
+            "${galleryMedia.src.length ?? 0}",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
           ),
         ),
@@ -210,8 +86,8 @@ class _GalleryThumbnailLabel extends StatelessWidget {
   }
 }
 
-class _LinkThumbnailLabel extends StatelessWidget {
-  const _LinkThumbnailLabel();
+class LinkThumbnailLabel extends StatelessWidget {
+  const LinkThumbnailLabel();
 
   @override
   Widget build(BuildContext context) {
@@ -237,55 +113,87 @@ class _LinkThumbnailLabel extends StatelessWidget {
   }
 }
 
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
 class SubmissionThumbnail extends StatelessWidget {
   final String previewUrl;
   final Widget label;
+  final Function onTap;
 
-  SubmissionThumbnail({this.previewUrl, this.label = const SizedBox.shrink()});
+  SubmissionThumbnail(
+      {this.previewUrl, this.label = const SizedBox.shrink(), this.onTap});
 
-  factory SubmissionThumbnail.fromSubmission(Submission submission) {
-    if (submission is WebSubmission)
+  factory SubmissionThumbnail.fromSubmission(
+      Submission submission, BuildContext context) {
+    if (submission is WebSubmission) {
       return SubmissionThumbnail(
-          previewUrl: submission.previewUrl, label: _LinkThumbnailLabel());
+          previewUrl: submission.previewUrl,
+          label: LinkThumbnailLabel(),
+          onTap: () {
+            _launchURL(submission.url);
+          });
+    }
 
     if (submission is MediaSubmission) {
       if (submission.media is VideoMedia) {
         return SubmissionThumbnail(
           previewUrl: submission.previewUrl,
-          label: _VideoThumbnailLabel(),
+          label: VideoThumbnailLabel(),
         );
       }
       if (submission.media is GifMedia) {
         return SubmissionThumbnail(
           previewUrl: submission.previewUrl,
-          label: _GifThumbnailLabel(),
+          label: GifThumbnailLabel(),
         );
       }
       if (submission.media is GalleryMedia) {
         return SubmissionThumbnail(
           previewUrl: submission.previewUrl,
-          label: _GalleryThumbnailLabel(submission.media),
+          label: GalleryThumbnailLabel(submission.media),
         );
       }
     }
 
     return SubmissionThumbnail(
       previewUrl: submission.previewUrl,
+      // onTap: () {
+      //   print('$context');
+      // }
+      onTap: () {
+        Navigator.of(context, rootNavigator: true).push(
+          DragToPopPageRoute(
+            builder: (_) => SecondPage(
+              bloc: context.bloc<SubmissionBloc>(),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: null,
+      onTap: onTap,
       child: Stack(
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(4.0),
             child: CachedNetworkImage(
+              fadeInDuration: Duration(),
               imageUrl: previewUrl,
               useOldImageOnUrlChange: true,
-              placeholder: (context, submission) =>
-                  Center(child: LoadingIndicator()),
+              placeholder: (context, submission) => Container(
+                height: 55,
+                width: 55,
+                color: CupertinoColors.inactiveGray,
+              ),
               errorWidget: (context, submission, error) => Center(
                   child: Icon(
                 CupertinoIcons.clear,
@@ -308,6 +216,23 @@ class SubmissionThumbnail extends StatelessWidget {
       ),
     );
   }
+}
+
+typedef SubmissionThumbnail SubmissionThumbnailBuilder(BuildContext context);
+
+class ThumbnailBuilder extends StatelessWidget {
+  final SubmissionThumbnailBuilder builder;
+  final Submission submission;
+  final Bloc bloc;
+
+  ThumbnailBuilder(
+      {@required this.builder, @required this.submission, @required this.bloc})
+      : assert(builder != null),
+        assert(submission != null),
+        assert(bloc != null);
+
+  @override
+  Widget build(BuildContext context) => builder(context);
 }
 
 class SecondPage extends StatelessWidget {

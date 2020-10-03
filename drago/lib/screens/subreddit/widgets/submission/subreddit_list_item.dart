@@ -28,16 +28,17 @@ class SubredditListItem extends StatelessWidget {
             ),
           );
       },
-      builder: (context, state) {
+      builder: (buildercontext, state) {
         return CupertinoListTile(
           onTap: () {
-            Navigator.of(context).pushNamed('/comments',
-                arguments: BlocProvider.of<SubmissionBloc>(context));
+            // Navigator.of(context).pushNamed('/comments',
+            //     arguments: BlocProvider.of<SubmissionBloc>(context));
           },
           bottomRightCorner: SubmissionSave(
             submission: state.submission,
           ),
-          leading: SubmissionThumbnail.fromSubmission(state.submission),
+          leading:
+              SubmissionThumbnail.fromSubmission(state.submission, context),
           title: Text(
             state.submission.title,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),

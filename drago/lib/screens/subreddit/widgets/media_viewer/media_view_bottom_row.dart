@@ -23,7 +23,7 @@ class MediaViewerBottomRow extends StatelessWidget {
     );
   }
 
-  Widget _votesAndScore(context, submission) {
+  Widget _votesAndScore(context, Submission submission) {
     return Row(
       children: [
         SquareActionButton(
@@ -34,7 +34,7 @@ class MediaViewerBottomRow extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(submission.score.asString,
+          child: Text(submission.score.toString(),
               style: TextStyle(color: CupertinoColors.lightBackgroundGray)),
         ),
         SquareActionButton(
