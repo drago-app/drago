@@ -100,7 +100,53 @@ class Submission extends Equatable {
 }
 
 class WebSubmission extends Submission {
-  WebSubmission({@required RedditLink link}) : super.fromRedditLink(link: link);
+  WebSubmission.fromRedditLink({@required RedditLink link})
+      : super.fromRedditLink(link: link);
+  WebSubmission(
+      {@required author,
+      @required createdUtc,
+      @required edited,
+      @required domain,
+      @required id,
+      @required numComments,
+      @required score,
+      @required title,
+      @required url,
+      @required previewUrl,
+      @required saved,
+      @required subreddit,
+      @required voteState})
+      : super(
+            author: author,
+            createdUtc: createdUtc,
+            edited: edited,
+            domain: domain,
+            id: id,
+            numComments: numComments,
+            score: score,
+            title: title,
+            url: url,
+            previewUrl: previewUrl,
+            saved: saved,
+            subreddit: subreddit,
+            voteState: voteState);
+
+  WebSubmission copyWith({score, numComments, edited, voteState, saved}) {
+    return WebSubmission(
+        author: this.author,
+        createdUtc: this.createdUtc,
+        edited: edited ?? this.edited,
+        domain: this.domain,
+        id: this.id,
+        subreddit: this.subreddit,
+        numComments: numComments ?? this.numComments,
+        score: score ?? this.score,
+        title: this.title,
+        url: this.url,
+        previewUrl: this.previewUrl,
+        saved: saved ?? this.saved,
+        voteState: voteState ?? this.voteState);
+  }
 }
 
 class SelfSubmission extends Submission {
@@ -108,15 +154,65 @@ class SelfSubmission extends Submission {
       'https://via.placeholder.com/150/0000FF/808080?Text=SELF';
   final String body;
 
-  SelfSubmission({@required RedditLink link})
+  SelfSubmission.fromRedditLink({@required RedditLink link})
       : body = link.body,
         super.fromRedditLink(link: link, previewUrl: _defaultPreview);
+
+  SelfSubmission(
+      {@required this.body,
+      @required author,
+      @required createdUtc,
+      @required edited,
+      @required domain,
+      @required id,
+      @required numComments,
+      @required score,
+      @required title,
+      @required url,
+      @required previewUrl,
+      @required saved,
+      @required subreddit,
+      @required voteState})
+      : super(
+            author: author,
+            createdUtc: createdUtc,
+            edited: edited,
+            domain: domain,
+            id: id,
+            numComments: numComments,
+            score: score,
+            title: title,
+            url: url,
+            previewUrl: previewUrl,
+            saved: saved,
+            subreddit: subreddit,
+            voteState: voteState);
+
+  SelfSubmission copyWith(
+      {score, numComments, edited, voteState, saved, body}) {
+    return SelfSubmission(
+        body: body ?? this.body,
+        author: this.author,
+        createdUtc: this.createdUtc,
+        edited: edited ?? this.edited,
+        domain: this.domain,
+        id: this.id,
+        subreddit: this.subreddit,
+        numComments: numComments ?? this.numComments,
+        score: score ?? this.score,
+        title: this.title,
+        url: this.url,
+        previewUrl: this.previewUrl,
+        saved: saved ?? this.saved,
+        voteState: voteState ?? this.voteState);
+  }
 }
 
 class MediaSubmission extends Submission {
   final ExpandoMedia media;
 
-  MediaSubmission({@required RedditLink link, @required ExpandoMedia media})
+  MediaSubmission.fromRedditLink(
+      {@required RedditLink link, @required ExpandoMedia media})
       : media = media,
         super.fromRedditLink(link: link);
 
@@ -129,6 +225,54 @@ class MediaSubmission extends Submission {
         super.voteState,
         super.edited
       ];
+  MediaSubmission(
+      {@required this.media,
+      @required author,
+      @required createdUtc,
+      @required edited,
+      @required domain,
+      @required id,
+      @required numComments,
+      @required score,
+      @required title,
+      @required url,
+      @required previewUrl,
+      @required saved,
+      @required subreddit,
+      @required voteState})
+      : super(
+            author: author,
+            createdUtc: createdUtc,
+            edited: edited,
+            domain: domain,
+            id: id,
+            numComments: numComments,
+            score: score,
+            title: title,
+            url: url,
+            previewUrl: previewUrl,
+            saved: saved,
+            subreddit: subreddit,
+            voteState: voteState);
+
+  MediaSubmission copyWith(
+      {score, numComments, edited, voteState, saved, media}) {
+    return MediaSubmission(
+        media: media ?? this.media,
+        author: this.author,
+        createdUtc: this.createdUtc,
+        edited: edited ?? this.edited,
+        domain: this.domain,
+        id: this.id,
+        subreddit: this.subreddit,
+        numComments: numComments ?? this.numComments,
+        score: score ?? this.score,
+        title: this.title,
+        url: this.url,
+        previewUrl: this.previewUrl,
+        saved: saved ?? this.saved,
+        voteState: voteState ?? this.voteState);
+  }
 }
 
 enum AuthorType { admin, moderator, regular, developer, loggedInUser, friend }
