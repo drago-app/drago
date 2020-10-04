@@ -90,7 +90,7 @@ Widget mediaSubmission(Submission submission, Widget thumbnail) =>
       onDownVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
       onTap: null,
-      leading: thumbnail,
+      thumbnail: thumbnail,
       authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
       scoreViewModel: ScoreViewModel(
         score: submission.score,
@@ -98,6 +98,7 @@ Widget mediaSubmission(Submission submission, Widget thumbnail) =>
         onTap: (context) =>
             BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
       ),
+      numCommentsViewModel: NumCommentsViewModel(submission.numComments),
     );
 
 Widget linkSubmission(Submission submission) => SubredditListItem(
@@ -109,7 +110,7 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
       onDownVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
       onTap: null,
-      leading: SubmissionThumbnail(
+      thumbnail: SubmissionThumbnail(
         onTap: () => _launchURL(submission.url),
         label: LinkThumbnailLabel(),
         previewUrl: submission.previewUrl ?? 'https://via.placeholder.com/150',
@@ -121,6 +122,7 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
         onTap: (context) =>
             BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
       ),
+      numCommentsViewModel: NumCommentsViewModel(submission.numComments),
     );
 
 Widget selfSubmission(Submission submission) => SubredditListItem(
@@ -132,7 +134,7 @@ Widget selfSubmission(Submission submission) => SubredditListItem(
       onDownVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
       onTap: null,
-      leading: SubmissionThumbnail(
+      thumbnail: SubmissionThumbnail(
         onTap: null,
         previewUrl: 'https://via.placeholder.com/150',
       ),
@@ -143,6 +145,7 @@ Widget selfSubmission(Submission submission) => SubredditListItem(
         onTap: (context) =>
             BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
       ),
+      numCommentsViewModel: NumCommentsViewModel(submission.numComments),
     );
 
 class SubredditListItem extends StatelessWidget {
@@ -151,14 +154,15 @@ class SubredditListItem extends StatelessWidget {
   final VoteState voteState;
   final Function onUpVote;
   final Function onDownVote;
-  final Widget leading;
+  final Widget thumbnail;
   final bool saved;
   final AuthorViewModel authorViewModel;
   final ScoreViewModel scoreViewModel;
+  final NumCommentsViewModel numCommentsViewModel;
 
   const SubredditListItem(
       {Key key,
-      @required this.leading,
+      @required this.thumbnail,
       @required this.title,
       @required this.voteState,
       @required this.onUpVote,
@@ -166,7 +170,8 @@ class SubredditListItem extends StatelessWidget {
       @required this.onTap,
       @required this.saved,
       @required this.authorViewModel,
-      @required this.scoreViewModel})
+      @required this.scoreViewModel,
+      @required this.numCommentsViewModel})
       : super(key: key);
 
   @override
@@ -174,14 +179,14 @@ class SubredditListItem extends StatelessWidget {
     return CupertinoListTile(
       onTap: () => onTap,
       bottomRightCorner: SubmissionSave(saved: saved),
-      leading: leading,
+      leading: thumbnail,
       title: Text(
         title,
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
       ),
       subtitle: SubredditListItemBottomBar(
           author: authorViewModel,
-          numComments: null,
+          numComments: numCommentsViewModel,
           age: null,
           score: scoreViewModel),
       trailing: Column(
@@ -207,15 +212,15 @@ class SubredditListItem extends StatelessWidget {
 class SubredditListItemBottomBar extends StatelessWidget {
   // final Submission submission;
   final String age;
-  final NumComments numComments;
   final AuthorViewModel author;
   final ScoreViewModel score;
+  final NumCommentsViewModel numComments;
 
   SubredditListItemBottomBar(
       {@required this.age,
-      @required this.numComments,
       @required this.author,
-      @required this.score});
+      @required this.score,
+      @required this.numComments});
 
   @override
   Widget build(BuildContext context) {
@@ -226,9 +231,9 @@ class SubredditListItemBottomBar extends StatelessWidget {
       children: <Widget>[
         AuthorWidget(author),
         // FlairWidget(flairText: submission.authorFlairText),
-        ScoreWidget(score)
+        ScoreWidget(score),
 
-        // SubmissionNumComments(submission: submission),
+        NumCommentsWidget(numComments),
         // SubmissionAge(age: age),
         // _optionsButton(context, submission)
       ],
