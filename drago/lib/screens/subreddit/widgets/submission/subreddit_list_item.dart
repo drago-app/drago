@@ -1,5 +1,8 @@
+import 'package:drago/common/drag_to_pop_modal/drag_to_pop_page_route.dart';
 import 'package:drago/common/log_in_alert.dart';
 import 'package:drago/common/text_button.dart';
+import 'package:drago/models/num_comments_model.dart';
+import 'package:drago/sandbox/host.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,70 +11,211 @@ import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class SubredditListItem extends StatelessWidget {
+class SubmissionWidgetFactory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SubmissionBloc, SubmissionState>(
-      listener: (listenercontext, state) {
-        if (state is SubmissionAuthError)
-          showCupertinoDialog(
-            context: context,
-            builder: (context) => CupertinoLogInAlert(
-              context: context,
-              titleText: state.title,
-              contentText: state.content,
-              onDismiss: () =>
-                  BlocProvider.of<SubmissionBloc>(listenercontext).add(
-                DialogDismissed(),
-              ),
-            ),
-          );
-      },
-      builder: (buildercontext, state) {
-        return CupertinoListTile(
-          onTap: () {
-            // Navigator.of(context).pushNamed('/comments',
-            //     arguments: BlocProvider.of<SubmissionBloc>(context));
-          },
-          bottomRightCorner: SubmissionSave(
-            submission: state.submission,
+        listener: (listenerContext, state) {},
+        builder: (builderContext, state) {
+          if (state.submission is SelfSubmission)
+            return selfSubmission(state.submission);
+          if (state.submission is WebSubmission)
+            return linkSubmission(state.submission);
+          if (state.submission is MediaSubmission) {
+            if ((state.submission as MediaSubmission).media is VideoMedia) {
+              return mediaSubmission(
+                  state.submission,
+                  SubmissionThumbnail(
+                    label: VideoThumbnailLabel(),
+                    previewUrl: state.submission.previewUrl,
+                  ));
+            }
+            if ((state.submission as MediaSubmission).media is GifMedia) {
+              return mediaSubmission(
+                  state.submission,
+                  SubmissionThumbnail(
+                    label: GifThumbnailLabel(),
+                    previewUrl: state.submission.previewUrl,
+                  ));
+            }
+            if ((state.submission as MediaSubmission).media is GalleryMedia) {
+              return mediaSubmission(
+                  state.submission,
+                  SubmissionThumbnail(
+                    label: GalleryThumbnailLabel(
+                        (state.submission as MediaSubmission).media),
+                    previewUrl: state.submission.previewUrl,
+                  ));
+            }
+            if ((state.submission as MediaSubmission).media is ImageMedia) {
+              return mediaSubmission(
+                  state.submission,
+                  SubmissionThumbnail(
+                    previewUrl: state.submission.previewUrl,
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true).push(
+                        DragToPopPageRoute(
+                          builder: (_) => SecondPage(
+                            bloc: context.bloc<SubmissionBloc>(),
+                          ),
+                        ),
+                      );
+                    },
+                  ));
+            }
+          }
+
+          return SizedBox.shrink();
+        });
+  }
+}
+
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+Widget mediaSubmission(Submission submission, Widget thumbnail) =>
+    SubredditListItem(
+      saved: submission.saved,
+      title: submission.title,
+      voteState: submission.voteState,
+      onUpVote: (context) =>
+          BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+      onDownVote: (context) =>
+          BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+      onTap: null,
+      leading: thumbnail,
+      authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
+      scoreViewModel: ScoreViewModel(
+        score: submission.score,
+        voteState: submission.voteState,
+        onTap: (context) =>
+            BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+      ),
+    );
+
+Widget linkSubmission(Submission submission) => SubredditListItem(
+      saved: submission.saved,
+      title: submission.title,
+      voteState: submission.voteState,
+      onUpVote: (context) =>
+          BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+      onDownVote: (context) =>
+          BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+      onTap: null,
+      leading: SubmissionThumbnail(
+        onTap: () => _launchURL(submission.url),
+        label: LinkThumbnailLabel(),
+        previewUrl: submission.previewUrl ?? 'https://via.placeholder.com/150',
+      ),
+      authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
+      scoreViewModel: ScoreViewModel(
+        score: submission.score,
+        voteState: submission.voteState,
+        onTap: (context) =>
+            BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+      ),
+    );
+
+Widget selfSubmission(Submission submission) => SubredditListItem(
+      saved: submission.saved,
+      title: submission.title,
+      voteState: submission.voteState,
+      onUpVote: (context) =>
+          BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+      onDownVote: (context) =>
+          BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+      onTap: null,
+      leading: SubmissionThumbnail(
+        onTap: null,
+        previewUrl: 'https://via.placeholder.com/150',
+      ),
+      authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
+      scoreViewModel: ScoreViewModel(
+        score: submission.score,
+        voteState: submission.voteState,
+        onTap: (context) =>
+            BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+      ),
+    );
+
+class SubredditListItem extends StatelessWidget {
+  final Function onTap;
+  final String title;
+  final VoteState voteState;
+  final Function onUpVote;
+  final Function onDownVote;
+  final Widget leading;
+  final bool saved;
+  final AuthorViewModel authorViewModel;
+  final ScoreViewModel scoreViewModel;
+
+  const SubredditListItem(
+      {Key key,
+      @required this.leading,
+      @required this.title,
+      @required this.voteState,
+      @required this.onUpVote,
+      @required this.onDownVote,
+      @required this.onTap,
+      @required this.saved,
+      @required this.authorViewModel,
+      @required this.scoreViewModel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoListTile(
+      onTap: () => onTap,
+      bottomRightCorner: SubmissionSave(saved: saved),
+      leading: leading,
+      title: Text(
+        title,
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+      ),
+      subtitle: SubredditListItemBottomBar(
+          author: authorViewModel,
+          numComments: null,
+          age: null,
+          score: scoreViewModel),
+      trailing: Column(
+        children: <Widget>[
+          SquareActionButton(
+            color: CupertinoColors.systemOrange,
+            iconData: FontAwesomeIcons.longArrowAltUp,
+            onTap: () => onUpVote(context),
+            switchCondition: voteState == VoteState.Up,
           ),
-          leading:
-              SubmissionThumbnail.fromSubmission(state.submission, context),
-          title: Text(
-            state.submission.title,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-          ),
-          subtitle: SubredditListItemBottomBar(submission: state.submission),
-          trailing: Column(
-            children: <Widget>[
-              SquareActionButton(
-                color: CupertinoColors.systemOrange,
-                iconData: FontAwesomeIcons.longArrowAltUp,
-                onTap: () =>
-                    BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-                switchCondition: state.submission.voteState == VoteState.Up,
-              ),
-              SquareActionButton(
-                color: CupertinoColors.systemPurple,
-                iconData: FontAwesomeIcons.longArrowAltDown,
-                onTap: () =>
-                    BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-                switchCondition: state.submission.voteState == VoteState.Down,
-              )
-            ],
-          ),
-        );
-      },
+          SquareActionButton(
+            color: CupertinoColors.systemPurple,
+            iconData: FontAwesomeIcons.longArrowAltDown,
+            onTap: () => onDownVote,
+            switchCondition: voteState == VoteState.Down,
+          )
+        ],
+      ),
     );
   }
 }
 
 class SubredditListItemBottomBar extends StatelessWidget {
-  final Submission submission;
+  // final Submission submission;
+  final String age;
+  final NumComments numComments;
+  final AuthorViewModel author;
+  final ScoreViewModel score;
 
-  SubredditListItemBottomBar({@required this.submission});
+  SubredditListItemBottomBar(
+      {@required this.age,
+      @required this.numComments,
+      @required this.author,
+      @required this.score});
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +224,13 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
-        AuthorTextButton(author: submission.author, onTap: () => null),
+        AuthorWidget(author),
         // FlairWidget(flairText: submission.authorFlairText),
-        SubmissionScore(
-            submission: submission,
-            onTap: () =>
-                BlocProvider.of<SubmissionBloc>(context).add(Upvote())),
-        SubmissionNumComments(submission: submission),
-        // SubmissionAge(age: submission.age),
-        _optionsButton(context, submission)
+        ScoreWidget(score)
+
+        // SubmissionNumComments(submission: submission),
+        // SubmissionAge(age: age),
+        // _optionsButton(context, submission)
       ],
     );
   }
@@ -210,7 +352,10 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
                     ],
                   ),
                 )),
-            Positioned(bottom: 0, right: 0, child: widget.bottomRightCorner),
+            Positioned(
+                bottom: 0,
+                right: 0,
+                child: widget.bottomRightCorner ?? SizedBox.shrink()),
           ],
         ),
       ),

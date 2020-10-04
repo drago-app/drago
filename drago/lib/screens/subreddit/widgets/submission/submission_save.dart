@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionSave extends StatelessWidget {
-  final Submission submission;
+  final bool saved;
 
-  const SubmissionSave({@required this.submission})
-      : assert(submission != null);
+  const SubmissionSave({@required this.saved}) : assert(saved != null);
 
   @override
   Widget build(BuildContext context) {
-    if (submission.saved == false) {
+    if (saved == false) {
       return SizedBox.shrink();
     } else {
       return Container(

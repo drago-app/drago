@@ -113,13 +113,13 @@ class LinkThumbnailLabel extends StatelessWidget {
   }
 }
 
-_launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
+// _launchURL(String url) async {
+//   if (await canLaunch(url)) {
+//     await launch(url);
+//   } else {
+//     throw 'Could not launch $url';
+//   }
+// }
 
 class SubmissionThumbnail extends StatelessWidget {
   final String previewUrl;
@@ -129,54 +129,54 @@ class SubmissionThumbnail extends StatelessWidget {
   SubmissionThumbnail(
       {this.previewUrl, this.label = const SizedBox.shrink(), this.onTap});
 
-  factory SubmissionThumbnail.fromSubmission(
-      Submission submission, BuildContext context) {
-    if (submission is WebSubmission) {
-      return SubmissionThumbnail(
-          previewUrl: submission.previewUrl,
-          label: LinkThumbnailLabel(),
-          onTap: () {
-            _launchURL(submission.url);
-          });
-    }
+  // factory SubmissionThumbnail.fromSubmission(
+  //     Submission submission, BuildContext context) {
+  //   if (submission is WebSubmission) {
+  //     return SubmissionThumbnail(
+  //         previewUrl: submission.previewUrl,
+  //         label: LinkThumbnailLabel(),
+  //         onTap: () {
+  //           _launchURL(submission.url);
+  //         });
+  //   }
 
-    if (submission is MediaSubmission) {
-      if (submission.media is VideoMedia) {
-        return SubmissionThumbnail(
-          previewUrl: submission.previewUrl,
-          label: VideoThumbnailLabel(),
-        );
-      }
-      if (submission.media is GifMedia) {
-        return SubmissionThumbnail(
-          previewUrl: submission.previewUrl,
-          label: GifThumbnailLabel(),
-        );
-      }
-      if (submission.media is GalleryMedia) {
-        return SubmissionThumbnail(
-          previewUrl: submission.previewUrl,
-          label: GalleryThumbnailLabel(submission.media),
-        );
-      }
-    }
+  //   if (submission is MediaSubmission) {
+  //     if (submission.media is VideoMedia) {
+  //       return SubmissionThumbnail(
+  //         previewUrl: submission.previewUrl,
+  //         label: VideoThumbnailLabel(),
+  //       );
+  //     }
+  //     if (submission.media is GifMedia) {
+  //       return SubmissionThumbnail(
+  //         previewUrl: submission.previewUrl,
+  //         label: GifThumbnailLabel(),
+  //       );
+  //     }
+  //     if (submission.media is GalleryMedia) {
+  //       return SubmissionThumbnail(
+  //         previewUrl: submission.previewUrl,
+  //         label: GalleryThumbnailLabel(submission.media),
+  //       );
+  //     }
+  //   }
 
-    return SubmissionThumbnail(
-      previewUrl: submission.previewUrl,
-      // onTap: () {
-      //   print('$context');
-      // }
-      onTap: () {
-        Navigator.of(context, rootNavigator: true).push(
-          DragToPopPageRoute(
-            builder: (_) => SecondPage(
-              bloc: context.bloc<SubmissionBloc>(),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  //   return SubmissionThumbnail(
+  //     previewUrl: submission.previewUrl,
+  //     // onTap: () {
+  //     //   print('$context');
+  //     // }
+  //     onTap: () {
+  //       Navigator.of(context, rootNavigator: true).push(
+  //         DragToPopPageRoute(
+  //           builder: (_) => SecondPage(
+  //             bloc: context.bloc<SubmissionBloc>(),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -216,23 +216,6 @@ class SubmissionThumbnail extends StatelessWidget {
       ),
     );
   }
-}
-
-typedef SubmissionThumbnail SubmissionThumbnailBuilder(BuildContext context);
-
-class ThumbnailBuilder extends StatelessWidget {
-  final SubmissionThumbnailBuilder builder;
-  final Submission submission;
-  final Bloc bloc;
-
-  ThumbnailBuilder(
-      {@required this.builder, @required this.submission, @required this.bloc})
-      : assert(builder != null),
-        assert(submission != null),
-        assert(bloc != null);
-
-  @override
-  Widget build(BuildContext context) => builder(context);
 }
 
 class SecondPage extends StatelessWidget {

@@ -126,7 +126,15 @@ class _SubredditPageState extends State<SubredditPage> {
               upvoteOrClear: upvoteOrClear,
               downvoteOrClear: downvoteOrClear,
               saveOrUnsave: saveOrUnsave),
-          child: SubredditListItem(),
+          child: SubmissionWidgetFactory(),
+          // child: SelfSubmissionWidget(
+          //         title: state.redditLinks[index].title,
+          //         voteState: state.redditLinks[index].voteState,
+          //         onUpVote: (BuildContext context) =>
+          //             BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+          //         onDownVote: null,
+          //         onTap: null) ??
+          //     SizedBox.shrink(),
         ),
       );
     }
