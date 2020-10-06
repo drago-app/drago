@@ -1,13 +1,11 @@
 import 'package:drago/common/drag_to_pop_modal/drag_to_pop_page_route.dart';
 import 'package:drago/common/log_in_alert.dart';
 import 'package:drago/common/text_button.dart';
-import 'package:drago/models/num_comments_model.dart';
 import 'package:drago/sandbox/host.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
-import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
@@ -133,7 +131,8 @@ Widget selfSubmission(Submission submission) => SubredditListItem(
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
       onDownVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-      onTap: null,
+      onTap: (context) => Navigator.of(context).pushNamed('/comments',
+          arguments: BlocProvider.of<SubmissionBloc>(context)),
       thumbnail: SubmissionThumbnail(
         onTap: null,
         previewUrl: 'https://via.placeholder.com/150',
@@ -177,7 +176,7 @@ class SubredditListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoListTile(
-      onTap: () => onTap,
+      onTap: () => onTap(context),
       bottomRightCorner: SubmissionSave(saved: saved),
       leading: thumbnail,
       title: Text(

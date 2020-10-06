@@ -281,18 +281,18 @@ class RouteGenerator {
             child: SubredditPage(),
           ),
         );
-      // case '/comments':
-      //   return CupertinoPageRoute(
-      //     builder: (context) => BlocProvider<CommentsPageBloc>(
-      //       child: CommentsPage(
-      //         submissionBloc: args as SubmissionBloc,
-      //       ),
-      //       create: (BuildContext context) => CommentsPageBloc(
-      //           reddit: _reddit,
-      //           submission: (args as SubmissionBloc).subm)
-      //         ..add(LoadComments()),
-      //     ),
-      //   );
+      case '/comments':
+        return CupertinoPageRoute(
+          builder: (context) => BlocProvider<CommentsPageBloc>(
+            child: CommentsPageFactory(
+              submissionBloc: args as SubmissionBloc,
+            ),
+            create: (BuildContext context) => CommentsPageBloc(
+                reddit: _reddit,
+                submission: (args as SubmissionBloc).state.submission)
+              ..add(LoadComments()),
+          ),
+        );
       default:
         return _errorRoute();
     }

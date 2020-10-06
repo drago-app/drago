@@ -2,7 +2,6 @@ import 'package:drago/models/score_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/core/entities/submission_entity.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
 
 class ScoreViewModel {
   final Function onTap;
@@ -31,17 +30,18 @@ class ScoreWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => score.onTap(context),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            FaIcon(FontAwesomeIcons.arrowUp, size: 14, color: score.color),
-            Text(
-              ' ${score.score.toString()}',
-              style: TextStyle(fontSize: 14, color: score.color),
-            )
-          ],
-        ));
+      onTap: () => score.onTap(context),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          FaIcon(FontAwesomeIcons.arrowUp, size: 14, color: score.color),
+          Text(
+            ' ${score.score.toString()}',
+            style: TextStyle(fontSize: 14, color: score.color),
+          )
+        ],
+      ),
+    );
   }
 }
