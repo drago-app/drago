@@ -12,10 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drago/blocs/comments_page_bloc/comments_page.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
-
 import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'widgets/submission/submission_score.dart';
 
 // class SubmissionContentWidget extends StatelessWidget {
@@ -126,55 +124,83 @@ class CommentsPageFactory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SubmissionBloc, SubmissionState>(
-      bloc: submissionBloc,
-      listener: (listenerState, state) {},
-      builder: (builderContext, state) => CommentsPage(
-        submissionBloc: submissionBloc,
-        bottomWidget: SelfSubmissionBodyWidget(
-            (submissionBloc.state.submission as SelfSubmission).body),
-        topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
-        submissionSummary: SubmissionSummary(
-          subreddit: submissionBloc.state.submission.subreddit,
-          authorViewModel:
-              AuthorViewModel(author: submissionBloc.state.submission.author),
-          scoreViewModel: ScoreViewModel(
-              onTap: (_) => submissionBloc.add(Upvote()),
-              score: submissionBloc.state.submission.score,
-              voteState: submissionBloc.state.submission.voteState),
-        ),
-        submissionActions: SubmissionActions(
-            onUpVote: () => submissionBloc.add(Upvote()),
-            onDownVote: () => submissionBloc.add(Downvote()),
-            onSave: (context) => submissionBloc.add(Save()),
-            saved: submissionBloc.state.submission.saved,
-            voteState: submissionBloc.state.submission.voteState),
-      ),
-    );
+        bloc: submissionBloc,
+        listener: (listenerState, state) {},
+        builder: (builderContext, state) {
+          if (state.submission is SelfSubmission)
+            return selfSubmissionCommentsPage(submissionBloc);
+          if (state.submission is WebSubmission) {
+            return linkSubmissionCommentsPage(submissionBloc);
+          }
+        });
   }
 }
 
+Widget linkSubmissionCommentsPage(submissionBloc) => CommentsPage(
+      numComments: submissionBloc.state.submission.numComments.toString(),
+      bottomWidget: Text('${submissionBloc.state.submission.url}'),
+      topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
+      submissionSummary: SubmissionSummary(
+        subreddit: submissionBloc.state.submission.subreddit,
+        authorViewModel:
+            AuthorViewModel(author: submissionBloc.state.submission.author),
+        scoreViewModel: ScoreViewModel(
+          onTap: (_) => submissionBloc.add(Upvote()),
+          score: submissionBloc.state.submission.score,
+          voteState: submissionBloc.state.submission.voteState,
+        ),
+      ),
+      submissionActions: SubmissionActions(
+        onUpVote: () => submissionBloc.add(Upvote()),
+        onDownVote: () => submissionBloc.add(Downvote()),
+        onSave: (context) => submissionBloc.add(Save()),
+        saved: submissionBloc.state.submission.saved,
+        voteState: submissionBloc.state.submission.voteState,
+      ),
+    );
+
+Widget selfSubmissionCommentsPage(submissionBloc) => CommentsPage(
+      numComments: submissionBloc.state.submission.numComments.toString(),
+      bottomWidget: SelfSubmissionBodyWidget(
+          (submissionBloc.state.submission as SelfSubmission).body),
+      topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
+      submissionSummary: SubmissionSummary(
+        subreddit: submissionBloc.state.submission.subreddit,
+        authorViewModel:
+            AuthorViewModel(author: submissionBloc.state.submission.author),
+        scoreViewModel: ScoreViewModel(
+          onTap: (_) => submissionBloc.add(Upvote()),
+          score: submissionBloc.state.submission.score,
+          voteState: submissionBloc.state.submission.voteState,
+        ),
+      ),
+      submissionActions: SubmissionActions(
+        onUpVote: () => submissionBloc.add(Upvote()),
+        onDownVote: () => submissionBloc.add(Downvote()),
+        onSave: (context) => submissionBloc.add(Save()),
+        saved: submissionBloc.state.submission.saved,
+        voteState: submissionBloc.state.submission.voteState,
+      ),
+    );
+
 class CommentsPage extends StatelessWidget {
-  final SubmissionBloc submissionBloc;
+  final String numComments;
   final SubmissionActions submissionActions;
   final SubmissionSummary submissionSummary;
   final Widget topWidget;
   final Widget bottomWidget;
 
   CommentsPage(
-      {@required this.submissionBloc,
+      {@required this.numComments,
       this.submissionActions,
       this.submissionSummary,
       this.topWidget,
-      this.bottomWidget})
-      : assert(submissionBloc != null);
+      this.bottomWidget});
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(
-            '${submissionBloc.state.submission.numComments.toString()} Comments'),
-      ),
+      navigationBar: CupertinoNavigationBar(middle: Text(numComments)),
       child: SafeArea(
         child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

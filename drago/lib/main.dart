@@ -288,7 +288,7 @@ class RouteGenerator {
               submissionBloc: args as SubmissionBloc,
             ),
             create: (BuildContext context) => CommentsPageBloc(
-                reddit: _reddit,
+                reddit: _reddit, // Bloc shouldnlt have access to _reddit
                 submission: (args as SubmissionBloc).state.submission)
               ..add(LoadComments()),
           ),

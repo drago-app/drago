@@ -26,7 +26,6 @@ class ScoreWidget extends StatelessWidget {
   final ScoreViewModel score;
 
   ScoreWidget(this.score) : assert(score != null);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

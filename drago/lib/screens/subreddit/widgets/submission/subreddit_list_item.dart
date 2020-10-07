@@ -107,7 +107,8 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
       onDownVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-      onTap: null,
+      onTap: (context) => Navigator.of(context).pushNamed('/comments',
+          arguments: BlocProvider.of<SubmissionBloc>(context)),
       thumbnail: SubmissionThumbnail(
         onTap: () => _launchURL(submission.url),
         label: LinkThumbnailLabel(),

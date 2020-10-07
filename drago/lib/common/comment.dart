@@ -22,7 +22,7 @@ class CommentWidget extends StatelessWidget {
     return CustomExpansionTile(
       backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
       indentation: 8.0 * comment.depth,
-      trailing: trailing,
+      trailingOpen: trailing,
       sideBorderColor: (comment.depth == 0)
           ? Colors.transparent
           : (comment.depth == 9) ? Colors.blue : Colors.red,
