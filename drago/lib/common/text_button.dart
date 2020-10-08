@@ -2,7 +2,6 @@ import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:drago/core/entities/submission_author.dart';
 
 class TextButton extends StatelessWidget {
   final String text;
@@ -57,7 +56,7 @@ class AuthorWidget extends StatelessWidget {
         style: TextButton.defaultTextStyle.copyWith(
             letterSpacing: 0,
             fontWeight: FontWeight.w500,
-            fontSize: 15, //_size(size),
+            fontSize: 13,
             color: author.color));
   }
 }

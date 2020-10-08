@@ -1,12 +1,11 @@
 import 'package:drago/models/comment_model.dart';
+import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/common/custom_expansion_tile.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../theme.dart';
-import './common.dart';
 
 import 'package:flutter_markdown/flutter_markdown.dart';
 
