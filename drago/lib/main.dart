@@ -10,6 +10,7 @@ import 'package:drago/features/submission/usecases.dart';
 import 'package:drago/reddit_service.dart';
 
 import 'blocs/submission_bloc.dart/submission.dart';
+import 'comments_page_factory.dart';
 import 'common/common.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,6 @@ import 'dialog/dialog_service.dart';
 import 'features/subreddit/get_submissions.dart';
 import 'features/user/usecases.dart';
 import 'screens/screens.dart';
-import 'screens/subreddit/comments_page.dart';
 
 final RedditService _reddit = RedditService();
 
