@@ -318,14 +318,39 @@ class CupertinoListTile extends StatefulWidget {
 }
 
 class _StatefulStateCupertino extends State<CupertinoListTile> {
+  bool _isPressed = false;
+  static const Color _kBackgroundColorPressed = Color(0xFFDDDDDD);
+  void onTapDown(TapDownDetails details) {
+    setState(() {
+      _isPressed = true;
+    });
+  }
+
+  void onTapUp(TapUpDetails details) {
+    setState(() {
+      _isPressed = false;
+    });
+  }
+
+  void onTapCancel() {
+    setState(() {
+      _isPressed = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
+      onTapCancel: onTapCancel,
+      onTapDown: onTapDown,
+      onTapUp: onTapUp,
       child: Container(
         padding: EdgeInsets.only(top: 8, left: 16, right: 16),
         decoration: BoxDecoration(
-            color: CupertinoColors.systemBackground.resolveFrom(context)),
+            color: _isPressed
+                ? _kBackgroundColorPressed
+                : CupertinoColors.systemBackground.resolveFrom(context)),
         child: Stack(
           children: [
             Container(
@@ -335,7 +360,7 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
-                              width: 0, color: CupertinoColors.inactiveGray))),
+                              width: 0, color: CupertinoColors.separator))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
