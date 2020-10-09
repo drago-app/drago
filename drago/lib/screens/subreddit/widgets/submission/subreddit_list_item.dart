@@ -84,6 +84,8 @@ Widget mediaSubmission(Submission submission, Widget thumbnail) =>
       saved: submission.saved,
       title: submission.title,
       voteState: submission.voteState,
+      authorFlairText: submission.authorFlairText,
+      linkFlairText: submission.linkFlairText,
       onUpVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
       onDownVote: (context) =>
@@ -103,6 +105,8 @@ Widget mediaSubmission(Submission submission, Widget thumbnail) =>
 Widget linkSubmission(Submission submission) => SubredditListItem(
       saved: submission.saved,
       title: submission.title,
+      authorFlairText: submission.authorFlairText,
+      linkFlairText: submission.linkFlairText,
       voteState: submission.voteState,
       onUpVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
@@ -128,6 +132,8 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
 Widget selfSubmission(Submission submission) => SubredditListItem(
       saved: submission.saved,
       title: submission.title,
+      authorFlairText: submission.authorFlairText,
+      linkFlairText: submission.linkFlairText,
       voteState: submission.voteState,
       onUpVote: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
@@ -151,7 +157,7 @@ Widget selfSubmission(Submission submission) => SubredditListItem(
 
 class SubredditListItem extends StatelessWidget {
   final Function onTap;
-  final String title;
+  final String title, authorFlairText, linkFlairText;
   final VoteState voteState;
   final Function onUpVote;
   final Function onDownVote;
@@ -165,6 +171,8 @@ class SubredditListItem extends StatelessWidget {
       {Key key,
       @required this.thumbnail,
       @required this.title,
+      @required this.authorFlairText,
+      @required this.linkFlairText,
       @required this.voteState,
       @required this.onUpVote,
       @required this.onDownVote,
@@ -181,13 +189,20 @@ class SubredditListItem extends StatelessWidget {
       onTap: () => onTap(context),
       bottomRightCorner: SubmissionSave(saved: saved),
       leading: thumbnail,
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+      title: RichText(
+        text: TextSpan(
+            text: '$title ',
+            style: CupertinoTheme.of(context).textTheme.textStyle,
+            children: [
+              WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: FlairWidget(flairText: linkFlairText))
+            ]),
       ),
       subtitle: SubredditListItemBottomBar(
           author: authorViewModel,
           numComments: numCommentsViewModel,
+          authorFlairText: authorFlairText,
           age: null,
           score: scoreViewModel),
       trailing: Column(
@@ -216,10 +231,12 @@ class SubredditListItemBottomBar extends StatelessWidget {
   final AuthorViewModel author;
   final ScoreViewModel score;
   final NumCommentsViewModel numComments;
+  final String authorFlairText;
 
   SubredditListItemBottomBar(
       {@required this.age,
       @required this.author,
+      @required this.authorFlairText,
       @required this.score,
       @required this.numComments});
 
@@ -231,7 +248,7 @@ class SubredditListItemBottomBar extends StatelessWidget {
       spacing: 4,
       children: <Widget>[
         AuthorWidget(author),
-        // FlairWidget(flairText: submission.authorFlairText),
+        FlairWidget(flairText: authorFlairText),
         ScoreWidget(score),
 
         NumCommentsWidget(numComments),

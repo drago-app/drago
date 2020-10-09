@@ -28,7 +28,14 @@ class GetRedditLinks
 class Submission extends Equatable {
   static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
   final Author author;
-  final String domain, title, url, id, previewUrl, subreddit;
+  final String domain,
+      title,
+      url,
+      id,
+      previewUrl,
+      subreddit,
+      authorFlairText,
+      linkFlairText;
   final DateTime createdUtc;
   final bool edited, saved;
   final NumComments numComments;
@@ -38,6 +45,8 @@ class Submission extends Equatable {
   Submission(
       {@required this.author,
       @required this.createdUtc,
+      @required this.authorFlairText,
+      @required this.linkFlairText,
       @required this.edited,
       @required this.domain,
       @required this.id,
@@ -57,6 +66,8 @@ class Submission extends Equatable {
         domain = link.domain,
         id = link.id,
         saved = link.saved,
+        authorFlairText = link.authorFlairText,
+        linkFlairText = link.linkFlairText,
         numComments = NumComments(numComments: link.numComments),
         score = ScoreModel(score: link.score),
         title = link.title,
@@ -109,6 +120,8 @@ class WebSubmission extends Submission {
       @required domain,
       @required id,
       @required numComments,
+      @required authorFlairText,
+      @required linkFlairText,
       @required score,
       @required title,
       @required url,
@@ -118,6 +131,8 @@ class WebSubmission extends Submission {
       @required voteState})
       : super(
             author: author,
+            authorFlairText: authorFlairText,
+            linkFlairText: linkFlairText,
             createdUtc: createdUtc,
             edited: edited,
             domain: domain,
@@ -133,6 +148,8 @@ class WebSubmission extends Submission {
 
   WebSubmission copyWith({score, numComments, edited, voteState, saved}) {
     return WebSubmission(
+        linkFlairText: this.linkFlairText,
+        authorFlairText: this.authorFlairText,
         author: this.author,
         createdUtc: this.createdUtc,
         edited: edited ?? this.edited,
@@ -160,6 +177,8 @@ class SelfSubmission extends Submission {
 
   SelfSubmission(
       {@required this.body,
+      @required authorFlairText,
+      @required linkFlairText,
       @required author,
       @required createdUtc,
       @required edited,
@@ -179,6 +198,8 @@ class SelfSubmission extends Submission {
             edited: edited,
             domain: domain,
             id: id,
+            authorFlairText: authorFlairText,
+            linkFlairText: linkFlairText,
             numComments: numComments,
             score: score,
             title: title,
@@ -191,6 +212,8 @@ class SelfSubmission extends Submission {
   SelfSubmission copyWith(
       {score, numComments, edited, voteState, saved, body}) {
     return SelfSubmission(
+        linkFlairText: this.linkFlairText,
+        authorFlairText: this.authorFlairText,
         body: body ?? this.body,
         author: this.author,
         createdUtc: this.createdUtc,
@@ -227,6 +250,8 @@ class MediaSubmission extends Submission {
       ];
   MediaSubmission(
       {@required this.media,
+      @required linkFlairText,
+      @required authorFlairText,
       @required author,
       @required createdUtc,
       @required edited,
@@ -241,6 +266,8 @@ class MediaSubmission extends Submission {
       @required subreddit,
       @required voteState})
       : super(
+            linkFlairText: linkFlairText,
+            authorFlairText: authorFlairText,
             author: author,
             createdUtc: createdUtc,
             edited: edited,
@@ -258,6 +285,8 @@ class MediaSubmission extends Submission {
   MediaSubmission copyWith(
       {score, numComments, edited, voteState, saved, media}) {
     return MediaSubmission(
+        linkFlairText: this.linkFlairText,
+        authorFlairText: this.authorFlairText,
         media: media ?? this.media,
         author: this.author,
         createdUtc: this.createdUtc,

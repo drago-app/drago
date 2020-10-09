@@ -193,6 +193,8 @@ class RedditService {
           ? null
           : s.preview?.first?.source?.url?.toString(),
       subreddit: s.subreddit.displayName,
+      authorFlairText: s.authorFlairText ?? '',
+      linkFlairText: s.linkFlairText ?? '',
     );
 
     return r;

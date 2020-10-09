@@ -85,6 +85,8 @@ class RedditLink implements RedditThing {
   final String body;
   final String previewUrl;
   final String subreddit;
+  final String authorFlairText;
+  final String linkFlairText;
 
   /// admin, moderator,  null
   final String distinguished;
@@ -105,6 +107,8 @@ class RedditLink implements RedditThing {
       this.numComments,
       this.score,
       this.subreddit,
+      this.authorFlairText,
+      this.linkFlairText,
       this.title,
       this.url,
       this.previewUrl,
