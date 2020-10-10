@@ -81,6 +81,7 @@ _launchURL(String url) async {
 
 Widget mediaSubmission(Submission submission, Widget thumbnail) =>
     SubredditListItem(
+        stickied: submission.stickied,
         saved: submission.saved,
         title: submission.title,
         voteState: submission.voteState,
@@ -104,6 +105,7 @@ Widget mediaSubmission(Submission submission, Widget thumbnail) =>
         nsfw: submission.isNSFW);
 
 Widget linkSubmission(Submission submission) => SubredditListItem(
+    stickied: submission.stickied,
     saved: submission.saved,
     title: submission.title,
     authorFlairText: submission.authorFlairText,
@@ -131,6 +133,7 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
     nsfw: submission.isNSFW);
 
 Widget selfSubmission(Submission submission) => SubredditListItem(
+    stickied: submission.stickied,
     saved: submission.saved,
     title: submission.title,
     authorFlairText: submission.authorFlairText,
@@ -163,7 +166,7 @@ class SubredditListItem extends StatelessWidget {
   final Function onUpVote;
   final Function onDownVote;
   final Widget thumbnail;
-  final bool saved, nsfw;
+  final bool saved, nsfw, stickied;
   final AuthorViewModel authorViewModel;
   final ScoreViewModel scoreViewModel;
   final NumCommentsViewModel numCommentsViewModel;
@@ -180,6 +183,7 @@ class SubredditListItem extends StatelessWidget {
       @required this.onTap,
       @required this.saved,
       @required this.nsfw,
+      @required this.stickied,
       @required this.authorViewModel,
       @required this.scoreViewModel,
       @required this.numCommentsViewModel})
@@ -209,6 +213,7 @@ class SubredditListItem extends StatelessWidget {
           numComments: numCommentsViewModel,
           authorFlairText: authorFlairText,
           age: null,
+          stickied: stickied,
           score: scoreViewModel),
       trailing: Column(
         children: <Widget>[
@@ -231,15 +236,16 @@ class SubredditListItem extends StatelessWidget {
 }
 
 class SubredditListItemBottomBar extends StatelessWidget {
-  // final Submission submission;
   final String age;
   final AuthorViewModel author;
   final ScoreViewModel score;
   final NumCommentsViewModel numComments;
   final String authorFlairText;
+  final bool stickied;
 
   SubredditListItemBottomBar(
       {@required this.age,
+      @required this.stickied,
       @required this.author,
       @required this.authorFlairText,
       @required this.score,
@@ -252,6 +258,7 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
+        StickiedWidget(stickied),
         AuthorWidget(author),
         FlairWidget(flairText: authorFlairText),
         ScoreWidget(score),

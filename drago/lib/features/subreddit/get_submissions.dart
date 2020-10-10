@@ -37,7 +37,7 @@ class Submission extends Equatable {
       authorFlairText,
       linkFlairText;
   final DateTime createdUtc;
-  final bool edited, saved, isNSFW;
+  final bool edited, saved, isNSFW, stickied;
   final NumComments numComments;
   final ScoreModel score; //todo I don't likke this
   final VoteState voteState;
@@ -57,6 +57,7 @@ class Submission extends Equatable {
       @required this.previewUrl,
       @required this.saved,
       @required this.isNSFW,
+      @required this.stickied,
       @required this.subreddit,
       @required this.voteState});
 
@@ -67,6 +68,7 @@ class Submission extends Equatable {
         domain = link.domain,
         id = link.id,
         isNSFW = link.isNSFW,
+        stickied = link.stickied,
         saved = link.saved,
         authorFlairText = link.authorFlairText,
         linkFlairText = link.linkFlairText,
@@ -77,8 +79,10 @@ class Submission extends Equatable {
         url = link.url,
         previewUrl = link.previewUrl ?? _defaultPreviewUrl,
         voteState = link.voteState;
-  Submission copyWith({score, numComments, edited, voteState, saved, isNSFW}) {
+  Submission copyWith(
+      {score, numComments, edited, voteState, saved, isNSFW, stickied}) {
     return Submission(
+        stickied: stickied ?? this.stickied,
         author: this.author,
         createdUtc: this.createdUtc,
         edited: edited ?? this.edited,
@@ -114,7 +118,8 @@ class Submission extends Equatable {
         voteState,
         isNSFW,
         authorFlairText,
-        linkFlairText
+        linkFlairText,
+        stickied
       ];
 }
 
@@ -123,6 +128,7 @@ class WebSubmission extends Submission {
       : super.fromRedditLink(link: link);
   WebSubmission(
       {@required author,
+      @required stickied,
       @required createdUtc,
       @required edited,
       @required domain,
@@ -140,6 +146,7 @@ class WebSubmission extends Submission {
       @required voteState})
       : super(
             author: author,
+            stickied: stickied,
             authorFlairText: authorFlairText,
             linkFlairText: linkFlairText,
             createdUtc: createdUtc,
@@ -157,9 +164,10 @@ class WebSubmission extends Submission {
             voteState: voteState);
 
   WebSubmission copyWith(
-      {score, numComments, edited, voteState, saved, isNSFW}) {
+      {score, numComments, edited, voteState, saved, isNSFW, stickied}) {
     return WebSubmission(
         linkFlairText: this.linkFlairText,
+        stickied: stickied ?? this.stickied,
         authorFlairText: this.authorFlairText,
         author: this.author,
         createdUtc: this.createdUtc,
@@ -189,6 +197,7 @@ class SelfSubmission extends Submission {
 
   SelfSubmission(
       {@required this.body,
+      @required stickied,
       @required authorFlairText,
       @required linkFlairText,
       @required author,
@@ -207,6 +216,7 @@ class SelfSubmission extends Submission {
       @required voteState})
       : super(
             author: author,
+            stickied: stickied,
             createdUtc: createdUtc,
             edited: edited,
             domain: domain,
@@ -224,9 +234,10 @@ class SelfSubmission extends Submission {
             voteState: voteState);
 
   SelfSubmission copyWith(
-      {score, numComments, edited, voteState, saved, body, isNSFW}) {
+      {score, numComments, edited, voteState, saved, body, isNSFW, stickied}) {
     return SelfSubmission(
         linkFlairText: this.linkFlairText,
+        stickied: stickied ?? this.stickied,
         authorFlairText: this.authorFlairText,
         body: body ?? this.body,
         author: this.author,
@@ -261,10 +272,12 @@ class MediaSubmission extends Submission {
         super.saved,
         super.score,
         super.voteState,
-        super.edited
+        super.edited,
+        super.stickied
       ];
   MediaSubmission(
       {@required this.media,
+      @required stickied,
       @required linkFlairText,
       @required authorFlairText,
       @required author,
@@ -283,6 +296,7 @@ class MediaSubmission extends Submission {
       @required voteState})
       : super(
             linkFlairText: linkFlairText,
+            stickied: stickied,
             authorFlairText: authorFlairText,
             author: author,
             createdUtc: createdUtc,
@@ -300,9 +314,10 @@ class MediaSubmission extends Submission {
             voteState: voteState);
 
   MediaSubmission copyWith(
-      {score, numComments, edited, voteState, saved, media, isNSFW}) {
+      {score, numComments, edited, voteState, saved, media, isNSFW, stickied}) {
     return MediaSubmission(
         linkFlairText: this.linkFlairText,
+        stickied: stickied ?? this.stickied,
         authorFlairText: this.authorFlairText,
         media: media ?? this.media,
         author: this.author,

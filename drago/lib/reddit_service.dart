@@ -181,6 +181,7 @@ class RedditService {
       createdUtc: s.createdUtc,
       edited: s.edited,
       isSelf: s.isSelf,
+      stickied: s.stickied,
       domain: s.domain,
       distinguished: s.distinguished,
       body: s.selftext,
