@@ -76,6 +76,7 @@ class RedditLink implements RedditThing {
   final bool edited;
   final bool isSelf;
   final bool saved;
+  final bool isNSFW;
   final String domain;
   final String id;
   // final String permalink;
@@ -99,6 +100,7 @@ class RedditLink implements RedditThing {
       this.createdUtc,
       this.edited,
       this.isSelf,
+      this.isNSFW,
       this.saved,
       this.domain,
       this.body,

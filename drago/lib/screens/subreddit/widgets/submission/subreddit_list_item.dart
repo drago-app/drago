@@ -81,79 +81,80 @@ _launchURL(String url) async {
 
 Widget mediaSubmission(Submission submission, Widget thumbnail) =>
     SubredditListItem(
-      saved: submission.saved,
-      title: submission.title,
-      voteState: submission.voteState,
-      authorFlairText: submission.authorFlairText,
-      linkFlairText: submission.linkFlairText,
-      onUpVote: (context) =>
-          BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-      onDownVote: (context) =>
-          BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-      onTap: null,
-      thumbnail: thumbnail,
-      authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
-      scoreViewModel: ScoreViewModel(
-        score: submission.score,
+        saved: submission.saved,
+        title: submission.title,
         voteState: submission.voteState,
-        onTap: (context) =>
+        authorFlairText: submission.authorFlairText,
+        linkFlairText: submission.linkFlairText,
+        onUpVote: (context) =>
             BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-      ),
-      numCommentsViewModel: NumCommentsViewModel(submission.numComments),
-    );
+        onDownVote: (context) =>
+            BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+        onTap: null,
+        thumbnail: thumbnail,
+        authorViewModel:
+            AuthorViewModel(author: submission.author, onTap: null),
+        scoreViewModel: ScoreViewModel(
+          score: submission.score,
+          voteState: submission.voteState,
+          onTap: (context) =>
+              BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+        ),
+        numCommentsViewModel: NumCommentsViewModel(submission.numComments),
+        nsfw: submission.isNSFW);
 
 Widget linkSubmission(Submission submission) => SubredditListItem(
-      saved: submission.saved,
-      title: submission.title,
-      authorFlairText: submission.authorFlairText,
-      linkFlairText: submission.linkFlairText,
+    saved: submission.saved,
+    title: submission.title,
+    authorFlairText: submission.authorFlairText,
+    linkFlairText: submission.linkFlairText,
+    voteState: submission.voteState,
+    onUpVote: (context) =>
+        BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+    onDownVote: (context) =>
+        BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+    onTap: (context) => Navigator.of(context).pushNamed('/comments',
+        arguments: BlocProvider.of<SubmissionBloc>(context)),
+    thumbnail: SubmissionThumbnail(
+      onTap: () => _launchURL(submission.url),
+      label: LinkThumbnailLabel(),
+      previewUrl: submission.previewUrl ?? 'https://via.placeholder.com/150',
+    ),
+    authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
+    scoreViewModel: ScoreViewModel(
+      score: submission.score,
       voteState: submission.voteState,
-      onUpVote: (context) =>
+      onTap: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-      onDownVote: (context) =>
-          BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-      onTap: (context) => Navigator.of(context).pushNamed('/comments',
-          arguments: BlocProvider.of<SubmissionBloc>(context)),
-      thumbnail: SubmissionThumbnail(
-        onTap: () => _launchURL(submission.url),
-        label: LinkThumbnailLabel(),
-        previewUrl: submission.previewUrl ?? 'https://via.placeholder.com/150',
-      ),
-      authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
-      scoreViewModel: ScoreViewModel(
-        score: submission.score,
-        voteState: submission.voteState,
-        onTap: (context) =>
-            BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-      ),
-      numCommentsViewModel: NumCommentsViewModel(submission.numComments),
-    );
+    ),
+    numCommentsViewModel: NumCommentsViewModel(submission.numComments),
+    nsfw: submission.isNSFW);
 
 Widget selfSubmission(Submission submission) => SubredditListItem(
-      saved: submission.saved,
-      title: submission.title,
-      authorFlairText: submission.authorFlairText,
-      linkFlairText: submission.linkFlairText,
+    saved: submission.saved,
+    title: submission.title,
+    authorFlairText: submission.authorFlairText,
+    linkFlairText: submission.linkFlairText,
+    voteState: submission.voteState,
+    onUpVote: (context) =>
+        BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
+    onDownVote: (context) =>
+        BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
+    onTap: (context) => Navigator.of(context).pushNamed('/comments',
+        arguments: BlocProvider.of<SubmissionBloc>(context)),
+    thumbnail: SubmissionThumbnail(
+      onTap: null,
+      previewUrl: 'https://via.placeholder.com/150',
+    ),
+    authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
+    scoreViewModel: ScoreViewModel(
+      score: submission.score,
       voteState: submission.voteState,
-      onUpVote: (context) =>
+      onTap: (context) =>
           BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-      onDownVote: (context) =>
-          BlocProvider.of<SubmissionBloc>(context).add(Downvote()),
-      onTap: (context) => Navigator.of(context).pushNamed('/comments',
-          arguments: BlocProvider.of<SubmissionBloc>(context)),
-      thumbnail: SubmissionThumbnail(
-        onTap: null,
-        previewUrl: 'https://via.placeholder.com/150',
-      ),
-      authorViewModel: AuthorViewModel(author: submission.author, onTap: null),
-      scoreViewModel: ScoreViewModel(
-        score: submission.score,
-        voteState: submission.voteState,
-        onTap: (context) =>
-            BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-      ),
-      numCommentsViewModel: NumCommentsViewModel(submission.numComments),
-    );
+    ),
+    numCommentsViewModel: NumCommentsViewModel(submission.numComments),
+    nsfw: submission.isNSFW);
 
 class SubredditListItem extends StatelessWidget {
   final Function onTap;
@@ -162,7 +163,7 @@ class SubredditListItem extends StatelessWidget {
   final Function onUpVote;
   final Function onDownVote;
   final Widget thumbnail;
-  final bool saved;
+  final bool saved, nsfw;
   final AuthorViewModel authorViewModel;
   final ScoreViewModel scoreViewModel;
   final NumCommentsViewModel numCommentsViewModel;
@@ -178,6 +179,7 @@ class SubredditListItem extends StatelessWidget {
       @required this.onDownVote,
       @required this.onTap,
       @required this.saved,
+      @required this.nsfw,
       @required this.authorViewModel,
       @required this.scoreViewModel,
       @required this.numCommentsViewModel})
@@ -194,6 +196,9 @@ class SubredditListItem extends StatelessWidget {
             text: '$title ',
             style: CupertinoTheme.of(context).textTheme.textStyle,
             children: [
+              WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: NSFWFlairWidget(nsfw)),
               WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: FlairWidget(flairText: linkFlairText))

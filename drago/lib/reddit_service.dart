@@ -176,6 +176,7 @@ class RedditService {
 
   RedditLink _mapSubmissionToModel(draw.Submission s) {
     final r = RedditLink(
+      isNSFW: s.over18,
       author: s.author,
       createdUtc: s.createdUtc,
       edited: s.edited,

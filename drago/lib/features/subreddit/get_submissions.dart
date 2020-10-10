@@ -37,7 +37,7 @@ class Submission extends Equatable {
       authorFlairText,
       linkFlairText;
   final DateTime createdUtc;
-  final bool edited, saved;
+  final bool edited, saved, isNSFW;
   final NumComments numComments;
   final ScoreModel score; //todo I don't likke this
   final VoteState voteState;
@@ -56,6 +56,7 @@ class Submission extends Equatable {
       @required this.url,
       @required this.previewUrl,
       @required this.saved,
+      @required this.isNSFW,
       @required this.subreddit,
       @required this.voteState});
 
@@ -65,6 +66,7 @@ class Submission extends Equatable {
         edited = link.edited,
         domain = link.domain,
         id = link.id,
+        isNSFW = link.isNSFW,
         saved = link.saved,
         authorFlairText = link.authorFlairText,
         linkFlairText = link.linkFlairText,
@@ -75,15 +77,18 @@ class Submission extends Equatable {
         url = link.url,
         previewUrl = link.previewUrl ?? _defaultPreviewUrl,
         voteState = link.voteState;
-  Submission copyWith({score, numComments, edited, voteState, saved}) {
+  Submission copyWith({score, numComments, edited, voteState, saved, isNSFW}) {
     return Submission(
         author: this.author,
         createdUtc: this.createdUtc,
         edited: edited ?? this.edited,
         domain: this.domain,
         id: this.id,
+        isNSFW: isNSFW ?? this.isNSFW,
         subreddit: this.subreddit,
         numComments: numComments ?? this.numComments,
+        authorFlairText: this.authorFlairText,
+        linkFlairText: this.linkFlairText,
         score: score ?? this.score,
         title: this.title,
         url: this.url,
@@ -106,7 +111,10 @@ class Submission extends Equatable {
         previewUrl,
         saved,
         subreddit,
-        voteState
+        voteState,
+        isNSFW,
+        authorFlairText,
+        linkFlairText
       ];
 }
 
@@ -127,6 +135,7 @@ class WebSubmission extends Submission {
       @required url,
       @required previewUrl,
       @required saved,
+      @required isNSFW,
       @required subreddit,
       @required voteState})
       : super(
@@ -143,10 +152,12 @@ class WebSubmission extends Submission {
             url: url,
             previewUrl: previewUrl,
             saved: saved,
+            isNSFW: isNSFW,
             subreddit: subreddit,
             voteState: voteState);
 
-  WebSubmission copyWith({score, numComments, edited, voteState, saved}) {
+  WebSubmission copyWith(
+      {score, numComments, edited, voteState, saved, isNSFW}) {
     return WebSubmission(
         linkFlairText: this.linkFlairText,
         authorFlairText: this.authorFlairText,
@@ -162,6 +173,7 @@ class WebSubmission extends Submission {
         url: this.url,
         previewUrl: this.previewUrl,
         saved: saved ?? this.saved,
+        isNSFW: isNSFW ?? this.isNSFW,
         voteState: voteState ?? this.voteState);
   }
 }
@@ -190,6 +202,7 @@ class SelfSubmission extends Submission {
       @required url,
       @required previewUrl,
       @required saved,
+      @required isNSFW,
       @required subreddit,
       @required voteState})
       : super(
@@ -206,11 +219,12 @@ class SelfSubmission extends Submission {
             url: url,
             previewUrl: previewUrl,
             saved: saved,
+            isNSFW: isNSFW,
             subreddit: subreddit,
             voteState: voteState);
 
   SelfSubmission copyWith(
-      {score, numComments, edited, voteState, saved, body}) {
+      {score, numComments, edited, voteState, saved, body, isNSFW}) {
     return SelfSubmission(
         linkFlairText: this.linkFlairText,
         authorFlairText: this.authorFlairText,
@@ -227,7 +241,8 @@ class SelfSubmission extends Submission {
         url: this.url,
         previewUrl: this.previewUrl,
         saved: saved ?? this.saved,
-        voteState: voteState ?? this.voteState);
+        voteState: voteState ?? this.voteState,
+        isNSFW: isNSFW ?? this.isNSFW);
   }
 }
 
@@ -263,6 +278,7 @@ class MediaSubmission extends Submission {
       @required url,
       @required previewUrl,
       @required saved,
+      @required isNSFW,
       @required subreddit,
       @required voteState})
       : super(
@@ -280,10 +296,11 @@ class MediaSubmission extends Submission {
             previewUrl: previewUrl,
             saved: saved,
             subreddit: subreddit,
+            isNSFW: isNSFW,
             voteState: voteState);
 
   MediaSubmission copyWith(
-      {score, numComments, edited, voteState, saved, media}) {
+      {score, numComments, edited, voteState, saved, media, isNSFW}) {
     return MediaSubmission(
         linkFlairText: this.linkFlairText,
         authorFlairText: this.authorFlairText,
@@ -300,7 +317,8 @@ class MediaSubmission extends Submission {
         url: this.url,
         previewUrl: this.previewUrl,
         saved: saved ?? this.saved,
-        voteState: voteState ?? this.voteState);
+        voteState: voteState ?? this.voteState,
+        isNSFW: isNSFW ?? this.isNSFW);
   }
 }
 
