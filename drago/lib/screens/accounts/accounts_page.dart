@@ -86,6 +86,7 @@ class AccountPageFactory extends StatelessWidget {
                   ? AccountPageListings(
                       children: [
                         AccountPageListingWidget(
+                            last: true,
                             viewModel: moderatoreZoneListingViewModel)
                       ],
                     )
@@ -168,7 +169,7 @@ Widget _headerRow(comment, link, age) {
     children: <Widget>[
       _header(value: comment, text: 'Comment Karma'),
       _header(value: link, text: 'Link Karma'),
-      _header(value: age, text: 'Account Age')
+      // _header(value: age, text: 'Account Age')
     ],
   );
 }
@@ -181,7 +182,7 @@ class AccountPageListings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
       child: ClipRRect(
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(8),
