@@ -17,7 +17,7 @@ class CommentsPageFactory extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SubmissionBloc, SubmissionState>(
         bloc: submissionBloc,
-        listener: (listenerState, state) {},
+        listener: (listenerContext, state) {},
         builder: (builderContext, state) {
           if (state.submission is SelfSubmission)
             return selfSubmissionCommentsPage(submissionBloc);
@@ -34,8 +34,12 @@ Widget linkSubmissionCommentsPage(submissionBloc) => CommentsPage(
       topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
       submissionSummary: SubmissionSummary(
         subreddit: submissionBloc.state.submission.subreddit,
-        authorViewModel:
-            AuthorViewModel(author: submissionBloc.state.submission.author),
+        authorViewModel: AuthorViewModel(
+          author: submissionBloc.state.submission.author,
+          onTap: (BuildContext context) => Navigator.of(context).pushNamed(
+              '/account',
+              arguments: submissionBloc.state.submission.author.name),
+        ),
         scoreViewModel: ScoreViewModel(
           onTap: (_) => submissionBloc.add(Upvote()),
           score: submissionBloc.state.submission.score,
@@ -58,8 +62,12 @@ Widget selfSubmissionCommentsPage(submissionBloc) => CommentsPage(
       topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
       submissionSummary: SubmissionSummary(
         subreddit: submissionBloc.state.submission.subreddit,
-        authorViewModel:
-            AuthorViewModel(author: submissionBloc.state.submission.author),
+        authorViewModel: AuthorViewModel(
+          author: submissionBloc.state.submission.author,
+          onTap: (BuildContext context) => Navigator.of(context).pushNamed(
+              '/account',
+              arguments: submissionBloc.state.submission.author.name),
+        ),
         scoreViewModel: ScoreViewModel(
           onTap: (_) => submissionBloc.add(Upvote()),
           score: submissionBloc.state.submission.score,

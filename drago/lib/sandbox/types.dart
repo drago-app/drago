@@ -26,7 +26,7 @@ class RedditComment implements RedditThing {
 class RedditAccount implements RedditThing {
   static String kind = 't2';
   final num commentKarma;
-  final num createdUtc;
+  final DateTime createdUtc;
   final String id;
   final bool isFriend;
   final bool isMod;

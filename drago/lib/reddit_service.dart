@@ -23,6 +23,23 @@ class RedditService {
   String _state = 'thisisarandomstring';
   Cache submissions = new SimpleCache(storage: new SimpleStorage(size: 20));
 
+  Future<Either<Failure, RedditAccount>> getUser(String name) async {
+    try {
+      draw.Redditor redditor = await _reddit.redditor(name).populate();
+      return Right(RedditAccount(
+          id: redditor.id,
+          commentKarma: redditor.commentKarma,
+          createdUtc: redditor.createdUtc,
+          isMod: redditor.isModerator,
+          isFriend: redditor.data['is_friend'] ?? false,
+          linkKarma: redditor.linkKarma,
+          name: redditor.displayName));
+    } catch (e) {
+      print('[RedditService#getUser] e.toString()');
+      return Left(SomeFailure(message: e.toString()));
+    }
+  }
+
   Future<List> getMoreComments(MoreCommentsModel moreComments) async {
     var targetSubId = moreComments.submissionId;
     var fromCache = submissions.get(targetSubId);

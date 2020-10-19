@@ -1,3 +1,4 @@
+import 'package:drago/features/user/get_user_profile.dart';
 import 'package:drago/theme.dart';
 import 'package:drago/user_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +40,8 @@ final SaveOrUnsaveSubmission saveOrUnsave =
     SaveOrUnsaveSubmission(reddit: _reddit, userService: _userService);
 
 final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
+
+final GetUserProfile getUserProfile = GetUserProfile(reddit: _reddit);
 
 final DialogService _dialogService = DialogService();
 
@@ -192,9 +195,6 @@ class AuthenticatedApp extends StatelessWidget {
                   getDefaultSubreddits: _getDefaultSubreddits,
                 )..add(UserAuthenticated());
               }),
-              BlocProvider<AccountPageBloc>(create: (context) {
-                return AccountPageBloc();
-              })
             ],
             child: _scaffold(),
           ),
@@ -245,7 +245,7 @@ class AuthenticatedApp extends StatelessWidget {
             });
           case 2:
             return CupertinoTabView(builder: (context) {
-              return AccountsPage();
+              return AccountPage();
             });
           case 3:
             return CupertinoTabView(builder: (context) {
@@ -293,21 +293,40 @@ class RouteGenerator {
               ..add(LoadComments()),
           ),
         );
+      case '/account':
+        return CupertinoPageRoute(
+          builder: (context) => BlocProvider<AccountPageBloc>(
+              child: AccountPageFactory(),
+              //AccountPageFactory(),
+              create: (BuildContext context) => AccountPageBloc(
+                  getUserProfile: getUserProfile, userName: args as String)
+                ..add(LoadUser(args as String))),
+        );
       default:
         return _errorRoute();
     }
   }
 
   static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
+    return CupertinoPageRoute(builder: (_) {
+      return CupertinoPageScaffold(
+        child: Center(
           child: Text('ERROR'),
         ),
       );
     });
+  }
+}
+
+extension ExtendedIterable<E> on Iterable<E> {
+  /// Like Iterable<T>.map but callback have index as second argument
+  Iterable<T> mapIndex<T>(T f(E e, int i)) {
+    var i = 0;
+    return this.map((e) => f(e, i++));
+  }
+
+  void forEachIndex(void f(E e, int i)) {
+    var i = 0;
+    this.forEach((e) => f(e, i++));
   }
 }

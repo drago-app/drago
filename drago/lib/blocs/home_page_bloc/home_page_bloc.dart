@@ -34,10 +34,6 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   Stream<HomePageState> _mapUserNotAuthenticatedToState() async* {
     yield HomePageLoading();
 
-    // dialogService.showDialog(
-    //     title: 'Dialog Manager',
-    //     description: 'FilledStacks architecture is always awesome');
-
     final failureOrDefaults = await getDefaultSubreddits(NoParams());
     yield failureOrDefaults.fold(
         ((failure) => HomePageError()),
