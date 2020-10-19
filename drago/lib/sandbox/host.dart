@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 typedef RegExpMatch Detect(String url);
 typedef Future<ExpandoMedia> HandleLink(String href, RegExpMatch detectResult);
 typedef Future<VideoData> GetVideoData(String id);
 
 class Host {
-  static List<Host> hosts = [defaultHost, defaultVideo, defaultGifHost];
+  static List<Host> hosts = [
+    defaultHost,
+    defaultVideo,
+    defaultGifHost,
+    imgurHost
+  ];
   final String moduleId;
   final String name;
   final List<String> domains;
@@ -216,3 +224,29 @@ final Host defaultVideo = Host(
     );
   },
 );
+
+final Host imgurHost = Host(
+    moduleId: 'imgur',
+    domains: ['imgur.com'],
+    detect: (url) {
+      final albumRegex = r'(?!m.|www.)imgur.com\/a\/([a-zA-Z0-9]{7})';
+      if (RegExp(albumRegex).firstMatch(url) != null) {
+        return RegExp(albumRegex).firstMatch(url);
+      }
+    },
+    handleLink: (href, detectResult) async {
+      final src = (hash, ext) => 'https://imgur.com/${hash}m${ext ?? '.png'}';
+
+      var response = await http.get(
+          "http://imgur.com/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true");
+
+      var body = jsonDecode(response.body);
+      List<ExpandoMedia> images = body['data']['images']
+          .map<ExpandoMedia>(
+            (i) => ImageMedia(src: src(i['hash'], i['ext']), title: i['title']),
+          )
+          .toList();
+      return images.length == 1 ? images.first : GalleryMedia(src: images);
+    }
+    // logo: 'https://i.imgur.com/favicon.ico',
+    );
