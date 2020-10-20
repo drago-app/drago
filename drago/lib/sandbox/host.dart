@@ -60,17 +60,22 @@ abstract class ExpandoMedia {
   static ExpandoMediaType type;
 }
 
+abstract class Sourceable {
+  String get src;
+}
+
 class GalleryMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Gallery;
   int get size => src.length;
   final String title;
   final String caption;
   final String credits;
-  final List<ExpandoMedia> src;
+  @override
+  final List<Sourceable> src;
   GalleryMedia({this.title, this.caption, this.credits, this.src});
 }
 
-class ImageMedia implements ExpandoMedia {
+class ImageMedia implements ExpandoMedia, Sourceable {
   static ExpandoMediaType type = ExpandoMediaType.Image;
   final String title;
   final String caption;
@@ -81,7 +86,7 @@ class ImageMedia implements ExpandoMedia {
       {this.title, this.caption, this.credits, @required this.src, this.href});
 }
 
-class GifMedia implements ExpandoMedia {
+class GifMedia implements ExpandoMedia, Sourceable {
   static ExpandoMediaType type = ExpandoMediaType.Image;
   final String title;
   final String caption;
@@ -246,8 +251,8 @@ final Host imgurHost = Host(
           "http://imgur.com/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true");
 
       var body = jsonDecode(response.body);
-      List<ExpandoMedia> images = body['data']['images']
-          .map<ExpandoMedia>(
+      List<Sourceable> images = body['data']['images']
+          .map<Sourceable>(
             (i) => ImageMedia(src: src(i['hash'], i['ext']), title: i['title']),
           )
           .toList();

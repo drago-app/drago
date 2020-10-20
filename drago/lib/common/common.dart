@@ -1,7 +1,6 @@
 export './loading_indicator.dart';
 // export './navbar.dart';
 export './flair.dart';
-export './author_widget.dart';
 export './options_widget.dart';
 export './custom_expansion_tile.dart';
 export './list_item_base.dart';
@@ -10,3 +9,4 @@ export './score_widget.dart';
 export './text_button.dart';
 export './square_action_button.dart';
 export './stickied_widget.dart';
+export './gallery_widget.dart';

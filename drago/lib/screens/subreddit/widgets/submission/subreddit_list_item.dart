@@ -1,6 +1,7 @@
 import 'package:drago/common/common.dart';
 import 'package:drago/common/drag_to_pop_modal/drag_to_pop_page_route.dart';
 import 'package:drago/common/log_in_alert.dart';
+import 'package:drago/common/picture.dart';
 import 'package:drago/common/text_button.dart';
 import 'package:drago/sandbox/host.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,10 +44,21 @@ class SubmissionWidgetFactory extends StatelessWidget {
               return mediaSubmission(
                   state.submission,
                   SubmissionThumbnail(
-                    label: GalleryThumbnailLabel(
-                        (state.submission as MediaSubmission).media),
-                    previewUrl: state.submission.previewUrl,
-                  ));
+                      label: GalleryThumbnailLabel(
+                          (state.submission as MediaSubmission).media),
+                      previewUrl: state.submission.previewUrl,
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).push(
+                          DragToPopPageRoute(
+                            builder: (_) => SecondPage(
+                              body: GalleryWidget(
+                                  media: (state.submission as MediaSubmission)
+                                      .media),
+                              bloc: context.bloc<SubmissionBloc>(),
+                            ),
+                          ),
+                        );
+                      }));
             }
             if ((state.submission as MediaSubmission).media is ImageMedia) {
               return mediaSubmission(
@@ -57,6 +69,9 @@ class SubmissionWidgetFactory extends StatelessWidget {
                       Navigator.of(context, rootNavigator: true).push(
                         DragToPopPageRoute(
                           builder: (_) => SecondPage(
+                            body: Picture(
+                                maxHeight: MediaQuery.of(context).size.height,
+                                url: state.submission.previewUrl),
                             bloc: context.bloc<SubmissionBloc>(),
                           ),
                         ),

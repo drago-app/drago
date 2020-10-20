@@ -113,14 +113,6 @@ class LinkThumbnailLabel extends StatelessWidget {
   }
 }
 
-// _launchURL(String url) async {
-//   if (await canLaunch(url)) {
-//     await launch(url);
-//   } else {
-//     throw 'Could not launch $url';
-//   }
-// }
-
 class SubmissionThumbnail extends StatelessWidget {
   final String previewUrl;
   final Widget label;
@@ -128,55 +120,6 @@ class SubmissionThumbnail extends StatelessWidget {
 
   SubmissionThumbnail(
       {this.previewUrl, this.label = const SizedBox.shrink(), this.onTap});
-
-  // factory SubmissionThumbnail.fromSubmission(
-  //     Submission submission, BuildContext context) {
-  //   if (submission is WebSubmission) {
-  //     return SubmissionThumbnail(
-  //         previewUrl: submission.previewUrl,
-  //         label: LinkThumbnailLabel(),
-  //         onTap: () {
-  //           _launchURL(submission.url);
-  //         });
-  //   }
-
-  //   if (submission is MediaSubmission) {
-  //     if (submission.media is VideoMedia) {
-  //       return SubmissionThumbnail(
-  //         previewUrl: submission.previewUrl,
-  //         label: VideoThumbnailLabel(),
-  //       );
-  //     }
-  //     if (submission.media is GifMedia) {
-  //       return SubmissionThumbnail(
-  //         previewUrl: submission.previewUrl,
-  //         label: GifThumbnailLabel(),
-  //       );
-  //     }
-  //     if (submission.media is GalleryMedia) {
-  //       return SubmissionThumbnail(
-  //         previewUrl: submission.previewUrl,
-  //         label: GalleryThumbnailLabel(submission.media),
-  //       );
-  //     }
-  //   }
-
-  //   return SubmissionThumbnail(
-  //     previewUrl: submission.previewUrl,
-  //     // onTap: () {
-  //     //   print('$context');
-  //     // }
-  //     onTap: () {
-  //       Navigator.of(context, rootNavigator: true).push(
-  //         DragToPopPageRoute(
-  //           builder: (_) => SecondPage(
-  //             bloc: context.bloc<SubmissionBloc>(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -220,8 +163,9 @@ class SubmissionThumbnail extends StatelessWidget {
 
 class SecondPage extends StatelessWidget {
   final Bloc bloc;
+  final Widget body;
 
-  SecondPage({@required this.bloc});
+  SecondPage({@required this.bloc, @required this.body});
 
   @override
   Widget build(BuildContext context) {
@@ -247,12 +191,9 @@ class SecondPage extends StatelessWidget {
             ),
           ),
           Hero(
-            transitionOnUserGestures: true,
-            tag: state.submission.previewUrl,
-            child: Picture(
-                maxHeight: MediaQuery.of(context).size.height,
-                url: state.submission.previewUrl),
-          ),
+              transitionOnUserGestures: true,
+              tag: state.submission.previewUrl,
+              child: body),
           Align(
             alignment: Alignment.topLeft,
             // top: -15,
