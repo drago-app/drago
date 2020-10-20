@@ -68,8 +68,8 @@ class GalleryThumbnailLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 2,
-      right: 2,
+      bottom: 4,
+      right: 4,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1),
         decoration: BoxDecoration(
@@ -77,7 +77,7 @@ class GalleryThumbnailLabel extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(4))),
         child: Center(
           child: Text(
-            "${galleryMedia.src.length ?? 0}",
+            "${galleryMedia.size ?? 0}",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
           ),
         ),

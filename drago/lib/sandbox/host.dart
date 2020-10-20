@@ -62,6 +62,7 @@ abstract class ExpandoMedia {
 
 class GalleryMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Gallery;
+  int get size => src.length;
   final String title;
   final String caption;
   final String credits;

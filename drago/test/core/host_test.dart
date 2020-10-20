@@ -25,7 +25,7 @@ void main() {
       'given an imgur link for a gallery with one picture it should return on ImageMedia',
       () async {
     final imgurUrl = 'https://imgur.com/gallery/ww4EGeP';
-    final expected = 'https://imgur.com/62o4Orym.jpg';
+    final expected = 'https://imgur.com/62o4Orymm.jpg';
 
     final resultStream = Host.getMedia(imgurUrl);
     final result = await resultStream.first;
