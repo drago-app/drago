@@ -230,8 +230,12 @@ final Host imgurHost = Host(
     domains: ['imgur.com'],
     detect: (url) {
       final albumRegex = r'(?!m.|www.)imgur.com\/a\/([a-zA-Z0-9]{7})';
+      final galleryRegex = r'(?!m.|www.)imgur.com\/gallery\/([a-zA-Z0-9]{7})';
       if (RegExp(albumRegex).firstMatch(url) != null) {
         return RegExp(albumRegex).firstMatch(url);
+      }
+      if (RegExp(galleryRegex).firstMatch(url) != null) {
+        return RegExp(galleryRegex).firstMatch(url);
       }
     },
     handleLink: (href, detectResult) async {

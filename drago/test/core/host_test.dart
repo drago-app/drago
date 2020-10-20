@@ -20,4 +20,16 @@ void main() {
 
     expect((result as ImageMedia).src, expected);
   });
+
+  test(
+      'given an imgur link for a gallery with one picture it should return on ImageMedia',
+      () async {
+    final imgurUrl = 'https://imgur.com/gallery/ww4EGeP';
+    final expected = 'https://imgur.com/62o4Orym.jpg';
+
+    final resultStream = Host.getMedia(imgurUrl);
+    final result = await resultStream.first;
+
+    expect((result as ImageMedia).src, expected);
+  });
 }
