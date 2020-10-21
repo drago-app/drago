@@ -25,11 +25,24 @@ void main() {
       'given an imgur link for a gallery with one picture it should return on ImageMedia',
       () async {
     final imgurUrl = 'https://imgur.com/gallery/ww4EGeP';
-    final expected = 'https://imgur.com/62o4Orymm.jpg';
+    final expected = 'https://imgur.com/62o4Orym.jpg';
 
     final resultStream = Host.getMedia(imgurUrl);
     final result = await resultStream.first;
 
     expect((result as ImageMedia).src, expected);
+  });
+
+  test(
+      'given an imgur link for a gallery with more than one image it should return on a gallery',
+      () async {
+    final imgurUrl = 'https://imgur.com/a/CtSR2kR';
+
+    final resultStream = Host.getMedia(imgurUrl);
+    final result = await resultStream.first;
+
+    (result as GalleryMedia).src.forEach(print);
+
+    assert((result as GalleryMedia).size == 11);
   });
 }

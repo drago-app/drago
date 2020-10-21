@@ -249,11 +249,12 @@ final Host imgurHost = Host(
 
       var response = await http.get(
           "http://imgur.com/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true");
-
       var body = jsonDecode(response.body);
+
       List<Sourceable> images = body['data']['images']
           .map<Sourceable>(
-            (i) => ImageMedia(src: src(i['hash'], i['ext']), title: i['title']),
+            (i) => ImageMedia(
+                src: src(i['hash'], i['ext']), title: i['description']),
           )
           .toList();
       return images.length == 1 ? images.first : GalleryMedia(src: images);

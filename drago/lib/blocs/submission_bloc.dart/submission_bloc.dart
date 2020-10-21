@@ -39,8 +39,6 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
       submission: Submission.fromRedditLink(link: redditLink));
 
   _getSubmissionFromRedditLink(RedditLink redditLink) async {
-    // HostService hostService = HostService();
-
     final Stream<ExpandoMedia> mediaStream = Host.getMedia(redditLink.url);
     //Can this cause ui bugs? Like voting then  this causes a rebuild which would then hide the vote?
     if (redditLink.isSelf) {
@@ -51,11 +49,15 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
           submission: WebSubmission.fromRedditLink(link: redditLink)));
     }
     mediaStream.forEach((media) {
-      this.add(
-        SubmissionResolved(
-            submission:
-                MediaSubmission.fromRedditLink(link: redditLink, media: media)),
-      );
+      try {
+        this.add(
+          SubmissionResolved(
+              submission: MediaSubmission.fromRedditLink(
+                  link: redditLink, media: media)),
+        );
+      } catch (e) {
+        debugPrint(redditLink.title);
+      }
     });
   }
 
