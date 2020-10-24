@@ -100,19 +100,19 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   }
 
   Stream<SubredditPageState> _mapLoadMoreToState() async* {
-    // if (state is SubredditPageLoaded) {
-    //   final s = state as SubredditPageLoaded;
-    //   final lastSubmission = s.submissions.last;
-    //   final failureOrSubmissions = await getSubmissions(GetSubmissionsParams(
-    //       sort: state.currentSort,
-    //       subreddit: this.subreddit,
-    //       after: lastSubmission.id));
+    if (state is SubredditPageLoaded) {
+      final s = state as SubredditPageLoaded;
+      final lastSubmission = s.redditLinks.last;
+      final failureOrSubmissions = await getRedditLinks(GetRedditLinksParams(
+          sort: state.currentSort,
+          subreddit: this.subreddit,
+          after: lastSubmission.id));
 
-    //   yield* failureOrSubmissions.fold((left) async* {
-    //     print(left.message);
-    //   }, (right) async* {
-    //     yield s.copyWith(submissions: s.submissions + right);
-    //   });
-    // }
+      yield* failureOrSubmissions.fold((left) async* {
+        print(left.message);
+      }, (right) async* {
+        yield s.copyWith(redditLinks: s.redditLinks + right);
+      });
+    }
   }
 }

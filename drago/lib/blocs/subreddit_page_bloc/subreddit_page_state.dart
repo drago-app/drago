@@ -47,10 +47,10 @@ class SubredditPageLoaded extends SubredditPageState {
       @required this.currentSort})
       : assert(redditLinks != null);
 
-  SubredditPageLoaded copyWith({submissions, subreddit}) {
+  SubredditPageLoaded copyWith({redditLinks, subreddit}) {
     return SubredditPageLoaded(
         currentSort: currentSort ?? this.currentSort,
-        redditLinks: submissions ?? this.redditLinks,
+        redditLinks: redditLinks ?? this.redditLinks,
         subreddit: subreddit ?? this.subreddit);
   }
 
