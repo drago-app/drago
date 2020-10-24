@@ -80,8 +80,12 @@ class SubmissionWidgetFactory extends StatelessWidget {
                   ));
             }
           }
-
-          return SizedBox.shrink();
+          if (state.submission is Submission) {
+            return Container(
+                height: 500,
+                color: CupertinoColors.systemBlue,
+                child: Text(state.submission.title));
+          }
         });
   }
 }

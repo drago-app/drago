@@ -79,11 +79,11 @@ class _SubredditPageState extends State<SubredditPage> {
                     onPressed: () =>
                         BlocProvider.of<SubredditPageBloc>(bloccontext)
                             .add(UserTappedSortButton()),
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     child: FaIcon(_mapStateToSortIcon(state.currentSort))),
                 CupertinoButton(
                     onPressed: () => null,
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     child: FaIcon(FontAwesomeIcons.ellipsisH)),
               ],
             ),
@@ -127,14 +127,6 @@ class _SubredditPageState extends State<SubredditPage> {
               downvoteOrClear: downvoteOrClear,
               saveOrUnsave: saveOrUnsave),
           child: SubmissionWidgetFactory(),
-          // child: SelfSubmissionWidget(
-          //         title: state.redditLinks[index].title,
-          //         voteState: state.redditLinks[index].voteState,
-          //         onUpVote: (BuildContext context) =>
-          //             BlocProvider.of<SubmissionBloc>(context).add(Upvote()),
-          //         onDownVote: null,
-          //         onTap: null) ??
-          //     SizedBox.shrink(),
         ),
       );
     }

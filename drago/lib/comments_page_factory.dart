@@ -1,3 +1,4 @@
+import 'package:drago/common/picture.dart';
 import 'package:drago/screens/comments/comments_page.dart';
 import 'package:drago/screens/comments/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,8 +25,16 @@ class CommentsPageFactory extends StatelessWidget {
           if (state.submission is WebSubmission) {
             return linkSubmissionCommentsPage(submissionBloc);
           }
+          if (state.submission is MediaSubmission) {}
         });
   }
+}
+
+Widget galleryWidget(context, url) {
+  return Picture(
+    maxHeight: MediaQuery.of(context).size.height * .5,
+    url: url,
+  );
 }
 
 Widget linkSubmissionCommentsPage(submissionBloc) => CommentsPage(

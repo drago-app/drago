@@ -70,7 +70,6 @@ class GalleryMedia implements ExpandoMedia {
   final String title;
   final String caption;
   final String credits;
-  @override
   final List<Sourceable> src;
   GalleryMedia({this.title, this.caption, this.credits, this.src});
 }

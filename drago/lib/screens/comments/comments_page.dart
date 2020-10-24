@@ -72,7 +72,8 @@ Widget _comments() {
 //     return SizedBox.shrink();
 //     if (submission.content is ImageSubmissionContent) {
 //       return MediaSubmissionWidget(
-//         mediaWidget: Picture(
+//         mediaWidget:
+// Picture(
 //           maxHeight: MediaQuery.of(context).size.height * .5,
 //           url: submission.content.content.url,
 //         ),
