@@ -56,12 +56,19 @@ class VideoData {
 
 enum ExpandoMediaType { Gallery, Image, Video, Audio, Text, Iframe, Generic }
 
-abstract class ExpandoMedia {
-  static ExpandoMediaType type;
+abstract class MediaVisitor {
+  visitGalleryMedia(GalleryMedia media);
+  visitImageMedia(ImageMedia media);
+  visitVideoMedia(VideoMedia media);
+  visitGifMedia(GifMedia media);
+  visitAudioMedia(AudioMedia media);
+  visitGenericMedia(GenericaMedia media);
+  visitIframeMedia(IframeMedia media);
 }
 
-abstract class Sourceable {
-  String get src;
+abstract class ExpandoMedia {
+  static ExpandoMediaType type;
+  accept(MediaVisitor vistor);
 }
 
 class GalleryMedia implements ExpandoMedia {
@@ -70,11 +77,12 @@ class GalleryMedia implements ExpandoMedia {
   final String title;
   final String caption;
   final String credits;
-  final List<Sourceable> src;
+  final List<ExpandoMedia> src;
   GalleryMedia({this.title, this.caption, this.credits, this.src});
+  accept(MediaVisitor visitor) => visitor.visitGalleryMedia(this);
 }
 
-class ImageMedia implements ExpandoMedia, Sourceable {
+class ImageMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Image;
   final String title;
   final String caption;
@@ -83,9 +91,10 @@ class ImageMedia implements ExpandoMedia, Sourceable {
   final String href;
   ImageMedia(
       {this.title, this.caption, this.credits, @required this.src, this.href});
+  accept(MediaVisitor visitor) => visitor.visitImageMedia(this);
 }
 
-class GifMedia implements ExpandoMedia, Sourceable {
+class GifMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Image;
   final String title;
   final String caption;
@@ -94,6 +103,8 @@ class GifMedia implements ExpandoMedia, Sourceable {
   final String href;
   GifMedia(
       {this.title, this.caption, this.credits, @required this.src, this.href});
+
+  accept(MediaVisitor visitor) => visitor.visitGifMedia(this);
 }
 
 class VideoMedia implements ExpandoMedia {
@@ -131,6 +142,8 @@ class VideoMedia implements ExpandoMedia {
       this.reversed,
       this.time,
       @required this.sources});
+
+  accept(MediaVisitor visitor) => visitor.visitVideoMedia(this);
 }
 
 class VideoMediaSource {
@@ -148,6 +161,8 @@ class AudioMedia implements ExpandoMedia {
   final List<AudioMediaSrc> sources;
 
   AudioMedia({this.autoplay, this.loop, this.sources});
+
+  accept(MediaVisitor visitor) => visitor.visitAudioMedia(this);
 }
 
 class AudioMediaSrc {
@@ -179,6 +194,7 @@ class IframeMedia implements ExpandoMedia {
       this.fixedRatio,
       this.pause,
       this.play});
+  accept(MediaVisitor visitor) => visitor.visitIframeMedia(this);
 }
 
 class GenericaMedia implements ExpandoMedia {
@@ -188,6 +204,8 @@ class GenericaMedia implements ExpandoMedia {
   final String expandoClass;
 
   GenericaMedia({this.muted, this.expandoClass});
+  accept(MediaVisitor visitor) => visitor.visitGenericMedia(this);
+
   //generate: () => HTMLElement;
   // onAttach?: () => void;
 
@@ -250,8 +268,8 @@ final Host imgurHost = Host(
           "http://imgur.com/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true");
       var body = jsonDecode(response.body);
 
-      List<Sourceable> images = body['data']['images']
-          .map<Sourceable>(
+      List<ExpandoMedia> images = body['data']['images']
+          .map<ExpandoMedia>(
             (i) => ImageMedia(
                 src: src(i['hash'], i['ext']), title: i['description']),
           )

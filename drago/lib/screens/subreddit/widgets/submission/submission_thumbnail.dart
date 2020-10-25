@@ -164,8 +164,12 @@ class SubmissionThumbnail extends StatelessWidget {
 class SecondPage extends StatelessWidget {
   final Bloc bloc;
   final Widget body;
+  final Widget topRightCorner;
 
-  SecondPage({@required this.bloc, @required this.body});
+  SecondPage(
+      {@required this.bloc,
+      @required this.body,
+      this.topRightCorner = const SizedBox.shrink()});
 
   @override
   Widget build(BuildContext context) {
@@ -207,6 +211,7 @@ class SecondPage extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(top: 40, right: 40, child: topRightCorner)
         ],
       ),
     );

@@ -13,7 +13,21 @@ import 'package:drago/screens/subreddit/widgets/widgets.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SubmissionWidgetFactory extends StatelessWidget {
+class SubmissionWidgetFactory extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => SubmissionWidgetFactoryState();
+}
+
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
+    implements MediaVisitor {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SubmissionBloc, SubmissionState>(
@@ -24,61 +38,73 @@ class SubmissionWidgetFactory extends StatelessWidget {
           if (state.submission is WebSubmission)
             return linkSubmission(state.submission);
           if (state.submission is MediaSubmission) {
-            if ((state.submission as MediaSubmission).media is VideoMedia) {
-              return mediaSubmission(
-                  state.submission,
-                  SubmissionThumbnail(
-                    label: VideoThumbnailLabel(),
-                    previewUrl: state.submission.previewUrl,
-                  ));
-            }
-            if ((state.submission as MediaSubmission).media is GifMedia) {
-              return mediaSubmission(
-                  state.submission,
-                  SubmissionThumbnail(
-                    label: GifThumbnailLabel(),
-                    previewUrl: state.submission.previewUrl,
-                  ));
-            }
-            if ((state.submission as MediaSubmission).media is GalleryMedia) {
-              return mediaSubmission(
-                  state.submission,
-                  SubmissionThumbnail(
-                      label: GalleryThumbnailLabel(
-                          (state.submission as MediaSubmission).media),
-                      previewUrl: state.submission.previewUrl,
-                      onTap: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                          DragToPopPageRoute(
-                            builder: (_) => SecondPage(
-                              body: GalleryWidget(
-                                  media: (state.submission as MediaSubmission)
-                                      .media),
-                              bloc: context.bloc<SubmissionBloc>(),
-                            ),
-                          ),
-                        );
-                      }));
-            }
-            if ((state.submission as MediaSubmission).media is ImageMedia) {
-              return mediaSubmission(
-                  state.submission,
-                  SubmissionThumbnail(
-                    previewUrl: state.submission.previewUrl,
-                    onTap: () {
-                      Navigator.of(context, rootNavigator: true).push(
-                        DragToPopPageRoute(
-                          builder: (_) => SecondPage(
-                            body: Picture(
-                                maxHeight: MediaQuery.of(context).size.height,
-                                url: state.submission.previewUrl),
-                            bloc: context.bloc<SubmissionBloc>(),
-                          ),
-                        ),
-                      );
-                    },
-                  ));
-            }
+            return (state.submission as MediaSubmission).media.accept(this);
+            //   if ((state.submission as MediaSubmission).media is VideoMedia) {
+            //     return mediaSubmission(
+            //         state.submission,
+            //         SubmissionThumbnail(
+            //           label: VideoThumbnailLabel(),
+            //           previewUrl: state.submission.previewUrl,
+            //         ));
+            //   }
+            //   if ((state.submission as MediaSubmission).media is GifMedia) {
+            //     return mediaSubmission(
+            //         state.submission,
+            //         SubmissionThumbnail(
+            //           label: GifThumbnailLabel(),
+            //           previewUrl: state.submission.previewUrl,
+            //         ));
+            //   }
+            //   if ((state.submission as MediaSubmission).media is GalleryMedia) {
+            // return mediaSubmission(
+            //     state.submission,
+            //     SubmissionThumbnail(
+            //         label: GalleryThumbnailLabel(
+            //             (state.submission as MediaSubmission).media),
+            //         previewUrl: state.submission.previewUrl,
+            //         onTap: () {
+            //           Navigator.of(context, rootNavigator: true).push(
+            //             DragToPopPageRoute(
+            //               builder: (_) {
+            //                 final PageController controller =
+            //                     PageController();
+            //                 return SecondPage(
+            //                   topRightCorner: GalleryPageIndicator(
+            //                     controller: controller,
+            //                     total: ((state.submission as MediaSubmission)
+            //                             .media as GalleryMedia)
+            //                         .size,
+            //                   ),
+            //                   body: GalleryWidget(
+            //                       controller: controller,
+            //                       media: (state.submission as MediaSubmission)
+            //                           .media),
+            //                   bloc: context.bloc<SubmissionBloc>(),
+            //                 );
+            //               },
+            //             ),
+            //           );
+            //         }));
+            //   }
+            //   if ((state.submission as MediaSubmission).media is ImageMedia) {
+            // return mediaSubmission(
+            //     state.submission,
+            //     SubmissionThumbnail(
+            //       previewUrl: state.submission.previewUrl,
+            //       onTap: () {
+            //         Navigator.of(context, rootNavigator: true).push(
+            //           DragToPopPageRoute(
+            //             builder: (_) => SecondPage(
+            //               body: Picture(
+            //                   maxHeight: MediaQuery.of(context).size.height,
+            //                   url: state.submission.previewUrl),
+            //               bloc: context.bloc<SubmissionBloc>(),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     ));
+            //   }
           }
           if (state.submission is Submission) {
             return Container(
@@ -88,13 +114,110 @@ class SubmissionWidgetFactory extends StatelessWidget {
           }
         });
   }
-}
 
-_launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+  @override
+  Widget visitImageMedia(ImageMedia media) {
+    return mediaSubmission(
+        BlocProvider.of<SubmissionBloc>(context).state.submission,
+        SubmissionThumbnail(
+          previewUrl: BlocProvider.of<SubmissionBloc>(context)
+              .state
+              .submission
+              .previewUrl,
+          onTap: () {
+            Navigator.of(context, rootNavigator: true).push(
+              DragToPopPageRoute(
+                builder: (_) => SecondPage(
+                  body: Picture(
+                      maxHeight: MediaQuery.of(context).size.height,
+                      url: BlocProvider.of<SubmissionBloc>(context)
+                          .state
+                          .submission
+                          .previewUrl),
+                  bloc: context.bloc<SubmissionBloc>(),
+                ),
+              ),
+            );
+          },
+        ));
+  }
+
+  @override
+  visitAudioMedia(AudioMedia media) {
+    // TODO: implement visitAudioMedia
+    throw UnimplementedError();
+  }
+
+  @override
+  visitGalleryMedia(GalleryMedia media) {
+    return mediaSubmission(
+        BlocProvider.of<SubmissionBloc>(context).state.submission,
+        SubmissionThumbnail(
+            label: GalleryThumbnailLabel(
+                (BlocProvider.of<SubmissionBloc>(context).state.submission
+                        as MediaSubmission)
+                    .media),
+            previewUrl: BlocProvider.of<SubmissionBloc>(context)
+                .state
+                .submission
+                .previewUrl,
+            onTap: () {
+              Navigator.of(context, rootNavigator: true).push(
+                DragToPopPageRoute(
+                  builder: (_) {
+                    final PageController controller = PageController();
+                    return SecondPage(
+                      topRightCorner: GalleryPageIndicator(
+                        controller: controller,
+                        total: ((BlocProvider.of<SubmissionBloc>(context)
+                                    .state
+                                    .submission as MediaSubmission)
+                                .media as GalleryMedia)
+                            .size,
+                      ),
+                      body: GalleryWidget(
+                          controller: controller,
+                          media: (BlocProvider.of<SubmissionBloc>(context)
+                                  .state
+                                  .submission as MediaSubmission)
+                              .media),
+                      bloc: context.bloc<SubmissionBloc>(),
+                    );
+                  },
+                ),
+              );
+            }));
+  }
+
+  @override
+  visitGenericMedia(GenericaMedia media) {
+    // TODO: implement visitGenericMedia
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget visitGifMedia(GifMedia media) {
+    return mediaSubmission(
+        BlocProvider.of<SubmissionBloc>(context).state.submission,
+        SubmissionThumbnail(
+          label: GifThumbnailLabel(),
+          previewUrl: BlocProvider.of<SubmissionBloc>(context)
+              .state
+              .submission
+              .previewUrl,
+        ));
+  }
+
+  @override
+  visitIframeMedia(IframeMedia media) {
+    // TODO: implement visitIframeMedia
+    throw UnimplementedError();
+  }
+
+  @override
+  visitVideoMedia(VideoMedia media) {
+    // TODO: implement visitVideoMedia
+    throw UnimplementedError();
   }
 }
 
