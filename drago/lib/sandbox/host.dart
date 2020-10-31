@@ -68,6 +68,7 @@ abstract class MediaVisitor {
 
 abstract class ExpandoMedia {
   static ExpandoMediaType type;
+  String get title;
   accept(MediaVisitor vistor);
 }
 
@@ -158,9 +159,10 @@ class AudioMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Audio;
   final bool autoplay;
   final bool loop;
+  final String title;
   final List<AudioMediaSrc> sources;
 
-  AudioMedia({this.autoplay, this.loop, this.sources});
+  AudioMedia({this.autoplay, this.loop, this.sources, this.title = ''});
 
   accept(MediaVisitor visitor) => visitor.visitAudioMedia(this);
 }
@@ -183,6 +185,7 @@ class IframeMedia implements ExpandoMedia {
   final bool fixedRatio;
   final String pause;
   final String play;
+  final String title;
 
   IframeMedia(
       {this.muted,
@@ -193,6 +196,7 @@ class IframeMedia implements ExpandoMedia {
       this.height,
       this.fixedRatio,
       this.pause,
+      this.title = '',
       this.play});
   accept(MediaVisitor visitor) => visitor.visitIframeMedia(this);
 }
@@ -202,8 +206,9 @@ class GenericaMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Generic;
   final bool muted;
   final String expandoClass;
+  final String title;
 
-  GenericaMedia({this.muted, this.expandoClass});
+  GenericaMedia({this.muted, this.expandoClass, this.title = ''});
   accept(MediaVisitor visitor) => visitor.visitGenericMedia(this);
 
   //generate: () => HTMLElement;

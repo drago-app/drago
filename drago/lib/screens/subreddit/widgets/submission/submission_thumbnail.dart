@@ -165,11 +165,13 @@ class SecondPage extends StatelessWidget {
   final Bloc bloc;
   final Widget body;
   final Widget topRightCorner;
+  final Widget caption;
 
   SecondPage(
       {@required this.bloc,
       @required this.body,
-      this.topRightCorner = const SizedBox.shrink()});
+      this.topRightCorner = const SizedBox.shrink(),
+      this.caption = const SizedBox.shrink()});
 
   @override
   Widget build(BuildContext context) {
@@ -194,10 +196,13 @@ class SecondPage extends StatelessWidget {
               ),
             ),
           ),
-          Hero(
-              transitionOnUserGestures: true,
-              tag: state.submission.previewUrl,
-              child: body),
+          Align(
+            alignment: Alignment.center,
+            child: Hero(
+                transitionOnUserGestures: true,
+                tag: state.submission.previewUrl,
+                child: body),
+          ),
           Align(
             alignment: Alignment.topLeft,
             // top: -15,
@@ -211,7 +216,11 @@ class SecondPage extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(top: 40, right: 40, child: topRightCorner)
+          Positioned(top: 40, right: 40, child: topRightCorner),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: caption,
+          )
         ],
       ),
     );
