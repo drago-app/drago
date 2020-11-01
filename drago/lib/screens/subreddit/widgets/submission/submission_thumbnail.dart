@@ -117,45 +117,52 @@ class SubmissionThumbnail extends StatelessWidget {
   final String previewUrl;
   final Widget label;
   final Function onTap;
+  final String heroTag;
 
   SubmissionThumbnail(
-      {this.previewUrl, this.label = const SizedBox.shrink(), this.onTap});
+      {this.previewUrl,
+      this.label = const SizedBox.shrink(),
+      this.onTap,
+      @required this.heroTag});
 
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Stack(
-        children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4.0),
-            child: CachedNetworkImage(
-              fadeInDuration: Duration(),
-              imageUrl: previewUrl,
-              useOldImageOnUrlChange: true,
-              placeholder: (context, submission) => Container(
-                height: 55,
-                width: 55,
-                color: CupertinoColors.inactiveGray,
-              ),
-              errorWidget: (context, submission, error) => Center(
-                  child: Icon(
-                CupertinoIcons.clear,
-                color: CupertinoColors.destructiveRed,
-              )),
-              imageBuilder: (context, imageProvider) {
-                return Container(
+      child: Hero(
+        tag: heroTag,
+        child: Stack(
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4.0),
+              child: CachedNetworkImage(
+                fadeInDuration: Duration(),
+                imageUrl: previewUrl,
+                useOldImageOnUrlChange: true,
+                placeholder: (context, submission) => Container(
                   height: 55,
                   width: 55,
-                  decoration: BoxDecoration(
-                    image:
-                        DecorationImage(image: imageProvider, fit: BoxFit.fill),
-                  ),
-                );
-              },
+                  color: CupertinoColors.inactiveGray,
+                ),
+                errorWidget: (context, submission, error) => Center(
+                    child: Icon(
+                  CupertinoIcons.clear,
+                  color: CupertinoColors.destructiveRed,
+                )),
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    height: 55,
+                    width: 55,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.fill),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          label
-        ],
+            label
+          ],
+        ),
       ),
     );
   }

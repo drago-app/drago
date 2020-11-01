@@ -47,6 +47,7 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
     return mediaSubmission(
       BlocProvider.of<SubmissionBloc>(context).state.submission,
       SubmissionThumbnail(
+        heroTag: BlocProvider.of<SubmissionBloc>(context).state.submission.url,
         previewUrl: BlocProvider.of<SubmissionBloc>(context)
             .state
             .submission
@@ -54,10 +55,7 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
         onTap: () => Navigator.of(context, rootNavigator: true).push(
           DragToPopPageRoute(
             builder: (_) => SecondPage(
-              body: ImageViewerWidget(media
-                  // maxHeight: MediaQuery.of(context).size.height,
-                  // url: media.src,
-                  ),
+              body: ImageViewerWidget(media),
               bloc: context.bloc<SubmissionBloc>(),
             ),
           ),
@@ -77,6 +75,7 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
     return mediaSubmission(
       BlocProvider.of<SubmissionBloc>(context).state.submission,
       SubmissionThumbnail(
+        heroTag: BlocProvider.of<SubmissionBloc>(context).state.submission.url,
         label: GalleryThumbnailLabel(media),
         previewUrl: BlocProvider.of<SubmissionBloc>(context)
             .state
@@ -107,6 +106,8 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
     return mediaSubmission(
         BlocProvider.of<SubmissionBloc>(context).state.submission,
         SubmissionThumbnail(
+          heroTag:
+              BlocProvider.of<SubmissionBloc>(context).state.submission.url,
           label: GifThumbnailLabel(),
           previewUrl: BlocProvider.of<SubmissionBloc>(context)
               .state
@@ -126,6 +127,8 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
     return mediaSubmission(
         BlocProvider.of<SubmissionBloc>(context).state.submission,
         SubmissionThumbnail(
+          heroTag:
+              BlocProvider.of<SubmissionBloc>(context).state.submission.url,
           label: VideoThumbnailLabel(),
           previewUrl: BlocProvider.of<SubmissionBloc>(context)
               .state
@@ -175,6 +178,7 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
     onTap: (context) => Navigator.of(context).pushNamed('/comments',
         arguments: BlocProvider.of<SubmissionBloc>(context)),
     thumbnail: SubmissionThumbnail(
+      heroTag: submission.url,
       onTap: () => _launchURL(submission.url),
       label: LinkThumbnailLabel(),
       previewUrl: submission.previewUrl ?? 'https://via.placeholder.com/150',
@@ -203,6 +207,7 @@ Widget selfSubmission(Submission submission) => SubredditListItem(
     onTap: (context) => Navigator.of(context).pushNamed('/comments',
         arguments: BlocProvider.of<SubmissionBloc>(context)),
     thumbnail: SubmissionThumbnail(
+      heroTag: submission.url,
       onTap: null,
       previewUrl: 'https://via.placeholder.com/150',
     ),
