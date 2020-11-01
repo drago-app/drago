@@ -45,7 +45,6 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
   }
 
   Widget mapMediaTypeToWidget(maxHeight, media) {
-    print('media is ${media.runtimeType}');
     if (media is ImageMedia) {
       return imageWidget(maxHeight, media);
     }
