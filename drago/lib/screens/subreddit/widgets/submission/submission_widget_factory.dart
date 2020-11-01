@@ -75,36 +75,25 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
   @override
   visitGalleryMedia(GalleryMedia media) {
     return mediaSubmission(
-        BlocProvider.of<SubmissionBloc>(context).state.submission,
-        SubmissionThumbnail(
-            label: GalleryThumbnailLabel(media),
-            previewUrl: BlocProvider.of<SubmissionBloc>(context)
-                .state
-                .submission
-                .previewUrl,
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                DragToPopPageRoute(
-                  builder: (_) {
-                    final PageController controller = PageController();
-                    return SecondPage(
-                      topRightCorner: GalleryPageIndicator(
-                        controller: controller,
-                        total: media.size,
-                      ),
-                      body: Center(
-                          child: GalleryWidget(
-                              controller: controller, media: media)),
-                      bloc: context.bloc<SubmissionBloc>(),
-                      // caption: GalleryCaptionWidget(
-                      //   controller: controller,
-                      //   captions: media.src.map((src) => src.title).toList(),
-                      // ),
-                    );
-                  },
-                ),
-              );
-            }));
+      BlocProvider.of<SubmissionBloc>(context).state.submission,
+      SubmissionThumbnail(
+        label: GalleryThumbnailLabel(media),
+        previewUrl: BlocProvider.of<SubmissionBloc>(context)
+            .state
+            .submission
+            .previewUrl,
+        onTap: () {
+          Navigator.of(context, rootNavigator: true).push(
+            DragToPopPageRoute(
+              builder: (_) => GalleryWidget(
+                media: media,
+                bloc: context.bloc<SubmissionBloc>(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override

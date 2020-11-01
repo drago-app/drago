@@ -1,5 +1,7 @@
+import 'package:drago/blocs/submission_bloc.dart/submission_bloc.dart';
 import 'package:drago/common/picture.dart';
 import 'package:drago/sandbox/host.dart';
+import 'package:drago/screens/subreddit/widgets/submission/submission.dart';
 import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -8,8 +10,33 @@ import 'common.dart';
 class GalleryWidget extends StatelessWidget {
   final PageController controller;
   final GalleryMedia media;
+  final SubmissionBloc bloc;
+  final startingIndex;
 
-  GalleryWidget({@required this.media, @required this.controller});
+  GalleryWidget(
+      {@required this.media, @required this.bloc, this.startingIndex = 0})
+      : controller = PageController(initialPage: startingIndex);
+
+  @override
+  Widget build(BuildContext context) {
+    return SecondPage(
+      topRightCorner: GalleryPageIndicator(
+        controller: controller,
+        total: media.size,
+        initialIndex: startingIndex,
+      ),
+      body:
+          Center(child: GalleryPageView(controller: controller, media: media)),
+      bloc: bloc,
+    );
+  }
+}
+
+class GalleryPageView extends StatelessWidget {
+  final PageController controller;
+  final GalleryMedia media;
+
+  GalleryPageView({@required this.media, @required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +115,10 @@ class GalleryMediaWidgetState extends State<GalleryMediaWidget>
 class GalleryPageIndicator extends StatefulWidget {
   final num total;
   final PageController controller;
+  final initialIndex;
 
-  GalleryPageIndicator({@required this.total, @required this.controller})
+  GalleryPageIndicator(
+      {@required this.total, @required this.controller, this.initialIndex = 0})
       : assert(controller != null),
         assert(total != null);
 
@@ -98,26 +127,37 @@ class GalleryPageIndicator extends StatefulWidget {
 }
 
 class GalleryPageIndicatorState extends State<GalleryPageIndicator> {
-  int current = 0;
+  var index;
+
+  @override
+  void initState() {
+    super.initState();
+    index = widget.initialIndex;
+    widget.controller.addListener(() {
+      setState(() {
+        index = widget.controller.page.toInt();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      '${(current + 1).toString()} / ${widget.total.toString()}',
+      '${(index + 1).toString()} / ${widget.total.toString()}',
       style:
           defaultTextStyle.copyWith(color: CupertinoColors.white, fontSize: 18),
     );
   }
 
-  @override
-  void initState() {
-    widget.controller.addListener(() {
-      setState(() {
-        current = widget.controller.page.toInt();
-      });
-    });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   widget.controller.addListener(() {
+  //     setState(() {
+  //       current = widget.controller.page.toInt();
+  //     });
+  //   });
+  //   super.initState();
+  // }
 }
 
 class GalleryPreview extends StatelessWidget {

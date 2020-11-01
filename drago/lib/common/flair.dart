@@ -1,9 +1,12 @@
+import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class FlairWidget extends StatelessWidget {
   final String flairText;
+  final TextStyle style;
 
-  FlairWidget({@required this.flairText}) : assert(flairText != null);
+  FlairWidget({@required this.flairText, this.style})
+      : assert(flairText != null);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,7 @@ class FlairWidget extends StatelessWidget {
         : Container(
             child: Padding(
               padding: EdgeInsets.all(4),
-              child: Text(flairText, style: TextStyle(fontSize: 12)),
+              child: Text(flairText, style: defaultTextStyle.merge(style)),
             ),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),

@@ -58,17 +58,43 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
     final height = MediaQuery.of(context).size.height * .3;
     return Container(
       height: height,
-      child: StaggeredGridView.countBuilder(
-        scrollDirection: Axis.horizontal,
-        crossAxisCount: 2,
-        itemCount: 8,
-        itemBuilder: (BuildContext context, int index) => Container(
-          height: height,
-          child: GalleryPreviewElement(media.src[index], height: height),
-        ),
-        staggeredTileBuilder: (int index) => StaggeredTile.extent(2, height),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+      child: Stack(
+        children: [
+          StaggeredGridView.countBuilder(
+            scrollDirection: Axis.horizontal,
+            crossAxisCount: 2,
+            itemCount: 8,
+            itemBuilder: (BuildContext context, int index) => Container(
+              height: height,
+              child: GalleryPreviewElement(
+                media.src[index],
+                height: height,
+                onTap: () => Navigator.of(context, rootNavigator: true).push(
+                  DragToPopPageRoute(
+                    builder: (_) => GalleryWidget(
+                      media: media,
+                      startingIndex: index,
+                      bloc: widget.submissionBloc,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            staggeredTileBuilder: (int index) =>
+                StaggeredTile.extent(2, height),
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
+          ),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: FlairWidget(
+                    flairText: '${media.size} IMAGES',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+              ))
+        ],
       ),
     );
   }
@@ -169,19 +195,57 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
 
 class GalleryPreviewElement extends StatelessWidget {
   final ExpandoMedia media;
-
   final double height;
-  final Color color;
+  final Function onTap;
 
-  GalleryPreviewElement(this.media, {@required this.height, this.color})
-      : assert(media != null);
+  GalleryPreviewElement(this.media, {@required this.height, this.onTap})
+      : assert(media != null),
+        assert(media is ImageMedia);
 
   @override
   Widget build(BuildContext context) {
-    return (media is ImageMedia)
-        ? FittedBox(
-            fit: BoxFit.fill,
-            child: Picture(maxHeight: height, url: (media as ImageMedia).src))
-        : Placeholder();
+    return CupertinoTappableWidget(
+        onTap: onTap,
+        child: (media is ImageMedia)
+            ? FittedBox(
+                fit: BoxFit.fill,
+                child:
+                    Picture(maxHeight: height, url: (media as ImageMedia).src))
+            : Placeholder());
+  }
+}
+
+class CupertinoTappableWidget extends StatefulWidget {
+  final Function onTap;
+  final Widget child;
+
+  CupertinoTappableWidget({this.onTap, @required this.child});
+
+  @override
+  _CupertinoTappableWidgetState createState() =>
+      _CupertinoTappableWidgetState();
+}
+
+class _CupertinoTappableWidgetState extends State<CupertinoTappableWidget> {
+  _CupertinoTappableWidgetState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        CupertinoContextMenu(
+          child: GestureDetector(onTap: widget.onTap, child: widget.child),
+          actions: [
+            CupertinoContextMenuAction(
+              child: const Text('Action one'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
