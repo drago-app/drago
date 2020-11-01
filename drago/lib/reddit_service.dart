@@ -184,6 +184,7 @@ class RedditService {
       stickied: s.stickied,
       domain: s.domain,
       distinguished: s.distinguished,
+      voteState: _mapVoteState(s.vote),
       body: s.selftext,
       id: s.id,
       saved: s.saved,
