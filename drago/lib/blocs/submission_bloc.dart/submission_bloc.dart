@@ -44,10 +44,11 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     if (redditLink.isSelf) {
       this.add(SubmissionResolved(
           submission: SelfSubmission.fromRedditLink(link: redditLink)));
-    } else {
-      this.add(SubmissionResolved(
-          submission: WebSubmission.fromRedditLink(link: redditLink)));
     }
+    // else {
+    //   this.add(SubmissionResolved(
+    //       submission: WebSubmission.fromRedditLink(link: redditLink)));
+    // }
     Host.getMedia(redditLink.url).forEach((media) {
       try {
         this.add(

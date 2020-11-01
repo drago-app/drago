@@ -31,14 +31,15 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
         builder: (builderContext, state) {
           if (state.submission is SelfSubmission)
             return selfSubmission(state.submission);
-          if (state.submission is WebSubmission)
-            return linkSubmission(state.submission);
+          // if (state.submission is WebSubmission)
+          //   return linkSubmission(state.submission);
           if (state.submission is MediaSubmission) {
             return (state.submission as MediaSubmission).media.accept(this);
           }
-          if (state.submission is Submission) {
-            return SizedBox.shrink();
-          }
+          return linkSubmission(state.submission);
+          // if (state.submission is Submission) {
+          //   return SizedBox.shrink();
+          // }
         });
   }
 

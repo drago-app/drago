@@ -32,15 +32,16 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
         builder: (builderContext, state) {
           if (state.submission is SelfSubmission)
             return selfSubmissionCommentsPage(widget.submissionBloc);
-          if (state.submission is WebSubmission) {
-            return linkSubmissionCommentsPage(widget.submissionBloc);
-          }
+          // if (state.submission is WebSubmission) {
+          //   return linkSubmissionCommentsPage(widget.submissionBloc);
+          // }
           if (state.submission is MediaSubmission) {
             return mediaSubmissionCommentsPage(
                 widget.submissionBloc,
                 MediaQuery.of(context).size.height * .5,
                 (state.submission as MediaSubmission).media);
           }
+          return linkSubmissionCommentsPage(widget.submissionBloc);
         });
   }
 

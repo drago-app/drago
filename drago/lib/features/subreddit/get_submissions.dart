@@ -123,68 +123,68 @@ class Submission extends Equatable {
       ];
 }
 
-class WebSubmission extends Submission {
-  WebSubmission.fromRedditLink({@required RedditLink link})
-      : super.fromRedditLink(link: link);
-  WebSubmission(
-      {@required author,
-      @required stickied,
-      @required createdUtc,
-      @required edited,
-      @required domain,
-      @required id,
-      @required numComments,
-      @required authorFlairText,
-      @required linkFlairText,
-      @required score,
-      @required title,
-      @required url,
-      @required previewUrl,
-      @required saved,
-      @required isNSFW,
-      @required subreddit,
-      @required voteState})
-      : super(
-            author: author,
-            stickied: stickied,
-            authorFlairText: authorFlairText,
-            linkFlairText: linkFlairText,
-            createdUtc: createdUtc,
-            edited: edited,
-            domain: domain,
-            id: id,
-            numComments: numComments,
-            score: score,
-            title: title,
-            url: url,
-            previewUrl: previewUrl,
-            saved: saved,
-            isNSFW: isNSFW,
-            subreddit: subreddit,
-            voteState: voteState);
+// class WebSubmission extends Submission {
+//   WebSubmission.fromRedditLink({@required RedditLink link})
+//       : super.fromRedditLink(link: link);
+//   WebSubmission(
+//       {@required author,
+//       @required stickied,
+//       @required createdUtc,
+//       @required edited,
+//       @required domain,
+//       @required id,
+//       @required numComments,
+//       @required authorFlairText,
+//       @required linkFlairText,
+//       @required score,
+//       @required title,
+//       @required url,
+//       @required previewUrl,
+//       @required saved,
+//       @required isNSFW,
+//       @required subreddit,
+//       @required voteState})
+//       : super(
+//             author: author,
+//             stickied: stickied,
+//             authorFlairText: authorFlairText,
+//             linkFlairText: linkFlairText,
+//             createdUtc: createdUtc,
+//             edited: edited,
+//             domain: domain,
+//             id: id,
+//             numComments: numComments,
+//             score: score,
+//             title: title,
+//             url: url,
+//             previewUrl: previewUrl,
+//             saved: saved,
+//             isNSFW: isNSFW,
+//             subreddit: subreddit,
+//             voteState: voteState);
 
-  WebSubmission copyWith(
-      {score, numComments, edited, voteState, saved, isNSFW, stickied}) {
-    return WebSubmission(
-        linkFlairText: this.linkFlairText,
-        stickied: stickied ?? this.stickied,
-        authorFlairText: this.authorFlairText,
-        author: this.author,
-        createdUtc: this.createdUtc,
-        edited: edited ?? this.edited,
-        domain: this.domain,
-        id: this.id,
-        subreddit: this.subreddit,
-        numComments: numComments ?? this.numComments,
-        score: score ?? this.score,
-        title: this.title,
-        url: this.url,
-        previewUrl: this.previewUrl,
-        saved: saved ?? this.saved,
-        isNSFW: isNSFW ?? this.isNSFW,
-        voteState: voteState ?? this.voteState);
-  }
-}
+//   WebSubmission copyWith(
+//       {score, numComments, edited, voteState, saved, isNSFW, stickied}) {
+//     return WebSubmission(
+//         linkFlairText: this.linkFlairText,
+//         stickied: stickied ?? this.stickied,
+//         authorFlairText: this.authorFlairText,
+//         author: this.author,
+//         createdUtc: this.createdUtc,
+//         edited: edited ?? this.edited,
+//         domain: this.domain,
+//         id: this.id,
+//         subreddit: this.subreddit,
+//         numComments: numComments ?? this.numComments,
+//         score: score ?? this.score,
+//         title: this.title,
+//         url: this.url,
+//         previewUrl: this.previewUrl,
+//         saved: saved ?? this.saved,
+//         isNSFW: isNSFW ?? this.isNSFW,
+//         voteState: voteState ?? this.voteState);
+//   }
+// }
 
 class SelfSubmission extends Submission {
   static String _defaultPreview =
