@@ -200,7 +200,7 @@ class SecondPage extends StatelessWidget {
             alignment: Alignment.center,
             child: Hero(
                 transitionOnUserGestures: true,
-                tag: state.submission.previewUrl,
+                tag: state.submission.url,
                 child: body),
           ),
           Align(

@@ -10,3 +10,5 @@ export './text_button.dart';
 export './square_action_button.dart';
 export './stickied_widget.dart';
 export './gallery_widget.dart';
+export './expandable_text.dart';
+export './image_viewer_widget.dart';
