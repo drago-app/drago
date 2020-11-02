@@ -12,6 +12,7 @@ import 'common/common.dart';
 import 'common/drag_to_pop_modal/drag_to_pop_page_route.dart';
 import 'features/subreddit/get_submissions.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'dart:math';
 
 class CommentsPageFactory extends StatefulWidget {
   final SubmissionBloc submissionBloc;
@@ -32,9 +33,7 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
         builder: (builderContext, state) {
           if (state.submission is SelfSubmission)
             return selfSubmissionCommentsPage(widget.submissionBloc);
-          // if (state.submission is WebSubmission) {
-          //   return linkSubmissionCommentsPage(widget.submissionBloc);
-          // }
+
           if (state.submission is MediaSubmission) {
             return mediaSubmissionCommentsPage(
                 widget.submissionBloc,
@@ -170,7 +169,10 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
 
   Widget linkSubmissionCommentsPage(submissionBloc) => CommentsPage(
         numComments: submissionBloc.state.submission.numComments.toString(),
-        bottomWidget: Text('${submissionBloc.state.submission.url}'),
+        bottomWidget: LinkPreviewWidget(
+          link: submissionBloc.state.submission.url,
+          previewUrl: submissionBloc.state.submission.previewUrl,
+        ),
         topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
         submissionSummary: SubmissionSummary(
           subreddit: submissionBloc.state.submission.subreddit,
@@ -241,8 +243,10 @@ class GalleryPreviewElement extends StatelessWidget {
 class CupertinoTappableWidget extends StatefulWidget {
   final Function onTap;
   final Widget child;
+  final StackFit fit;
 
-  CupertinoTappableWidget({this.onTap, @required this.child});
+  CupertinoTappableWidget(
+      {this.onTap, @required this.child, this.fit = StackFit.expand});
 
   @override
   _CupertinoTappableWidgetState createState() =>
@@ -255,7 +259,7 @@ class _CupertinoTappableWidgetState extends State<CupertinoTappableWidget> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: widget.fit,
       children: [
         CupertinoContextMenu(
           child: GestureDetector(onTap: widget.onTap, child: widget.child),
@@ -269,6 +273,85 @@ class _CupertinoTappableWidgetState extends State<CupertinoTappableWidget> {
           ],
         ),
       ],
+    );
+  }
+}
+
+class LinkPreviewWidget extends StatelessWidget {
+  final String previewUrl;
+  final Uri uri;
+  LinkPreviewWidget({@required String link, this.previewUrl})
+      : uri = Uri.parse(link);
+
+  @override
+  Widget build(BuildContext context) {
+    var hostSegments = uri.host.split('.');
+    final host = hostSegments[hostSegments.length - 2] +
+        '.' +
+        hostSegments[hostSegments.length - 1];
+
+    return CupertinoTappableWidget(
+      fit: StackFit.loose,
+      onTap: null,
+      child: Container(
+        color: CupertinoTheme.of(context).barBackgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              color: CupertinoColors.systemGrey3.withOpacity(.3),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                      height: 50,
+                      width: 50,
+                      child: FittedBox(
+                          fit: BoxFit.cover, child: Image.network(previewUrl))),
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          RichText(
+                            softWrap: true,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                                text: '$host',
+                                style: TextStyle(
+                                  color: CupertinoColors.black.withOpacity(.8),
+                                ),
+                                children: [
+                                  TextSpan(
+                                      text:
+                                          '${uri.path.substring(0, min(20, uri.path.length))}. . .',
+                                      style: TextStyle(
+                                        color: CupertinoColors.black
+                                            .withOpacity(.3),
+                                      ))
+                                ]),
+                          ),
+                          Icon(
+                            CupertinoIcons.chevron_right,
+                            size: 18,
+                            color: CupertinoColors.black.withOpacity(.3),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
