@@ -45,4 +45,13 @@ void main() {
 
     assert((result as GalleryMedia).size == 11);
   });
+
+  test('given an imgur gifv link, it should return a VideoMedia', () async {
+    final imgurUrl = 'https://i.imgur.com/HixVFoG.gifv';
+
+    final resultStream = Host.getMedia(imgurUrl);
+    final result = await resultStream.first;
+
+    assert(result is VideoMedia);
+  });
 }

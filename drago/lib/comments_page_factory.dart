@@ -52,6 +52,9 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
     if (media is GalleryMedia) {
       return galleryWidget(maxHeight, media);
     }
+    if (media is GifMedia) {
+      return gifWidget(maxHeight, media);
+    }
   }
 
   Widget galleryWidget(maxHeight, GalleryMedia media) {
@@ -109,6 +112,26 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
           ),
         ),
       ),
+      child: Hero(
+        tag: widget.submissionBloc.state.submission.url,
+        child: Picture(
+          maxHeight: maxHeight,
+          url: media.src,
+        ),
+      ),
+    );
+  }
+
+  Widget gifWidget(maxHeight, GifMedia media) {
+    return GestureDetector(
+      // onTap: () => Navigator.of(context, rootNavigator: true).push(
+      //   DragToPopPageRoute(
+      //     builder: (_) => SecondPage(
+      //       body: ImageViewerWidget(media),
+      //       bloc: widget.submissionBloc,
+      //     ),
+      //   ),
+      // ),
       child: Hero(
         tag: widget.submissionBloc.state.submission.url,
         child: Picture(

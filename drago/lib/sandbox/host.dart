@@ -12,7 +12,8 @@ class Host {
     defaultHost,
     defaultVideo,
     defaultGifHost,
-    imgurHost
+    imgurAlbumHost,
+    imgurGifvHost
   ];
   final String moduleId;
   final String name;
@@ -220,7 +221,7 @@ final Host defaultHost = Host(
   moduleId: 'default',
   name: 'default',
   domains: [],
-  detect: (String url) => RegExp(r'\.(gif|jpe?g|png|svg)$').firstMatch(url),
+  detect: (String url) => RegExp(r'\.(jpe?g|png|svg)$').firstMatch(url),
   handleLink: (String href, _) => Future.value(ImageMedia(src: href)),
 );
 
@@ -229,7 +230,7 @@ final Host defaultGifHost = Host(
   name: 'default',
   domains: [],
   detect: (String url) => RegExp(r'\.(gif)$').firstMatch(url),
-  handleLink: (String href, _) => Future.value(ImageMedia(src: href)),
+  handleLink: (String href, _) => Future.value(GifMedia(src: href)),
 );
 
 final Host defaultVideo = Host(
@@ -253,12 +254,33 @@ final Host defaultVideo = Host(
   },
 );
 
-final Host imgurHost = Host(
+final imgurGifvHost = Host(
+    moduleId: 'imgur',
+    domains: ['imgur.com'],
+    detect: (url) {
+      final regex = r'imgur.com\/([a-zA-Z0-9]{3,7})(\.gifv)';
+      return RegExp(regex).firstMatch(url);
+    },
+    handleLink: (url, detectResult) {
+      return Future.value(
+        VideoMedia(
+          sources: [
+            VideoMediaSource(
+              type: 'video/mp4',
+              source: url.replaceAll('.gifv', '.mp4'),
+            )
+          ],
+        ),
+      );
+    });
+
+final Host imgurAlbumHost = Host(
     moduleId: 'imgur',
     domains: ['imgur.com'],
     detect: (url) {
       final albumRegex = r'(?!m.|www.)imgur.com\/a\/([a-zA-Z0-9]{7})';
       final galleryRegex = r'(?!m.|www.)imgur.com\/gallery\/([a-zA-Z0-9]{7})';
+
       if (RegExp(albumRegex).firstMatch(url) != null) {
         return RegExp(albumRegex).firstMatch(url);
       }
