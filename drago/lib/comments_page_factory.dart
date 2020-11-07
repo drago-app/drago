@@ -310,39 +310,43 @@ class LinkPreviewWidget extends StatelessWidget {
                       width: 50,
                       child: FittedBox(
                           fit: BoxFit.cover, child: Image.network(previewUrl))),
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 9.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          RichText(
-                            softWrap: true,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                                text: '$host',
-                                style: TextStyle(
-                                  color: CupertinoColors.black.withOpacity(.8),
-                                ),
-                                children: [
-                                  TextSpan(
-                                      text:
-                                          '${uri.path.substring(0, min(20, uri.path.length))}. . .',
-                                      style: TextStyle(
-                                        color: CupertinoColors.black
-                                            .withOpacity(.3),
-                                      ))
-                                ]),
-                          ),
-                          Icon(
-                            CupertinoIcons.chevron_right,
-                            size: 18,
-                            color: CupertinoColors.black.withOpacity(.3),
-                          )
-                        ],
+                  Container(
+                    child: Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                child: Expanded(
+                              child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                    text: '$host',
+                                    style: TextStyle(
+                                      color:
+                                          CupertinoColors.black.withOpacity(.8),
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                          text: '${uri.path}',
+                                          // text: '${uri.path.substring(0, min(20, uri.path.length))}. . .',
+                                          style: TextStyle(
+                                            color: CupertinoColors.black
+                                                .withOpacity(.3),
+                                          ))
+                                    ]),
+                              ),
+                            )),
+                            Icon(
+                              CupertinoIcons.chevron_right,
+                              size: 18,
+                              color: CupertinoColors.black.withOpacity(.3),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   )
