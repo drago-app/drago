@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/blocs/blocs.dart';
-import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 
 class AccountsPage extends StatefulWidget {
   AccountsPage({
@@ -35,7 +34,9 @@ class AccountsPageState extends State<AccountsPage> {
             middle: Text('')),
         child: ListView(
           shrinkWrap: true,
-          children: [_headerRow(), _test()],
+          children: [
+            _headerRow(),
+          ],
         ),
       );
     });
@@ -118,25 +119,25 @@ class AccountsPageState extends State<AccountsPage> {
     );
   }
 
-  Widget _test() {
-    return CupertinoSettings(
-      shrinkWrap: true,
-      items: <Widget>[
-        _rounded(),
-        CSDescription(
-          'Using Night mode extends battery life on devices with OLED display',
-        ),
-        const CSHeader(''),
-        CSControl(
-          nameWidget: Text('Loading...'),
-          contentWidget: CupertinoActivityIndicator(),
-        ),
-        CSButton(CSButtonType.DEFAULT, "Licenses", () {
-          print("It works!");
-        }),
-        const CSHeader(''),
-        CSButton(CSButtonType.DESTRUCTIVE, "Delete all data", () {})
-      ],
-    );
-  }
+  // Widget _test() {
+  //   return CupertinoSettings(
+  //     shrinkWrap: true,
+  //     items: <Widget>[
+  //       _rounded(),
+  //       CSDescription(
+  //         'Using Night mode extends battery life on devices with OLED display',
+  //       ),
+  //       const CSHeader(''),
+  //       CSControl(
+  //         nameWidget: Text('Loading...'),
+  //         contentWidget: CupertinoActivityIndicator(),
+  //       ),
+  //       CSButton(CSButtonType.DEFAULT, "Licenses", () {
+  //         print("It works!");
+  //       }),
+  //       const CSHeader(''),
+  //       CSButton(CSButtonType.DESTRUCTIVE, "Delete all data", () {})
+  //     ],
+  //   );
+  // }
 }

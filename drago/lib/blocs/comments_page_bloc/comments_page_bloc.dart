@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:drago/core/error/failures.dart';
+import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/comment_model.dart';
 import 'package:flutter/foundation.dart';
@@ -12,8 +15,12 @@ import 'comments_page.dart';
 class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
   final RedditService reddit;
   final Submission submission;
+  final GetComments getComments;
 
-  CommentsPageBloc({@required this.reddit, @required this.submission});
+  CommentsPageBloc(
+      {@required this.reddit,
+      @required this.submission,
+      @required this.getComments});
 
   @override
   get initialState => CommentsPageInitial();
@@ -36,16 +43,23 @@ class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
   }
 
   Stream<CommentsPageState> _mapLoadCommentsToState() async* {
-    final List<BaseCommentModel> comments =
-        await reddit.getComments(submission.id);
+    final commentsOrFailure =
+        await getComments(GetCommentsParams(submission.id));
 
-    yield CommentsLoaded(comments: comments);
+    yield* commentsOrFailure.fold(
+      (left) async* {
+        print('[CommentsPageBLoC#_mapLoadCommentsToState] \n ${left.message}');
+      },
+      (comments) async* {
+        yield (CommentsLoaded(comments: comments));
+      },
+    );
   }
 
   Stream<CommentsPageState> _mapExpandCommentToState(
       MoreCommentsModel comment) async* {
-    final List comments = await reddit.getMoreComments(comment);
+    // final List comments = await reddit.getMoreComments(comment);
 
-    yield CommentsLoaded(comments: comments);
+    // yield CommentsLoaded(comments: comments);
   }
 }

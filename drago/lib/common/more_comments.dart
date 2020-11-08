@@ -13,16 +13,13 @@ class ContinueThreadWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => null,
-      // onTap: () => BlocProvider.of<CommentsPageBloc>(context)
-      //     .add(ExpandComment(widget.moreComments)),
       child: Padding(
         padding: EdgeInsets.only(right: 0, left: continueThread.depth * 8.0),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(
-                  color: CupertinoColors.darkBackgroundGray, width: 0),
+              top: BorderSide(color: CupertinoColors.separator, width: 0),
             ),
           ),
           child: Padding(
@@ -83,8 +80,7 @@ class _MoreCommentsState extends State<MoreCommentsWidget> {
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(
-                  color: CupertinoColors.darkBackgroundGray, width: 0),
+              top: BorderSide(color: CupertinoColors.separator, width: 0),
             ),
           ),
           child: Padding(

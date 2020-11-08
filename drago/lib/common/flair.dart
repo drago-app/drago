@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 class FlairWidget extends StatelessWidget {
   final String flairText;
   final TextStyle style;
+  final color;
+  static final _defaultColor = CupertinoColors.lightBackgroundGray;
 
-  FlairWidget({@required this.flairText, this.style})
+  FlairWidget({@required this.flairText, this.style, this.color})
       : assert(flairText != null);
 
   @override
@@ -19,7 +21,7 @@ class FlairWidget extends StatelessWidget {
             ),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: CupertinoColors.lightBackgroundGray));
+                color: color ?? _defaultColor));
   }
 }
 

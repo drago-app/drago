@@ -1,3 +1,4 @@
+import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/theme.dart';
 import 'package:drago/user_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +40,7 @@ final SaveOrUnsaveSubmission saveOrUnsave =
     SaveOrUnsaveSubmission(reddit: _reddit, userService: _userService);
 
 final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
+final GetComments getComments = GetComments(reddit: _reddit);
 
 final DialogService _dialogService = DialogService();
 
@@ -288,6 +290,7 @@ class RouteGenerator {
               submissionBloc: args as SubmissionBloc,
             ),
             create: (BuildContext context) => CommentsPageBloc(
+                getComments: getComments,
                 reddit: _reddit, // Bloc shouldnlt have access to _reddit
                 submission: (args as SubmissionBloc).state.submission)
               ..add(LoadComments()),

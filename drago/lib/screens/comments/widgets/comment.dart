@@ -1,4 +1,5 @@
 import 'package:drago/models/comment_model.dart';
+import 'package:drago/screens/comments/comments_page.dart';
 import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,52 +12,66 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 
 class CommentWidget extends StatelessWidget {
   final CommentModel comment;
-  final Widget trailing;
+  final AuthorViewModel authorViewModel;
+  final ScoreViewModel scoreViewModel;
+  final List<Widget> children;
+  final List colors;
+
   final unescape = new HtmlUnescape();
 
-  CommentWidget({@required this.comment, this.trailing});
+  CommentWidget(
+      {@required this.comment,
+      this.children,
+      @required this.colors,
+      @required this.scoreViewModel,
+      @required this.authorViewModel});
 
   @override
   Widget build(BuildContext context) {
     return CustomExpansionTile(
       backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
       indentation: 8.0 * comment.depth,
-      trailingOpen: trailing,
-      sideBorderColor: (comment.depth == 0)
-          ? Colors.transparent
-          : (comment.depth == 9) ? Colors.blue : Colors.red,
+      trailingOpen: [
+        Icon(
+          CupertinoIcons.ellipsis,
+          size: 18,
+          color: CupertinoColors.systemGrey,
+        ),
+      ],
+      trailingClosed: [
+        FlairWidget(
+          color: CupertinoColors.systemGrey2,
+          style: TextStyle(color: CupertinoColors.systemGrey6, fontSize: 14),
+          flairText: '${comment.count}',
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Icon(
+          CupertinoIcons.chevron_down,
+          size: 14,
+          color: CupertinoColors.systemGrey,
+        )
+      ],
+      sideBorderColor:
+          (comment.depth == 0) ? Colors.transparent : colors[comment.depth],
       initiallyExpanded: true,
-      title: Text(
-          '${comment.author}'), // AuthorWidget(author: comment.author, onTap: () => null),
+      title: RichText(
+        text: TextSpan(children: [
+          WidgetSpan(
+              child: AuthorWidget(authorViewModel,
+                  style: TextStyle(fontSize: 16))),
+          WidgetSpan(child: ScoreWidgetSpan(scoreViewModel))
+        ]),
+      ),
       body: _body(context, comment),
       children: (comment.children == null)
           ? []
-          : comment.children
+          : children
               .map<Widget>(
-                (c) => Padding(
-                    padding: EdgeInsets.only(left: 0),
-                    child: _commentChild(c, comment)),
-              )
+                  (c) => Padding(padding: EdgeInsets.only(left: 0), child: c))
               .toList(),
     );
-  }
-
-  _commentChild(child, comment) {
-    if (child is CommentModel) {
-      return CommentWidget(
-        comment: child,
-      );
-    }
-    if (child is MoreCommentsModel) {
-      return MoreCommentsWidget(child);
-    }
-    if (child is ContinueThreadModel) {
-      return ContinueThreadWidget(
-        continueThread: child,
-      );
-    }
-
-    print('comment --- how did I get here? ${child.runtimeType}');
   }
 
   Widget _body(BuildContext context, CommentModel comment) {

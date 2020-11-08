@@ -12,3 +12,4 @@ export './stickied_widget.dart';
 export './gallery_widget.dart';
 export './expandable_text.dart';
 export './image_viewer_widget.dart';
+export './tappable_icon_text_span.dart';

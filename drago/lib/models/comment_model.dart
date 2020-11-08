@@ -1,4 +1,8 @@
-import 'package:draw/draw.dart';
+import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/models/score_model.dart';
+import 'package:drago/sandbox/types.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,69 +10,79 @@ import '../utils.dart';
 
 abstract class BaseCommentModel extends Equatable {
   int get depth;
-  String get submissionId;
+  // String get submissionId;
   String get id;
 
   @override
-  List<Object> get props => [depth, submissionId, id];
+  List<Object> get props => [depth, id];
 
   BaseCommentModel();
 
-  factory BaseCommentModel.factory(RedditBase r) {
-    if (r is Comment) {
-      final submission = r.submission as Submission;
-      // debugPrint('submissionref --- ${r.submission.}');
-      return CommentModel(
-          id: r.id,
-          author: r.author,
-          authorFlairText: r.authorFlairText,
-          body: r.body,
-          depth: r.depth,
-          edited: r.edited,
-          score: r.score,
-          age: createdUtcToAge(r.createdUtc),
-          children: _children(r.replies),
-          submissionId: submission.id);
-    } else {
-      final moreComments = r as MoreComments;
-      final submission = moreComments.submission as Submission;
+  factory BaseCommentModel.fromMore(More more) {
+    return more.count == 0
+        ? ContinueThreadModel(
+            depth: more.depth, submissionId: more.submissionId, id: more.id)
+        : MoreCommentsModel(
+            depth: more.depth,
+            numReplies: more.count,
+            submissionId: more.submissionId,
+            id: more.id);
+  }
+  factory BaseCommentModel.fromRedditComment(RedditComment redditComment) {
+    //Theres some room for optimization here. There is a lot of duplicate computation in _getCount
 
-      if (moreComments.count == 0) {
-        return ContinueThreadModel(
-            depth: moreComments.data['depth'],
-            submissionId: submission.id,
-            id: moreComments.id);
-      } else {
-        return MoreCommentsModel(
-            depth: moreComments.data['depth'],
-            numReplies: moreComments.count,
-            submissionId: submission.id,
-            id: moreComments.id);
-      }
-    }
+    return CommentModel(
+        voteState: redditComment.voteState,
+        id: redditComment.id,
+        author: Author(name: redditComment.author),
+        authorFlairText: redditComment.authorFlairText,
+        body: redditComment.body,
+        depth: redditComment.depth,
+        edited: redditComment.edited,
+        // score: redditComment.score,
+        age: createdUtcToAge(redditComment.createdUtc),
+        score: ScoreModel(score: redditComment.score),
+        children: _getChildren(redditComment),
+        count: _getCount(redditComment)
+        // submissionId: redditComment.id
+        );
   }
 
-  static List<BaseCommentModel> _children(CommentForest forest) {
-    if (forest is CommentForest) {
-      return forest.comments.map((c) => BaseCommentModel.factory(c)).toList();
-    } else {
-      return [];
-    }
+  static int _getCount(redditComment) {
+    return redditComment.children.fold(
+        1,
+        (acc, moc) => moc.fold(
+              (more) => more.count + acc,
+              (comment) => _getCount(comment) + acc,
+            ));
+  }
+
+  static List<BaseCommentModel> _getChildren(RedditComment redditComment) {
+    if (redditComment.children == null) return [];
+
+    return redditComment.children
+        .map<BaseCommentModel>((moc) => moc.fold(
+            (more) => BaseCommentModel.fromMore(more),
+            (redditComment) =>
+                BaseCommentModel.fromRedditComment(redditComment)))
+        .toList();
   }
 }
 
 class CommentModel extends BaseCommentModel {
   final String id;
+  final VoteState voteState;
   final int depth;
   final bool edited;
-  final String author;
-  final int score;
+  final Author author;
+  final ScoreModel score;
+  final int count;
   final String body;
   final String authorFlairText;
   final String age;
   // final String submissionId;
   final List<BaseCommentModel> children;
-  final String submissionId;
+  // final String submissionId;
 
   @override
   List<Object> get props => [
@@ -81,20 +95,24 @@ class CommentModel extends BaseCommentModel {
         authorFlairText,
         age,
         children,
-        submissionId
+        count,
+        // submissionId
       ];
 
-  CommentModel(
-      {@required this.id,
-      @required this.depth,
-      @required this.edited,
-      @required this.author,
-      @required this.score,
-      @required this.body,
-      @required this.authorFlairText,
-      @required this.age,
-      @required this.submissionId,
-      @required this.children});
+  CommentModel({
+    @required this.voteState,
+    @required this.id,
+    @required this.depth,
+    @required this.edited,
+    @required this.author,
+    @required this.score,
+    @required this.body,
+    @required this.authorFlairText,
+    @required this.age,
+    // @required this.submissionId,
+    @required this.children,
+    @required this.count,
+  });
 }
 
 class ContinueThreadModel extends BaseCommentModel {

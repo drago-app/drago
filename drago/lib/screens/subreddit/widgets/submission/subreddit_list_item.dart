@@ -107,7 +107,7 @@ class SubredditListItemBottomBar extends StatelessWidget {
         StickiedWidget(stickied),
         AuthorWidget(author),
         FlairWidget(flairText: authorFlairText),
-        ScoreWidget(score),
+        ScoreWidgetSpan(score),
 
         NumCommentsWidget(numComments),
         // SubmissionAge(age: age),

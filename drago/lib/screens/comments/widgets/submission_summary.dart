@@ -65,7 +65,7 @@ class SubmissionSummary extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
               children: <Widget>[
-                ScoreWidget(scoreViewModel)
+                ScoreWidgetSpan(scoreViewModel)
                 // Padding(
                 //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 //   child: SubmissionRatio(submission: submission),

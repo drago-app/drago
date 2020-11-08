@@ -1,26 +1,57 @@
 //https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/master/lib/types/reddit.js
+import 'package:dartz/dartz.dart';
 import 'package:drago/core/entities/submission_entity.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class RedditThing {
   static String kind;
 }
 
+class More implements RedditThing {
+  static String kind = 'more';
+  final String id, parentId, submissionId;
+  final int count, depth;
+
+  More({
+    @required this.id,
+    @required this.parentId,
+    @required this.count,
+    @required this.depth,
+    @required this.submissionId,
+  });
+}
+
 class RedditComment implements RedditThing {
   static String kind = 't1';
+  final VoteState voteState;
   final String author;
   final String body;
-  final num created;
-  final num createdUtc;
+  // final num created;
+  final DateTime createdUtc;
   final String id;
-  final String subreddit;
+  // final String subreddit;
+  final String distinguished;
+  final String authorFlairText;
+  final int score;
+  final bool edited;
+  final int depth;
+  List<Either<More, RedditComment>> children;
 
   RedditComment(
-      {this.author,
-      this.body,
-      this.created,
-      this.createdUtc,
-      this.id,
-      this.subreddit});
+      {@required this.author,
+      @required this.voteState,
+      @required this.body,
+      // @required this.created,
+      @required this.createdUtc,
+      @required this.id,
+      @required this.edited,
+      @required this.depth,
+      @required this.score,
+
+      // @required this.subreddit,
+      @required this.authorFlairText,
+      @required this.distinguished,
+      @required this.children});
 }
 
 class RedditAccount implements RedditThing {

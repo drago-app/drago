@@ -7,7 +7,7 @@ class TextButton extends StatelessWidget {
   final String text;
   final Function onTap;
   final TextStyle style;
-  static TextStyle defaultTextStyle = const TextStyle();
+  static TextStyle _defaultTextStyle = const TextStyle();
 
   TextButton(this.text, {this.onTap, this.style}) : assert(text != null);
 
@@ -17,7 +17,7 @@ class TextButton extends StatelessWidget {
       onTap: onTap,
       child: Text(
         text,
-        style: style ?? defaultTextStyle,
+        style: _defaultTextStyle.merge(style),
       ),
     );
   }
@@ -26,12 +26,15 @@ class TextButton extends StatelessWidget {
 class AuthorViewModel {
   final Author author;
   final Function onTap;
+  final Color defaultColor;
   String get name => author.name;
-  Color get color => _mapTypeToColor(author.type);
+  Color get color =>
+      _mapTypeToColor(author.type, defaultColor ?? Colors.grey[600]);
 
-  AuthorViewModel({@required this.author, this.onTap}) : assert(author != null);
+  AuthorViewModel({@required this.author, this.onTap, this.defaultColor})
+      : assert(author != null);
 
-  static Color _mapTypeToColor(AuthorType type) {
+  static Color _mapTypeToColor(AuthorType type, Color defaultColor) {
     if (type == AuthorType.admin) {
       return CupertinoColors.systemRed;
     } else if (type == AuthorType.moderator) {
@@ -39,24 +42,27 @@ class AuthorViewModel {
     } else if (type == AuthorType.developer) {
       return CupertinoColors.systemOrange;
     } else {
-      return Colors.grey[600];
+      return defaultColor;
     }
   }
 }
 
 class AuthorWidget extends StatelessWidget {
   final AuthorViewModel author;
+  final TextStyle style;
+  static final _defaultTextStyle = TextStyle(
+    letterSpacing: 0,
+    fontWeight: FontWeight.w500,
+    fontSize: 13,
+  );
 
-  AuthorWidget(this.author) : assert(author != null);
+  AuthorWidget(this.author, {this.style}) : assert(author != null);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(author.name,
         onTap: author.onTap,
-        style: TextButton.defaultTextStyle.copyWith(
-            letterSpacing: 0,
-            fontWeight: FontWeight.w500,
-            fontSize: 13,
-            color: author.color));
+        style: _defaultTextStyle
+            .merge(TextStyle(color: author.color).merge(style ?? TextStyle())));
   }
 }

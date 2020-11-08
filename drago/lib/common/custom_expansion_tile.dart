@@ -49,8 +49,8 @@ class CustomExpansionTile extends StatefulWidget {
   final Color backgroundColor;
 
   /// A widget to display instead of a rotating arrow icon.
-  final Widget trailingOpen;
-  final Widget trailingClosed;
+  final List<Widget> trailingOpen;
+  final List<Widget> trailingClosed;
 
   /// Specifies if the list tile is initially expanded (true) or collapsed (false, the default).
   final bool initiallyExpanded;
@@ -167,7 +167,7 @@ class _ExpansionTileState extends State<CustomExpansionTile>
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Colors.grey, width: 0),
+                    top: BorderSide(color: CupertinoColors.separator, width: 0),
                   ),
                 ),
                 child: Padding(
@@ -192,7 +192,11 @@ class _ExpansionTileState extends State<CustomExpansionTile>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 widget.title,
-                                (!closed) ? _openTrailing() : _closedWidget()
+                                Row(
+                                  children: (!closed)
+                                      ? _openTrailing()
+                                      : _closedWidget(),
+                                )
                               ]),
                           (!closed) ? widget.body : SizedBox.shrink()
                         ],
@@ -214,9 +218,11 @@ class _ExpansionTileState extends State<CustomExpansionTile>
     );
   }
 
-  _openTrailing() => widget.trailingOpen ?? Icon(Icons.arrow_drop_up);
+  List<Widget> _openTrailing() =>
+      widget.trailingOpen ?? [Icon(Icons.arrow_drop_up)];
 
-  _closedWidget() => widget.trailingClosed ?? Icon(Icons.arrow_drop_down);
+  List<Widget> _closedWidget() =>
+      widget.trailingClosed ?? [Icon(Icons.arrow_drop_down)];
 
   @override
   Widget build(BuildContext context) {

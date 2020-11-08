@@ -1,3 +1,4 @@
+import 'package:drago/common/common.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,25 +23,21 @@ class ScoreViewModel {
   }
 }
 
-class ScoreWidget extends StatelessWidget {
+class ScoreWidgetSpan extends TappableIconTextSpan {
   final ScoreViewModel score;
 
-  ScoreWidget(this.score) : assert(score != null);
+  static final _iconWithColor =
+      (color) => Icon(CupertinoIcons.arrow_up, size: 14, color: color);
+
+  ScoreWidgetSpan(this.score)
+      : assert(score != null),
+        super(
+            text: score.score.toString(),
+            icon: _iconWithColor(score.color),
+            style: TextStyle(color: score.color));
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => score.onTap(context),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          FaIcon(FontAwesomeIcons.arrowUp, size: 14, color: score.color),
-          Text(
-            ' ${score.score.toString()}',
-            style: TextStyle(fontSize: 14, color: score.color),
-          )
-        ],
-      ),
-    );
+    return super.build(context);
   }
 }

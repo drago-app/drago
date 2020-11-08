@@ -1,3 +1,4 @@
+import 'package:drago/blocs/comment_bloc/comment.dart';
 import 'package:drago/common/common.dart';
 
 import 'package:drago/models/comment_model.dart';
@@ -52,9 +53,9 @@ Widget _comments() {
         shrinkWrap: true,
         itemCount: commentsState.comments.length,
         itemBuilder: (BuildContext context, int index) {
-          return (commentsState.comments[index] is CommentModel)
-              ? CommentWidget(comment: commentsState.comments[index])
-              : MoreCommentsWidget(commentsState.comments[index]);
+          return CommentFactory(
+            comment: commentsState.comments[index],
+          );
         },
       );
     } else {
@@ -63,62 +64,53 @@ Widget _comments() {
   });
 }
 
-// class SubmissionContentWidget extends StatelessWidget {
-//   final Submission submission;
-//   SubmissionContentWidget({@required this.submission});
+class CommentFactory extends StatelessWidget {
+  final BaseCommentModel comment;
+  static final List colors = [
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.indigo,
+    Colors.purple
+  ];
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox.shrink();
-//     if (submission.content is ImageSubmissionContent) {
-//       return MediaSubmissionWidget(
-//         mediaWidget:
-// Picture(
-//           maxHeight: MediaQuery.of(context).size.height * .5,
-//           url: submission.content.content.url,
-//         ),
-//         titleWidget: SubmissionTitle(
-//           submission: submission,
-//         ),
-//       );
-//     } else if (submission.content is GifSubmissionContent) {
-//       return MediaSubmissionWidget(
-//         titleWidget: SubmissionTitle(submission: submission),
-//         mediaWidget: Picture(
-//           maxHeight: MediaQuery.of(context).size.height * .5,
-//           url: submission.content.content.url,
-//         ),
-//       );
-//     } else if (submission.content is SelfSubmissionContent) {
-//       return SelfOrLinkSubmissionWidget(
-//         titleWidget: SubmissionTitle(
-//           submission: submission,
-//         ),
-//         submissionWidget: md.MarkdownBody(
-//             data: submission.content.content,
-//             styleSheet: MarkdownTheme.of(context)),
-//       );
-//     }
-//   }
-// }
+  const CommentFactory({
+    Key key,
+    @required this.comment,
+  }) : super(key: key);
 
-// class MediaSubmissionWidget extends StatelessWidget {
-//   final Widget mediaWidget;
-//   final Widget titleWidget;
-//   MediaSubmissionWidget(
-//       {@required this.mediaWidget, @required this.titleWidget});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         mediaWidget,
-//         Container(
-//             width: MediaQuery.of(context).size.width,
-//             color: CupertinoTheme.of(context).barBackgroundColor,
-//             padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-//             child: titleWidget),
-//       ],
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => CommentBloc(comment: comment),
+      child: (comment is CommentModel)
+          ? CommentWidget(
+              colors: colors,
+              scoreViewModel: ScoreViewModel(
+                  score: (comment as CommentModel).score,
+                  voteState: (comment as CommentModel).voteState,
+                  onTap: () {
+                    print('[CommentFactory] voting is not enabled on comments');
+                  }),
+              authorViewModel: AuthorViewModel(
+                  defaultColor: CupertinoColors.label,
+                  author: (comment as CommentModel).author,
+                  onTap: () {
+                    print(
+                        '[CommentFactory] need to update AuthorModel to redirect to user account page');
+                  }),
+              comment: comment,
+              children: (comment as CommentModel)
+                  .children
+                  .map((child) => CommentFactory(comment: child))
+                  .toList())
+          : (comment is MoreCommentsModel)
+              ? MoreCommentsWidget(comment)
+              : ContinueThreadWidget(
+                  continueThread: comment,
+                ),
+    );
+  }
+}
