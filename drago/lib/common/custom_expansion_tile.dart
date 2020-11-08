@@ -188,16 +188,20 @@ class _ExpansionTileState extends State<CustomExpansionTile>
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                widget.title,
-                                Row(
-                                  children: (!closed)
-                                      ? _openTrailing()
-                                      : _closedWidget(),
-                                )
-                              ]),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  widget.title,
+                                  Row(
+                                    children: (!closed)
+                                        ? _openTrailing()
+                                        : _closedWidget(),
+                                  )
+                                ]),
+                          ),
                           (!closed) ? widget.body : SizedBox.shrink()
                         ],
                       ),

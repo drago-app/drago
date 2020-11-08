@@ -60,7 +60,8 @@ class CommentWidget extends StatelessWidget {
         text: TextSpan(children: [
           WidgetSpan(
               child: AuthorWidget(authorViewModel,
-                  style: TextStyle(fontSize: 16))),
+                  style: TextStyle(fontSize: 14))),
+          WidgetSpan(child: SizedBox(width: 8)),
           WidgetSpan(child: ScoreWidgetSpan(scoreViewModel))
         ]),
       ),
