@@ -11,12 +11,14 @@ class More implements RedditThing {
   static String kind = 'more';
   final String id, parentId, submissionId;
   final int count, depth;
+  final Map data;
 
   More({
     @required this.id,
     @required this.parentId,
     @required this.count,
     @required this.depth,
+    @required this.data,
     @required this.submissionId,
   });
 }

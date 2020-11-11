@@ -23,39 +23,15 @@ class RedditService {
   String _state = 'thisisarandomstring';
   Cache submissions = new SimpleCache(storage: new SimpleStorage(size: 20));
 
-  // Future<List> getMoreComments(MoreCommentsModel moreComments) async {
-  //   var targetSubId = moreComments.submissionId;
-  //   var fromCache = submissions.get(targetSubId);
-  //   if (fromCache == null) {
-  //     final submission =
-  //         await draw.SubmissionRef.withID(_reddit, targetSubId).populate();
-  //     fromCache = submission;
-  //     submissions.set(fromCache.id, fromCache);
-  //   }
-  //   ListQueue nodes = ListQueue();
-  //   fromCache.comments.comments.forEach((c) => nodes.add(c));
-  //   while (nodes.isNotEmpty) {
-  //     var n = nodes.removeFirst();
-  //     if (n is draw.MoreComments) {
-  //       if (n.id == moreComments.id) {
-  //         await fromCache.comments.replaceMore(specificMoreComments: n);
-  //         break;
-  //       }
-  //     } else {
-  //       if (n.replies != null && n.replies.comments != null) {
-  //         nodes.addAll(n.replies.comments);
-  //       }
-  //     }
-  //   }
-  //   submissions.set(targetSubId, fromCache);
-  //   return fromCache.comments.comments
-  //       .map((c) => BaseCommentModel.factory(c))
-  //       .toList();
-  // }
+  Future<List<Either>> getMoreComments(Map data) async {
+    final List<dynamic> drawMoreOrComments =
+        await draw.MoreComments.parse(_reddit, data).comments();
+    return _buildChildren(drawMoreOrComments);
+  }
 
   Future<List<Either>> getComments(String submissionId) async {
     final sub = await _reddit.submission(id: submissionId).populate();
-    // submissions.set(sub.id, sub);
+
     final drawMoreOrComments = sub.comments.comments;
 
     return _buildChildren(drawMoreOrComments);
@@ -86,6 +62,7 @@ class RedditService {
         .map<Either<More, RedditComment>>((moc) => moc.fold((more) {
               more as draw.MoreComments;
               return Left(More(
+                  data: more.data,
                   count: more.count,
                   id: more.id,
                   parentId: more.parentId,

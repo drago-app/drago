@@ -61,8 +61,9 @@ class ContinueThreadWidget extends StatelessWidget {
 
 class MoreCommentsWidget extends StatefulWidget {
   final MoreCommentsModel moreComments;
+  final Function onTap;
 
-  MoreCommentsWidget(this.moreComments);
+  MoreCommentsWidget(this.moreComments, {@required this.onTap});
   @override
   _MoreCommentsState createState() => _MoreCommentsState();
 }
@@ -71,8 +72,7 @@ class _MoreCommentsState extends State<MoreCommentsWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => BlocProvider.of<CommentsPageBloc>(context)
-          .add(ExpandComment(widget.moreComments)),
+      onTap: widget.onTap,
       child: Padding(
         padding:
             EdgeInsets.only(right: 0, left: widget.moreComments.depth * 8.0),

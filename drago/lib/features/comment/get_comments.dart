@@ -14,13 +14,17 @@ class GetComments
 
   @override
   Future<Either<Failure, List<BaseCommentModel>>> call(params) async {
-    final List<Either<More, RedditComment>> moreOrComments =
+    // final List<Either<More, RedditComment>> moreOrComments =
+    //     await reddit.getComments(params.submissionId);
+
+    final List<Either<More, RedditComment>> failureOrComments =
         await reddit.getComments(params.submissionId);
 
-    final List<BaseCommentModel> comments = moreOrComments
+    final List<BaseCommentModel> comments = failureOrComments
         .map((moc) => moc.fold(
-              (more) => BaseCommentModel.fromMore(more),
-              (comment) => BaseCommentModel.fromRedditComment(comment),
+              (more) => BaseCommentModel.fromMore(more, params.submissionId),
+              (comment) => BaseCommentModel.fromRedditComment(
+                  comment, params.submissionId),
             ))
         .toList();
 

@@ -18,3 +18,15 @@ class CommentInitial extends CommentState {
     return CommentInitial(comment: comment ?? this.comment);
   }
 }
+
+class CommentsLoading extends CommentState {
+  final BaseCommentModel comment;
+  CommentsLoading(this.comment);
+}
+
+class CommentsLoaded extends CommentState {
+  final BaseCommentModel comment;
+  final List<BaseCommentModel> comments;
+
+  CommentsLoaded({@required this.comment, @required this.comments});
+}
