@@ -1,5 +1,5 @@
 import 'package:drago/models/comment_model.dart';
-import 'package:drago/screens/comments/comments_page.dart';
+
 import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +53,9 @@ class CommentWidget extends StatelessWidget {
           color: CupertinoColors.systemGrey,
         )
       ],
-      sideBorderColor:
-          (comment.depth == 0) ? Colors.transparent : colors[comment.depth],
+      sideBorderColor: (comment.depth == 0)
+          ? Colors.transparent
+          : colors[(comment.depth - 1) % colors.length],
       initiallyExpanded: true,
       title: RichText(
         text: TextSpan(children: [

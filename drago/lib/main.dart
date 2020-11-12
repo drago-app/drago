@@ -1,4 +1,5 @@
 import 'package:drago/features/comment/get_comments.dart';
+import 'package:drago/features/comment/get_more_comments.dart';
 import 'package:drago/theme.dart';
 import 'package:drago/user_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +42,7 @@ final SaveOrUnsaveSubmission saveOrUnsave =
 
 final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
 final GetComments getComments = GetComments(reddit: _reddit);
+final GetMoreComments getMoreComments = GetMoreComments(reddit: _reddit);
 
 final DialogService _dialogService = DialogService();
 

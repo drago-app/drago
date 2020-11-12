@@ -88,7 +88,7 @@ class _ExpansionTileState extends State<CustomExpansionTile>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: _kExpand, TickerProvider: this);
+    _controller = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
     // _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
     // _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));

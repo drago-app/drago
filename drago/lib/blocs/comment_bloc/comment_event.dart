@@ -7,8 +7,9 @@ abstract class CommentEvent extends Equatable {
 
 class LoadMoreComments extends CommentEvent {
   final Map data;
-  LoadMoreComments(this.data) : assert(data != null);
+  final String submissionId;
+  LoadMoreComments(this.data, this.submissionId) : assert(data != null);
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [data, submissionId];
 }

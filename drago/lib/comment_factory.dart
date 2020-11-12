@@ -19,8 +19,6 @@ class CommentFactory extends StatelessWidget {
     Colors.blue,
     Colors.indigo,
     Colors.purple,
-    Colors.black,
-    Colors.pink
   ];
 
   const CommentFactory({
@@ -32,7 +30,7 @@ class CommentFactory extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) =>
-            CommentBloc(getComments: getComments, comment: comment),
+            CommentBloc(getMoreComments: getMoreComments, comment: comment),
         child: Builder(
           builder: (context) => BlocConsumer<CommentBloc, CommentState>(
             listener: (context, state) {},
@@ -61,10 +59,15 @@ class CommentFactory extends StatelessWidget {
                             .map((child) => CommentFactory(comment: child))
                             .toList())
                     : (comment is MoreCommentsModel)
-                        ? MoreCommentsWidget(comment,
-                            onTap: () => BlocProvider.of<CommentBloc>(context)
-                                .add(LoadMoreComments(
-                                    (comment as MoreCommentsModel).data)))
+                        ? MoreCommentsWidget(
+                            comment,
+                            onTap: () =>
+                                BlocProvider.of<CommentBloc>(context).add(
+                              LoadMoreComments(
+                                  (comment as MoreCommentsModel).data,
+                                  comment.submissionId),
+                            ),
+                          )
                         : ContinueThreadWidget(
                             continueThread: comment,
                           );
@@ -75,6 +78,8 @@ class CommentFactory extends StatelessWidget {
                     children: state.comments
                         .map((c) => CommentFactory(comment: c))
                         .toList());
+              } else {
+                return Center(child: LoadingIndicator());
               }
             },
           ),

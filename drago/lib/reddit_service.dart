@@ -10,9 +10,6 @@ import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:dcache/dcache.dart';
-
-import 'models/comment_model.dart';
 import 'user_service.dart';
 
 class RedditService {
@@ -21,11 +18,11 @@ class RedditService {
   String _deviceID = 'pooppooppooppooppooppoop1';
   draw.Reddit _reddit;
   String _state = 'thisisarandomstring';
-  Cache submissions = new SimpleCache(storage: new SimpleStorage(size: 20));
 
-  Future<List<Either>> getMoreComments(Map data) async {
+  Future<List<Either>> getMoreComments(Map data, String submissionId) async {
     final List<dynamic> drawMoreOrComments =
-        await draw.MoreComments.parse(_reddit, data).comments();
+        await draw.MoreComments.parse(_reddit, data, submissionId: submissionId)
+            .comments();
     return _buildChildren(drawMoreOrComments);
   }
 

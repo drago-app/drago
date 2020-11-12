@@ -106,19 +106,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.1"
-  dcache:
-    dependency: "direct main"
-    description:
-      name: dcache
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   draw:
     dependency: "direct main"
     description:
       path: "."
       ref: master
-      resolved-ref: "721bee5d5ee3eb12704561ff26e0d397441ab8b8"
+      resolved-ref: "4e10b8720ae932d00c5093768d4a1cd3372d618d"
       url: "https://github.com/drago-app/DRAW"
     source: git
     version: "0.9.1"
@@ -248,7 +241,7 @@ packages:
       name: js
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1+1"
+    version: "0.6.3-nullsafety.1"
   logging:
     dependency: transitive
     description:
