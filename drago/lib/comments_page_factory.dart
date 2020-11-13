@@ -161,7 +161,7 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
         submissionActions: SubmissionActions(
           onUpVote: () => submissionBloc.add(Upvote()),
           onDownVote: () => submissionBloc.add(Downvote()),
-          onSave: (context) => submissionBloc.add(Save()),
+          onSave: () => submissionBloc.add(Save()),
           saved: submissionBloc.state.submission.saved,
           voteState: submissionBloc.state.submission.voteState,
         ),
