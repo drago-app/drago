@@ -106,7 +106,7 @@ class AccountsPageState extends State<AccountsPage> {
                     children: [
                       Text('Post'),
                       FaIcon(
-                        FontAwesomeIcons.chevronRight,
+                        CupertinoIcons.chevron_right,
                         color: CupertinoColors.lightBackgroundGray,
                         size: 18,
                       ),

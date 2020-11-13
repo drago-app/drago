@@ -64,14 +64,14 @@ class SubredditListItem extends StatelessWidget {
       trailing: Column(
         children: <Widget>[
           SquareActionButton(
-            color: CupertinoColors.systemOrange,
-            iconData: FontAwesomeIcons.longArrowAltUp,
+            activeBackgroundColor: CupertinoColors.systemOrange,
+            iconData: CupertinoIcons.arrow_up,
             onTap: () => onUpVote(context),
             switchCondition: voteState == VoteState.Up,
           ),
           SquareActionButton(
-            color: CupertinoColors.systemPurple,
-            iconData: FontAwesomeIcons.longArrowAltDown,
+            activeBackgroundColor: CupertinoColors.systemPurple,
+            iconData: CupertinoIcons.arrow_down,
             onTap: () => onDownVote,
             switchCondition: voteState == VoteState.Down,
           )

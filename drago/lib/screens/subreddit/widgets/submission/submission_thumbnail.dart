@@ -20,18 +20,23 @@ class VideoThumbnailLabel extends StatelessWidget {
     return Positioned(
       bottom: 2,
       right: 2,
-      child: Container(
-          padding: const EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-              color: CupertinoColors.lightBackgroundGray,
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          child: Center(
-            child: FaIcon(
-              FontAwesomeIcons.play,
-              color: CupertinoColors.darkBackgroundGray.withOpacity(.8),
-              size: 10,
-            ),
-          )),
+      child: Icon(
+        CupertinoIcons.arrowtriangle_right_circle_fill,
+        color: CupertinoColors.extraLightBackgroundGray, //.withOpacity(.8),
+        size: 25,
+      ),
+      // child: Container(
+      //     padding: const EdgeInsets.all(6.0),
+      //     decoration: BoxDecoration(
+      //         color: CupertinoColors.lightBackgroundGray,
+      //         borderRadius: BorderRadius.all(Radius.circular(15))),
+      //     child: Center(
+      //       child: Icon(
+      //         CupertinoIcons.arrowtriangle_right_circle_fill,
+      //         color: CupertinoColors.darkBackgroundGray.withOpacity(.8),
+      //         size: 12,
+      //       ),
+      //     )),
     );
   }
 }
@@ -92,24 +97,24 @@ class LinkThumbnailLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 5,
-      right: 5,
-      child: Container(
-        padding: const EdgeInsets.all(0.0),
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-            color: CupertinoColors.darkBackgroundGray,
-            borderRadius: BorderRadius.all(Radius.circular(50))),
-        child: Center(
-          child: FaIcon(
-            FontAwesomeIcons.solidCompass,
-            color: CupertinoColors.lightBackgroundGray,
-            size: 25,
-          ),
-        ),
-      ),
-    );
+        bottom: 2,
+        right: 2,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: 15,
+              width: 15,
+              color: CupertinoColors.darkBackgroundGray,
+            ),
+            Icon(
+              CupertinoIcons.compass_fill,
+              // color: CupertinoColors.darkBackgroundGray,
+              color: CupertinoColors.systemBackground,
+              size: 25,
+            ),
+          ],
+        ));
   }
 }
 

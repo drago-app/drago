@@ -212,24 +212,24 @@ class AuthenticatedApp extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.news_solid),
-            title: Text('Post'),
+            icon: Icon(CupertinoIcons.today),
+            label: 'Posts',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.mail_solid),
-            title: Text('Inbox'),
+            icon: Icon(CupertinoIcons.envelope_fill),
+            label: 'Inbox',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.profile_circled),
-            title: Text('Accounts'),
+            label: 'Accounts',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
-            title: Text('Search'),
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.settings_solid),
-            title: Text('Settings'),
+            label: 'Settings',
           ),
         ],
       ),

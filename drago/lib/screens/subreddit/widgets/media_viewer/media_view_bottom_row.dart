@@ -27,8 +27,8 @@ class MediaViewerBottomRow extends StatelessWidget {
     return Row(
       children: [
         SquareActionButton(
-          color: CupertinoColors.activeOrange,
-          iconData: FontAwesomeIcons.longArrowAltUp,
+          activeBackgroundColor: CupertinoColors.activeOrange,
+          iconData: CupertinoIcons.arrow_up,
           onTap: () => bloc.add(Upvote()),
           switchCondition: submission.voteState == VoteState.Up,
         ),
@@ -38,8 +38,8 @@ class MediaViewerBottomRow extends StatelessWidget {
               style: TextStyle(color: CupertinoColors.lightBackgroundGray)),
         ),
         SquareActionButton(
-          color: CupertinoColors.systemPurple,
-          iconData: FontAwesomeIcons.longArrowAltDown,
+          activeBackgroundColor: CupertinoColors.systemPurple,
+          iconData: CupertinoIcons.arrow_down,
           onTap: () => bloc.add(Downvote()),
           switchCondition: submission.voteState == VoteState.Down,
         )

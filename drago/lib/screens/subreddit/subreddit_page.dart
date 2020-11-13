@@ -81,11 +81,11 @@ class _SubredditPageState extends State<SubredditPage> {
                         BlocProvider.of<SubredditPageBloc>(bloccontext)
                             .add(UserTappedSortButton()),
                     padding: const EdgeInsets.all(0),
-                    child: FaIcon(_mapStateToSortIcon(state.currentSort))),
+                    child: Icon(_mapStateToSortIcon(state.currentSort))),
                 CupertinoButton(
                     onPressed: () => null,
                     padding: const EdgeInsets.all(0),
-                    child: FaIcon(FontAwesomeIcons.ellipsisH)),
+                    child: Icon(CupertinoIcons.ellipsis)),
               ],
             ),
           ),
@@ -97,13 +97,13 @@ class _SubredditPageState extends State<SubredditPage> {
   IconData _mapStateToSortIcon(SubmissionSortType type) {
     switch (type) {
       case SubmissionSortType.hot:
-        return FontAwesomeIcons.fireAlt;
+        return CupertinoIcons.flame;
       case SubmissionSortType.top:
-        return FontAwesomeIcons.thumbsUp;
+        return CupertinoIcons.sort_up;
       case SubmissionSortType.controversial:
         return FontAwesomeIcons.bomb;
       case SubmissionSortType.newest:
-        return FontAwesomeIcons.clock;
+        return CupertinoIcons.today;
       case SubmissionSortType.rising:
         return FontAwesomeIcons.chartLine;
     }

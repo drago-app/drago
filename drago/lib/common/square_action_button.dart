@@ -4,17 +4,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SquareActionButton extends StatelessWidget {
   final Function onTap;
   final IconData iconData;
-  final Color color;
+  final Color activeBackgroundColor;
+  final Color inActiveBackgroundColor;
+  final Color activeIconColor;
+  final Color inActiveIconColor;
   final bool switchCondition;
 
   SquareActionButton(
       {@required this.onTap,
       @required this.iconData,
-      @required this.color,
-      @required this.switchCondition})
+      @required this.activeBackgroundColor,
+      @required this.switchCondition,
+      this.inActiveBackgroundColor,
+      this.activeIconColor,
+      this.inActiveIconColor})
       : assert(onTap != null),
         assert(iconData != null),
-        assert(color != null),
+        assert(activeBackgroundColor != null),
         assert(switchCondition != null);
 
   @override
@@ -25,10 +31,15 @@ class SquareActionButton extends StatelessWidget {
         duration: Duration(milliseconds: 150),
         child: (switchCondition)
             ? _ActiveSquareActionButton(
-                color: color,
+                backgroundColor: activeBackgroundColor,
+                iconColor: activeIconColor,
                 iconData: iconData,
               )
-            : _InactiveSquareActionButton(iconData: iconData),
+            : _InactiveSquareActionButton(
+                iconData: iconData,
+                backgroundColor: inActiveBackgroundColor,
+                iconColor: inActiveIconColor,
+              ),
         switchInCurve: Curves.elasticOut,
         transitionBuilder: (Widget child, animation) {
           return ScaleTransition(child: child, scale: animation);
@@ -39,11 +50,13 @@ class SquareActionButton extends StatelessWidget {
 }
 
 class _ActiveSquareActionButton extends StatelessWidget {
-  final Color color;
+  final Color backgroundColor;
+  final iconColor;
   final IconData iconData;
 
-  _ActiveSquareActionButton({@required this.color, @required this.iconData})
-      : assert(color != null),
+  _ActiveSquareActionButton(
+      {@required this.backgroundColor, @required this.iconData, this.iconColor})
+      : assert(backgroundColor != null),
         assert(iconData != null);
 
   @override
@@ -53,21 +66,24 @@ class _ActiveSquareActionButton extends StatelessWidget {
       height: 32,
       width: 32,
       decoration: BoxDecoration(
-        color: color,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Center(
-        child:
-            FaIcon(iconData, color: CupertinoColors.extraLightBackgroundGray),
+        child: Icon(iconData,
+            color: iconColor ?? CupertinoColors.extraLightBackgroundGray),
       ),
     );
   }
 }
 
 class _InactiveSquareActionButton extends StatelessWidget {
+  final Color backgroundColor;
+  final iconColor;
   final IconData iconData;
 
-  _InactiveSquareActionButton({@required this.iconData})
+  _InactiveSquareActionButton(
+      {this.backgroundColor, @required this.iconData, this.iconColor})
       : assert(iconData != null);
 
   @override
@@ -77,7 +93,7 @@ class _InactiveSquareActionButton extends StatelessWidget {
       height: 32,
       width: 32,
       child: Center(
-        child: FaIcon(iconData, color: CupertinoColors.inactiveGray),
+        child: Icon(iconData, color: iconColor ?? CupertinoColors.inactiveGray),
       ),
     );
   }

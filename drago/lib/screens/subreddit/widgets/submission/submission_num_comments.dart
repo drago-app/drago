@@ -18,8 +18,8 @@ class NumCommentsWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        FaIcon(
-          FontAwesomeIcons.comment,
+        Icon(
+          CupertinoIcons.chat_bubble,
           size: 14,
           color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
         ),
