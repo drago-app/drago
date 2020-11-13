@@ -1,16 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:drago/common/drag_to_pop_modal/drag_to_pop_modal.dart';
-import 'package:drago/common/picture.dart';
 import 'package:drago/sandbox/host.dart';
 import 'package:drago/screens/subreddit/widgets/media_viewer/media_view_bottom_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
-import 'package:drago/common/common.dart';
-import 'package:drago/core/entities/preview.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VideoThumbnailLabel extends StatelessWidget {
   const VideoThumbnailLabel();
@@ -22,21 +16,9 @@ class VideoThumbnailLabel extends StatelessWidget {
       right: 2,
       child: Icon(
         CupertinoIcons.arrowtriangle_right_circle_fill,
-        color: CupertinoColors.extraLightBackgroundGray, //.withOpacity(.8),
+        color: CupertinoColors.extraLightBackgroundGray,
         size: 25,
       ),
-      // child: Container(
-      //     padding: const EdgeInsets.all(6.0),
-      //     decoration: BoxDecoration(
-      //         color: CupertinoColors.lightBackgroundGray,
-      //         borderRadius: BorderRadius.all(Radius.circular(15))),
-      //     child: Center(
-      //       child: Icon(
-      //         CupertinoIcons.arrowtriangle_right_circle_fill,
-      //         color: CupertinoColors.darkBackgroundGray.withOpacity(.8),
-      //         size: 12,
-      //       ),
-      //     )),
     );
   }
 }
@@ -109,7 +91,6 @@ class LinkThumbnailLabel extends StatelessWidget {
             ),
             Icon(
               CupertinoIcons.compass_fill,
-              // color: CupertinoColors.darkBackgroundGray,
               color: CupertinoColors.systemBackground,
               size: 25,
             ),
