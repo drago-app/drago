@@ -2,12 +2,14 @@ import 'dart:collection';
 import 'dart:io';
 import 'dart:async';
 import 'package:dartz/dartz.dart';
+import 'package:drago/draw_reddit_adapter.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
 import 'package:draw/draw.dart' as draw;
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'user_service.dart';
@@ -17,7 +19,11 @@ class RedditService {
   String _identifier = 'Hp4M9q3bOeds3w';
   String _deviceID = 'pooppooppooppooppooppoop1';
   draw.Reddit _reddit;
+  final RedditClient redditClient;
   String _state = 'thisisarandomstring';
+  final userAgent = 'ios:com.example.helios:v0.0.1 (by /u/pinkywrinkle)';
+
+  RedditService({@required this.redditClient});
 
   Future<List<Either>> getMoreComments(Map data, String submissionId) async {
     final List<dynamic> drawMoreOrComments =
@@ -73,31 +79,34 @@ class RedditService {
 
   Future<Either<Failure, List<String>>> defaultSubreddits() async {
     try {
-      final subs = await _reddit.subreddits.defaults().toList();
-      return Right(subs.map((sub) => sub.displayName).toList()
-        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
+      final subs = await redditClient.defaultSubreddits();
+      return Right(
+          subs..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
     } catch (e) {
       return Left(SomeFailure(
-          message: '[RedditService#defaultSubreddit] e.toString()'));
+          message: '[RedditService#defaultSubreddit] ${e.toString()}'));
     }
   }
 
   Future<Either<Failure, List<String>>> subscriptions() async {
     try {
-      final subs = await _reddit.user.subreddits().toList();
-      return Right(subs.map((sub) => sub.displayName).toList()
-        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
+      final subs = await redditClient.subscriptions();
+      return Right(
+          subs..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
     } catch (e) {
-      return Left(SomeFailure(message: e.toString()));
+      return Left(SomeFailure(
+          message: '[RedditService#subscriptions] ${e.toString()}'));
     }
   }
 
   Future<Either<Failure, List<String>>> moderatedSubreddits() async {
     try {
-      final subs = await _reddit.user.moderatorSubreddits().toList();
-      return Right(subs.map((sub) => sub.displayName).toList()..sort());
+      final subs = await redditClient.subscriptions();
+      return Right(
+          subs..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
     } catch (e) {
-      return Left(SomeFailure(message: e));
+      return Left(SomeFailure(
+          message: '[RedditService#moderatedSubreddits] ${e.toString()}'));
     }
   }
 
@@ -311,113 +320,16 @@ class RedditService {
     'subscribe',
     'vote'
   ];
-  final userAgent = 'ios:com.example.helios:v0.0.1 (by /u/pinkywrinkle)';
 
   Future<AuthUser> loginWithNewAccount() async {
-    Stream<String> onCode = await _server();
-    _reddit = draw.Reddit.createWebFlowInstance(
-      userAgent: userAgent,
-      clientId: _identifier,
-      clientSecret: _secret,
-      redirectUri: Uri.parse('http://localhost:8080'),
-    );
-
-    final authUrl =
-        _reddit.auth.url(_scopes, _state, compactLogin: true).toString();
-
-    _launchURL(authUrl);
-
-    final String code = await onCode.first;
-
-    await _reddit.auth.authorize(code);
-
-    draw.Redditor me = await _reddit.user.me();
-
-    return AuthUser(
-        name: me.displayName, token: _reddit.auth.credentials.toJson());
+    return redditClient.loginWithNewAccount(_scopes, _state);
   }
 
   initializeWithoutAuth() async {
-    _reddit = await draw.Reddit.createUntrustedReadOnlyInstance(
-      userAgent: userAgent,
-      clientId: _identifier,
-      deviceId: _deviceID,
-    );
+    await redditClient.initializeWithoutAuth();
   }
 
   String initializeWithAuth(String token) {
-    _reddit = draw.Reddit.restoreAuthenticatedInstance(
-      token,
-      userAgent: userAgent,
-      redirectUri: Uri.parse('http://localhost:8080'),
-      clientId: _identifier,
-      clientSecret: _secret,
-    );
-    return _reddit.auth.credentials.toJson();
-  }
-
-  // Future<RedditUser> init() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String token = prefs.getString('reddit_auth_token');
-
-  //   if (token == null) {
-  //     _reddit = await Reddit.createUntrustedReadOnlyInstance(
-  // userAgent: userAgent,
-  // clientId: _identifier,
-  // deviceId: _deviceID,
-  //     );
-  //     print('UNTRUSTEDREADONLYINSTANCE ${_reddit.toString()}');
-  //     return RedditUser(
-  //         displayName: '',
-  //         postKarma: 0,
-  //         commentKarma: 0,
-  //         createdOn: DateTime.now());
-  //   } else {
-  // _reddit = Reddit.restoreAuthenticatedInstance(
-  //   token,
-  //   userAgent: userAgent,
-  //   redirectUri: Uri.parse('http://localhost:8080'),
-  //   clientId: _identifier,
-  //   clientSecret: _secret,
-  // );
-  //     print('RESTOREAUTHENTICATEDINSTANCE ${_reddit.toString()}');
-  //     final Redditor me = await _reddit.user.me(useCache: true);
-  //     return RedditUser(
-  //         displayName: me.displayName,
-  //         createdOn: me.createdUtc,
-  //         commentKarma: me.commentKarma,
-  //         postKarma: me.linkKarma);
-  //   }
-  // }
-
-  Future<Stream<String>> _server() async {
-    final StreamController<String> onCode = new StreamController();
-
-    final HttpServer server =
-        await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
-
-    server.listen((HttpRequest request) async {
-      final String code = request.uri.queryParameters["code"];
-
-      request.response
-        ..statusCode = 200
-        ..headers.set("Content-Type", ContentType.html.mimeType)
-        ..write("<html><h1>You can now close this window</h1></html>");
-
-      await request.response.close();
-      await server.close(force: true);
-      onCode.add(code);
-      await onCode.close();
-    });
-
-    return onCode.stream;
-  }
-
-  _launchURL(url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    return redditClient.initializeWithAuth(token);
   }
 }

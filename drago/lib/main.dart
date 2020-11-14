@@ -1,3 +1,4 @@
+import 'package:drago/draw_reddit_adapter.dart';
 import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/comment/get_more_comments.dart';
 import 'package:drago/theme.dart';
@@ -24,19 +25,27 @@ import 'features/subreddit/get_submissions.dart';
 import 'features/user/usecases.dart';
 import 'screens/screens.dart';
 
-final RedditService _reddit = RedditService();
+final RedditClient _redditClient = DrawRedditClient();
+
+final RedditService _reddit = RedditService(redditClient: _redditClient);
 
 final UserService _userService = UserService(reddit: _reddit);
+
 final GetDefaultSubreddits _getDefaultSubreddits =
     GetDefaultSubreddits(reddit: _reddit);
+
 final GetUsersSubscriptions _getUsersSubscriptions =
     GetUsersSubscriptions(reddit: _reddit);
+
 final GetUsersModerations _getUsersModerations =
     GetUsersModerations(reddit: _reddit);
+
 final UpvoteOrClear upvoteOrClear =
     UpvoteOrClear(reddit: _reddit, userService: _userService);
+
 final DownvoteOrClear downvoteOrClear =
     DownvoteOrClear(reddit: _reddit, userService: _userService);
+
 final SaveOrUnsaveSubmission saveOrUnsave =
     SaveOrUnsaveSubmission(reddit: _reddit, userService: _userService);
 
@@ -62,7 +71,7 @@ class MyApp extends StatelessWidget {
         ],
         child: BlocBuilder<AppBloc, AppState>(
           builder: (context, state) {
-            if (state is AppInitializing) {
+            if (state is AppInitializing || state is AppUninitialized) {
               return Center(child: LoadingIndicator());
             } else if (state is AppInitializedWithAuthUser) {
               return AuthenticatedApp();

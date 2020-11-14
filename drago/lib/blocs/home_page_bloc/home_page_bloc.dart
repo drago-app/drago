@@ -40,7 +40,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
     final failureOrDefaults = await getDefaultSubreddits(NoParams());
     yield failureOrDefaults.fold(
-        ((failure) => HomePageError()),
+        ((failure) => HomePageError(failure.message)),
         (defaults) => (state is HomePageLoaded)
             ? (state as HomePageLoaded).copyWith(subscriptions: defaults)
             : HomePageLoaded(subscriptions: defaults, moderatedSubs: []));
@@ -51,14 +51,14 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
     final failureOrSubs = await getUsersSubscriptions(NoParams());
     yield failureOrSubs.fold(
-        ((failure) => HomePageError()),
+        ((failure) => HomePageError(failure.message)),
         (subs) => (state is HomePageLoaded)
             ? (state as HomePageLoaded).copyWith(subscriptions: subs)
             : HomePageLoaded(subscriptions: subs, moderatedSubs: []));
 
     final failureOrMods = await getUsersSubscriptions(NoParams());
     yield failureOrMods.fold(
-        ((failure) => HomePageError()),
+        ((failure) => HomePageError(failure.message)),
         (mods) => (state is HomePageLoaded)
             ? (state as HomePageLoaded).copyWith(subscriptions: mods)
             : HomePageLoaded(subscriptions: [], moderatedSubs: mods));

@@ -23,6 +23,8 @@ class HomePage extends StatelessWidget {
         ));
       } else if (state is HomePageInitial) {
         return CupertinoPageScaffold(child: Center(child: Placeholder()));
+      } else if (state is HomePageError) {
+        return Center(child: Text(state.message));
       }
     });
   }

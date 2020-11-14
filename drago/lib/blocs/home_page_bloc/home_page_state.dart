@@ -28,4 +28,7 @@ class HomePageLoaded extends HomePageState {
   }
 }
 
-class HomePageError extends HomePageState {}
+class HomePageError extends HomePageState {
+  final String message;
+  HomePageError(this.message);
+}
