@@ -132,9 +132,7 @@ class RedditService {
 
   Future<Either<Failure, Unit>> downvote(Submission submissionModel) async {
     try {
-      final submission =
-          await _reddit.submission(id: submissionModel.id).populate();
-      await submission.downvote();
+      await redditClient.downvoteSubmission(submissionModel.id);
       return Right(unit);
     } catch (e) {
       return Left(SomeFailure(message: e));
@@ -143,9 +141,7 @@ class RedditService {
 
   Future<Either<Failure, Unit>> clearVote(Submission submissionModel) async {
     try {
-      final submission =
-          await _reddit.submission(id: submissionModel.id).populate();
-      await submission.clearVote();
+      await redditClient.removeVoteSubmission(submissionModel.id);
       return Right(unit);
     } catch (e) {
       return Left(SomeFailure(message: e));
@@ -154,9 +150,8 @@ class RedditService {
 
   Future<Either<Failure, Unit>> upvote(Submission submissionModel) async {
     try {
-      final submission =
-          await _reddit.submission(id: submissionModel.id).populate();
-      await submission.upvote();
+      await redditClient.upvoteSubmission(submissionModel.id);
+
       return Right(unit);
     } catch (e) {
       return Left(SomeFailure(message: e));

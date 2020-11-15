@@ -72,7 +72,7 @@ class SubredditListItem extends StatelessWidget {
           SquareActionButton(
             activeBackgroundColor: CupertinoColors.systemPurple,
             iconData: CupertinoIcons.arrow_down,
-            onTap: () => onDownVote,
+            onTap: () => onDownVote(context),
             switchCondition: voteState == VoteState.Down,
           )
         ],

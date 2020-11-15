@@ -29,6 +29,10 @@ abstract class RedditClient {
   Future<void> saveSubmission(String submissionId);
   Future<void> unsaveSubmission(String submissionId);
 
+  Future<void> upvoteSubmission(String submissionId);
+  Future<void> downvoteSubmission(String submissionId);
+  Future<void> removeVoteSubmission(String submissionId);
+
   Future<Map<String, dynamic>> getCommentsForSubmission(String submissionId);
 }
 
@@ -171,6 +175,24 @@ class DrawRedditClient implements RedditClient {
   Future<void> saveSubmission(String submissionId) async {
     final submission = await _reddit.submission(id: submissionId).populate();
     return submission.save();
+  }
+
+  @override
+  Future<void> upvoteSubmission(String submissionId) async {
+    final submission = await _reddit.submission(id: submissionId).populate();
+    return submission.upvote();
+  }
+
+  @override
+  Future<void> downvoteSubmission(String submissionId) async {
+    final submission = await _reddit.submission(id: submissionId).populate();
+    return submission.downvote();
+  }
+
+  @override
+  Future<void> removeVoteSubmission(String submissionId) async {
+    final submission = await _reddit.submission(id: submissionId).populate();
+    return submission.clearVote();
   }
 
   @override
