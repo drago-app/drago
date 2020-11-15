@@ -168,10 +168,17 @@ class RedditLink implements RedditThing {
           ? VoteState.Up
           : VoteState.Down;
 
+  static DateTime _createdUtc(dynamic created_utc) {
+    return DateTime.fromMillisecondsSinceEpoch(
+        ((created_utc as double).round() * 1000),
+        isUtc: true);
+  }
+
   factory RedditLink.fromJson(Map<dynamic, dynamic> json) {
-    return RedditLink(
+    try {
+      return RedditLink(
         author: json['author'],
-        edited: json['edited'],
+        edited: (json['edited'] == null) ? false : true,
         isSelf: json['is_self'],
         isNSFW: json['over_18'],
         saved: json['saved'],
@@ -188,10 +195,13 @@ class RedditLink implements RedditThing {
         url: json['url'],
         previewUrl: _previewUrl(json['preview']),
         voteState: _voteState(json['likes']),
-        body: json['body'],
-        createdUtc: DateTime.fromMillisecondsSinceEpoch(
-            ((json['created_utc'] as double).round() * 1000),
-            isUtc: true));
+        body: json['self_text'],
+        createdUtc: _createdUtc(json['created_utc']),
+      );
+    } catch (e) {
+      // print("previewUrl -- " + _previewUrl(json['preview']));
+      print(json['url']);
+    }
   }
 }
 
