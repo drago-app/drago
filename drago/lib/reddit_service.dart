@@ -110,25 +110,21 @@ class RedditService {
     }
   }
 
-  Future<Either<Failure, RedditLink>> saveSubmission(
+  Future<Either<Failure, Unit>> saveSubmission(
       Submission submissionModel) async {
     try {
-      final submission =
-          await _reddit.submission(id: submissionModel.id).populate();
-      submission.save();
-      return Right(_mapSubmissionToModel(submission));
+      await redditClient.saveSubmission(submissionModel.id);
+      return Right(unit);
     } catch (e) {
       return Left(SomeFailure(message: e));
     }
   }
 
-  Future<Either<Failure, RedditLink>> unsaveSubmission(
+  Future<Either<Failure, Unit>> unsaveSubmission(
       Submission submissionModel) async {
     try {
-      final submission =
-          await _reddit.submission(id: submissionModel.id).populate();
-      submission.unsave();
-      return Right(_mapSubmissionToModel(submission));
+      await redditClient.unsaveSubmission(submissionModel.id);
+      return Right(unit);
     } catch (e) {
       return Left(SomeFailure(message: e));
     }
@@ -177,120 +173,56 @@ class RedditService {
     }
   }
 
-  draw.TimeFilter _mapTimeFilter(TimeFilter_ filter) {
-    if (filter == TimeFilter_.all) {
-      return draw.TimeFilter.all;
-    } else if (filter == TimeFilter_.day) {
-      return draw.TimeFilter.day;
-    } else if (filter == TimeFilter_.hour) {
-      return draw.TimeFilter.hour;
-    } else if (filter == TimeFilter_.month) {
-      return draw.TimeFilter.month;
-    } else if (filter == TimeFilter_.week) {
-      return draw.TimeFilter.week;
-    } else {
-      return draw.TimeFilter.year;
-    }
-  }
-
-  RedditLink _mapSubmissionToModel(draw.Submission s) {
-    final r = RedditLink(
-      isNSFW: s.over18,
-      author: s.author,
-      createdUtc: s.createdUtc,
-      edited: s.edited,
-      isSelf: s.isSelf,
-      stickied: s.stickied,
-      domain: s.domain,
-      distinguished: s.distinguished,
-      voteState: _mapVoteState(s.vote),
-      body: s.selftext,
-      id: s.id,
-      saved: s.saved,
-      numComments: s.numComments,
-      score: s.score,
-      title: s.title,
-      url: s.url.toString(),
-      previewUrl: (s.preview.isEmpty)
-          ? null
-          : s.preview?.first?.source?.url?.toString(),
-      subreddit: s.subreddit.displayName,
-      authorFlairText: s.authorFlairText ?? '',
-      linkFlairText: s.linkFlairText ?? '',
-    );
-
-    return r;
-  }
-
   Future<List<RedditLink>> _hot(
-      String subreddit, Map<String, String> params) async {
-    final List<RedditLink> t = await _reddit
-        .subreddit(subreddit)
-        .hot(after: params['after'], params: params)
-        .map((s) => s as draw.Submission)
-        .map((s) => _mapSubmissionToModel(s))
-        .toList();
-    return t;
+      String subreddit, TimeFilter_ filter, String after) async {
+    final linksAsJson = await redditClient.hotSubmissions(subreddit, after);
+
+    return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<List<RedditLink>> _newest(
-          String subreddit, Map<String, String> params) async =>
-      await _reddit
-          .subreddit(subreddit)
-          .newest(params: params)
-          .map((s) => s as draw.Submission)
-          .map((s) => _mapSubmissionToModel(s))
-          .toList();
-  Future<List<RedditLink>> _rising(
-          String subreddit, Map<String, String> params) async =>
-      await _reddit
-          .subreddit(subreddit)
-          .rising(params: params)
-          .map((s) => s as draw.Submission)
-          .map((s) => _mapSubmissionToModel(s))
-          .toList();
-
-  Future<List<RedditLink>> _controversial(
-      String subreddit, Map<String, String> params, TimeFilter_ filter) async {
-    final List<RedditLink> t = await _reddit
-        .subreddit(subreddit)
-        .controversial(params: params, timeFilter: _mapTimeFilter(filter))
-        .map((s) => s as draw.Submission)
-        .map((s) => _mapSubmissionToModel(s))
-        .toList();
-
-    return t;
+      String subreddit, TimeFilter_ filter, String after) async {
+    final List<Map<dynamic, dynamic>> linksAsJson =
+        await redditClient.newestSubmissions(subreddit, after);
+    return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
-  Future<List<RedditLink>> _top(String subreddit, Map<String, String> params,
-          TimeFilter_ filter) async =>
-      await _reddit
-          .subreddit(subreddit)
-          .top(params: params, timeFilter: _mapTimeFilter(filter))
-          .map((s) => s as draw.Submission)
-          .map((s) => _mapSubmissionToModel(s))
-          .toList();
+  Future<List<RedditLink>> _rising(String subreddit, String after) async {
+    final List<Map<dynamic, dynamic>> linksAsJson =
+        await redditClient.risingSubmissions(subreddit, after);
+    return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
+  }
+
+  Future<List<RedditLink>> _controversial(
+      String subreddit, String after, TimeFilter_ filter) async {
+    final List<Map<dynamic, dynamic>> linksAsJson =
+        await redditClient.controversialSubmissions(subreddit, after, filter);
+    return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
+  }
+
+  Future<List<RedditLink>> _top(
+      String subreddit, String after, TimeFilter_ filter) async {
+    final List<Map<dynamic, dynamic>> linksAsJson =
+        await redditClient.topSubmissions(subreddit, after, filter);
+    return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
+  }
 
   Future<Either<Failure, List<RedditLink>>> getRedditLinks(String subreddit,
       {String after,
       SubmissionSortType sort = SubmissionSortType.hot,
       TimeFilter_ filter = TimeFilter_.all}) async {
-    var params = Map<String, String>();
-    params['limit'] = '25';
-    params['after'] = (after == null) ? null : 't3_$after';
-
     try {
       List<RedditLink> response;
       if (sort == SubmissionSortType.hot) {
-        response = await _hot(subreddit, params);
+        response = await _hot(subreddit, filter, after);
       } else if (sort == SubmissionSortType.newest) {
-        response = await _newest(subreddit, params);
+        response = await _newest(subreddit, filter, after);
       } else if (sort == SubmissionSortType.rising) {
-        response = await _rising(subreddit, params);
+        response = await _rising(subreddit, after);
       } else if (sort == SubmissionSortType.controversial) {
-        response = await _controversial(subreddit, params, filter);
+        response = await _controversial(subreddit, after, filter);
       } else if (sort == SubmissionSortType.top) {
-        response = await _top(subreddit, params, filter);
+        response = await _top(subreddit, after, filter);
       } else {
         throw Exception('Unknown SubmissionSortType $sort');
       }

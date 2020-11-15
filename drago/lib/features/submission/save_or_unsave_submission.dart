@@ -9,15 +9,14 @@ import 'package:drago/reddit_service.dart';
 
 import '../../user_service.dart';
 
-class SaveOrUnsaveSubmission
-    implements UseCase<RedditLink, SaveOrUnsaveParams> {
+class SaveOrUnsaveSubmission implements UseCase<Unit, SaveOrUnsaveParams> {
   final RedditService reddit;
   final UserService userService;
 
   SaveOrUnsaveSubmission({@required this.reddit, @required this.userService});
 
   @override
-  Future<Either<Failure, RedditLink>> call(params) async {
+  Future<Either<Failure, Unit>> call(params) async {
     if (!await userService.isUserLoggedIn()) {
       return Left(NotAuthorizedFailure());
     }

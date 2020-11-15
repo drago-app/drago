@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:drago/models/sort_option.dart';
 import 'package:drago/user_service.dart';
 import 'package:draw/draw.dart' as draw;
 import 'package:url_launcher/url_launcher.dart';
@@ -9,9 +10,26 @@ abstract class RedditClient {
   Future<void> initializeWithoutAuth();
   String initializeWithAuth(String token);
   Future<AuthUser> loginWithNewAccount(List<String> scopes, String state);
+
   Future<List<String>> defaultSubreddits();
   Future<List<String>> subscriptions();
   Future<List<String>> moderatedSubreddits();
+
+  Future<List<Map<dynamic, dynamic>>> hotSubmissions(
+      String subreddit, String after);
+  Future<List<Map<dynamic, dynamic>>> newestSubmissions(
+      String subreddit, String after);
+  Future<List<Map<dynamic, dynamic>>> risingSubmissions(
+      String subreddit, String after);
+  Future<List<Map<dynamic, dynamic>>> controversialSubmissions(
+      String subreddit, String after, TimeFilter_ filter);
+  Future<List<Map<dynamic, dynamic>>> topSubmissions(
+      String subreddit, String after, TimeFilter_ filter);
+
+  Future<void> saveSubmission(String submissionId);
+  Future<void> unsaveSubmission(String submissionId);
+
+  Future<Map<String, dynamic>> getCommentsForSubmission(String submissionId);
 }
 
 class DrawRedditClient implements RedditClient {
@@ -21,25 +39,19 @@ class DrawRedditClient implements RedditClient {
   String _deviceID = 'pooppooppooppooppooppoop1';
   final userAgent = 'ios:com.example.helios:v0.0.1 (by /u/pinkywrinkle)';
 
-  DrawRedditClient() {
-    initializeWithoutAuth();
-  }
+  DrawRedditClient();
 
   @override
   Future<void> initializeWithoutAuth() async {
-    print('before initializeWithoutAuth -- _reddit is $_reddit');
     _reddit = await draw.Reddit.createUntrustedReadOnlyInstance(
       userAgent: userAgent,
       clientId: _identifier,
       deviceId: _deviceID,
     );
-    print('after initializeWithoutAuth -- _reddit is $_reddit');
   }
 
   @override
   String initializeWithAuth(String token) {
-    print('before initializeWithAuth -- _reddit is $_reddit');
-
     _reddit = draw.Reddit.restoreAuthenticatedInstance(
       token,
       userAgent: userAgent,
@@ -47,7 +59,6 @@ class DrawRedditClient implements RedditClient {
       clientId: _identifier,
       clientSecret: _secret,
     );
-    print('after initializeWithAuth -- _reddit is $_reddit');
     return _reddit.auth.credentials.toJson();
   }
 
@@ -92,6 +103,82 @@ class DrawRedditClient implements RedditClient {
     final subredditRefs = await _reddit.user.moderatorSubreddits().toList();
     return subredditRefs.map((ref) => ref.displayName).toList();
   }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> hotSubmissions(
+      String subreddit, String after) async {
+    return await _getSubmissions(
+        _reddit.subreddit(subreddit).hot, subreddit, after);
+  }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> newestSubmissions(
+      String subreddit, String after) async {
+    return await _getSubmissions(
+        _reddit.subreddit(subreddit).newest, subreddit, after);
+  }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> risingSubmissions(
+      String subreddit, String after) async {
+    return await _getSubmissions(
+        _reddit.subreddit(subreddit).rising, subreddit, after);
+  }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> controversialSubmissions(
+      String subreddit, String after, TimeFilter_ filter) async {
+    return await _getSubmissions(
+        _reddit.subreddit(subreddit).controversial, subreddit, after,
+        filter: filter);
+  }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> topSubmissions(
+      String subreddit, String after, TimeFilter_ filter) async {
+    return await _getSubmissions(
+        _reddit.subreddit(subreddit).controversial, subreddit, after,
+        filter: filter);
+  }
+
+  Future<List<Map<dynamic, dynamic>>> _getSubmissions(
+    Function drawMethod,
+    String subreddit,
+    String after, {
+    TimeFilter_ filter,
+  }) async {
+    var params = Map<String, String>();
+    params['limit'] = '25';
+    params['after'] = (after == null) ? null : 't3_$after';
+
+    Stream<draw.UserContent> stream = (filter == null)
+        ? await drawMethod(params: params)
+        : drawMethod(params: params, timeFilter: _mapTimeFilter(filter));
+
+    return stream
+        .map((sub) => sub as draw.Submission)
+        .map((sub) => sub.data)
+        .toList();
+  }
+
+  @override
+  Future<void> unsaveSubmission(String submissionId) async {
+    final submission = await _reddit.submission(id: submissionId).populate();
+    return submission.unsave();
+  }
+
+  @override
+  Future<void> saveSubmission(String submissionId) async {
+    final submission = await _reddit.submission(id: submissionId).populate();
+    return submission.save();
+  }
+
+  @override
+  Future<Map<String, dynamic>> getCommentsForSubmission(
+      String submissionId) async {
+    final submission = await _reddit.submission(id: submissionId).populate();
+    return submission.data['children'];
+  }
 }
 
 Future<Stream<String>> _server() async {
@@ -122,5 +209,21 @@ _launchURL(url) async {
     await launch(url);
   } else {
     throw 'Could not launch $url';
+  }
+}
+
+draw.TimeFilter _mapTimeFilter(TimeFilter_ filter) {
+  if (filter == TimeFilter_.all) {
+    return draw.TimeFilter.all;
+  } else if (filter == TimeFilter_.day) {
+    return draw.TimeFilter.day;
+  } else if (filter == TimeFilter_.hour) {
+    return draw.TimeFilter.hour;
+  } else if (filter == TimeFilter_.month) {
+    return draw.TimeFilter.month;
+  } else if (filter == TimeFilter_.week) {
+    return draw.TimeFilter.week;
+  } else {
+    return draw.TimeFilter.year;
   }
 }

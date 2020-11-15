@@ -1,6 +1,7 @@
 //https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/master/lib/types/reddit.js
 import 'package:dartz/dartz.dart';
 import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/utils.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class RedditThing {
@@ -116,9 +117,10 @@ class RedditLink implements RedditThing {
   // final String permalink;
 
   final String title;
-  final String url;
-  final String body;
+  // final Option<String> previewUrl;
   final String previewUrl;
+  final String body;
+  final String url;
   final String subreddit;
   final String authorFlairText;
   final String linkFlairText;
@@ -130,26 +132,67 @@ class RedditLink implements RedditThing {
   final VoteState voteState;
 
   RedditLink(
-      {this.author,
-      this.createdUtc,
-      this.edited,
-      this.isSelf,
-      this.isNSFW,
-      this.saved,
-      this.stickied,
-      this.domain,
-      this.body,
-      this.distinguished,
-      this.id,
-      this.numComments,
-      this.score,
-      this.subreddit,
-      this.authorFlairText,
-      this.linkFlairText,
-      this.title,
-      this.url,
-      this.previewUrl,
-      this.voteState});
+      {@required this.author,
+      @required this.createdUtc,
+      @required this.edited,
+      @required this.isSelf,
+      @required this.isNSFW,
+      @required this.saved,
+      @required this.stickied,
+      @required this.domain,
+      @required this.body,
+      @required this.distinguished,
+      @required this.id,
+      @required this.numComments,
+      @required this.score,
+      @required this.subreddit,
+      @required this.authorFlairText,
+      @required this.linkFlairText,
+      @required this.title,
+      @required this.url,
+      @required this.previewUrl,
+      @required this.voteState});
+
+  // static Option<String> _previewUrl(Map<String, dynamic> preview) {
+  //   return optionOf(preview['images'].first?.source['url']);
+  // }
+
+  static String _previewUrl(Map<String, dynamic> preview) {
+    if (preview == null || preview.isEmpty) return null;
+    return unescape(preview['images']?.first['source']['url']);
+  }
+
+  static VoteState _voteState(String vote) => (vote == null)
+      ? VoteState.Neutral
+      : (vote == 'likes')
+          ? VoteState.Up
+          : VoteState.Down;
+
+  factory RedditLink.fromJson(Map<dynamic, dynamic> json) {
+    return RedditLink(
+        author: json['author'],
+        edited: json['edited'],
+        isSelf: json['is_self'],
+        isNSFW: json['over_18'],
+        saved: json['saved'],
+        stickied: json['stickied'],
+        domain: json['domain'],
+        distinguished: json['distinguished'],
+        id: json['id'],
+        numComments: json['num_comments'],
+        score: json['score'],
+        subreddit: json['subreddit'],
+        authorFlairText: json['author_flair_text'] ?? '',
+        linkFlairText: json['link_flair_text'] ?? '',
+        title: json['title'],
+        url: json['url'],
+        previewUrl: _previewUrl(json['preview']),
+        voteState: _voteState(json['likes']),
+        body: json['body'],
+        createdUtc: DateTime.fromMillisecondsSinceEpoch(
+            ((json['created_utc'] as double).round() * 1000),
+            isUtc: true));
+  }
 }
 
 class RedditMessage implements RedditThing {
