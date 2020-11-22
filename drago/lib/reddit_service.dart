@@ -26,56 +26,59 @@ class RedditService {
   RedditService({@required this.redditClient});
 
   Future<List<Either>> getMoreComments(Map data, String submissionId) async {
-    final List<dynamic> drawMoreOrComments =
-        await draw.MoreComments.parse(_reddit, data, submissionId: submissionId)
-            .comments();
-    return _buildChildren(drawMoreOrComments);
+    // final List<dynamic> drawMoreOrComments =
+    //     await draw.MoreComments.parse(_reddit, data, submissionId: submissionId)
+    //         .comments();
+    // return _buildChildren(drawMoreOrComments);
   }
 
   Future<List<Either>> getComments(String submissionId) async {
-    final sub = await _reddit.submission(id: submissionId).populate();
+    final List<Map> jsonComments =
+        await redditClient.getCommentsForSubmission(submissionId);
+    return RedditComment.buildComments(jsonComments);
+    // final sub = await _reddit.submission(id: submissionId).populate();
 
-    final drawMoreOrComments = sub.comments.comments;
+    // final drawMoreOrComments = sub.comments.comments;
 
-    return _buildChildren(drawMoreOrComments);
+    // return _buildChildren(drawMoreOrComments);
   }
 
-  RedditComment _mapDrawCommentToRedditComment(draw.Comment c) {
-    return RedditComment(
-        author: c.author,
-        body: c.body,
-        id: c.id,
-        score: c.score,
-        voteState: _mapVoteState(c.vote),
-        depth: c.depth,
-        distinguished: c.data['distinguished'],
-        authorFlairText: c.authorFlairText,
-        createdUtc: c.createdUtc,
-        edited: c.edited,
-        children: (c.replies?.comments != null)
-            ? _buildChildren(c.replies.comments)
-            : []);
-  }
+  // RedditComment _mapDrawCommentToRedditComment(draw.Comment c) {
+  //   return RedditComment(
+  //       author: c.author,
+  //       body: c.body,
+  //       id: c.id,
+  //       score: c.score,
+  //       voteState: _mapVoteState(c.vote),
+  //       depth: c.depth,
+  //       distinguished: c.data['distinguished'],
+  //       authorFlairText: c.authorFlairText,
+  //       createdUtc: c.createdUtc,
+  //       edited: c.edited,
+  //       children: (c.replies?.comments != null)
+  //           ? _buildChildren(c.replies.comments)
+  //           : []);
+  // }
 
-  List<Either<More, RedditComment>> _buildChildren(List children) {
-    if (children == null) return [];
-    return children
-        .map<Either>((moc) =>
-            (moc is draw.MoreComments) ? Left(moc) : Right(moc as draw.Comment))
-        .map<Either<More, RedditComment>>((moc) => moc.fold((more) {
-              more as draw.MoreComments;
-              return Left(More(
-                  data: more.data,
-                  count: more.count,
-                  id: more.id,
-                  parentId: more.parentId,
-                  depth: more.data['depth'],
-                  submissionId: null));
-            },
-                (comment) => Right(
-                    _mapDrawCommentToRedditComment(comment as draw.Comment))))
-        .toList();
-  }
+  // List<Either<More, RedditComment>> _buildChildren(List children) {
+  //   if (children == null) return [];
+  //   return children
+  //       .map<Either>((moc) =>
+  //           (moc is draw.MoreComments) ? Left(moc) : Right(moc as draw.Comment))
+  //       .map<Either<More, RedditComment>>((moc) => moc.fold((more) {
+  //             more as draw.MoreComments;
+  //             return Left(More(
+  //                 data: more.data,
+  //                 count: more.count,
+  //                 id: more.id,
+  //                 parentId: more.parentId,
+  //                 depth: more.data['depth'],
+  //                 submissionId: null));
+  //           },
+  //               (comment) => Right(
+  //                   _mapDrawCommentToRedditComment(comment as draw.Comment))))
+  //       .toList();
+  // }
 
   Future<Either<Failure, List<String>>> defaultSubreddits() async {
     try {

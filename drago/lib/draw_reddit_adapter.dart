@@ -33,7 +33,8 @@ abstract class RedditClient {
   Future<void> downvoteSubmission(String submissionId);
   Future<void> removeVoteSubmission(String submissionId);
 
-  Future<Map<String, dynamic>> getCommentsForSubmission(String submissionId);
+  Future<List<Map<dynamic, dynamic>>> getCommentsForSubmission(
+      String submissionId);
 }
 
 class DrawRedditClient implements RedditClient {
@@ -196,10 +197,15 @@ class DrawRedditClient implements RedditClient {
   }
 
   @override
-  Future<Map<String, dynamic>> getCommentsForSubmission(
-      String submissionId) async {
+  Future<List<Map>> getCommentsForSubmission(String submissionId) async {
     final submission = await _reddit.submission(id: submissionId).populate();
-    return submission.data['children'];
+    final List<Map> json = submission.comments.comments
+        .map((c) => (c as draw.RedditBaseInitializedMixin).data)
+        .map((data) =>
+            {'data': data, 'kind': (data['count'] != null) ? 'more' : 't1'})
+        .toList();
+
+    return json;
   }
 }
 

@@ -4,6 +4,20 @@ import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/utils.dart';
 import 'package:flutter/foundation.dart';
 
+VoteState _voteState(dynamic vote) => (vote == null)
+    ? VoteState.Neutral
+    : (vote == 'likes')
+        ? VoteState.Up
+        : VoteState.Down;
+
+DateTime _createdUtc(dynamic created_utc) {
+  return DateTime.fromMillisecondsSinceEpoch(
+      ((created_utc as double).round() * 1000),
+      isUtc: true);
+}
+
+bool _edited(dynamic edited) => (edited == null) ? false : true;
+
 abstract class RedditThing {
   static String kind;
 }
@@ -22,6 +36,16 @@ class More implements RedditThing {
     @required this.data,
     @required this.submissionId,
   });
+
+  factory More.fromJson(Map json) {
+    return More(
+        id: json['id'],
+        parentId: json['parent_id'],
+        count: json['count'],
+        data: json,
+        depth: json['depth'],
+        submissionId: null);
+  }
 }
 
 class RedditComment implements RedditThing {
@@ -55,6 +79,49 @@ class RedditComment implements RedditThing {
       @required this.authorFlairText,
       @required this.distinguished,
       @required this.children});
+
+  factory RedditComment.fromJson(Map json) {
+    try {
+      return RedditComment(
+          author: json['author'],
+          body: json['body'],
+          createdUtc: _createdUtc(json['created_utc']),
+          id: json['id'],
+          edited: _edited(json['edited']),
+          depth: json['depth'],
+          score: json['score'],
+          authorFlairText: json['author_flair_text'],
+          distinguished: json['distinguished'],
+          children: _buildChildren(json['replies']),
+          voteState: _voteState(json['likes']));
+    } catch (e) {
+      print('RedditComment-- ${json['id']} ' + e.toString());
+    }
+  }
+
+  static List<Either<More, RedditComment>> _buildChildren(replies) {
+    if (replies == "" || replies == null) return [];
+    final Map data = replies['data'];
+    final children = data['children'];
+
+    print(children.length);
+    return buildComments(children);
+  }
+
+  /// Objects that come in here should be like:
+  /// {'kind': 'more', 'data': {...} } or
+  /// {'t1': 'more', 'data': {...} }
+  static List<Either<More, RedditComment>> buildComments(List jsonChildren) {
+    if (jsonChildren == null) return [];
+
+    List<Either<More, RedditComment>> answer = jsonChildren
+        .map<Either<More, RedditComment>>((child) => child['kind'] == 'more'
+            ? Left(More.fromJson(child['data']))
+            : Right(RedditComment.fromJson(child['data'])))
+        .toList();
+
+    return answer;
+  }
 }
 
 class RedditAccount implements RedditThing {
@@ -178,7 +245,7 @@ class RedditLink implements RedditThing {
     try {
       return RedditLink(
         author: json['author'],
-        edited: (json['edited'] == null) ? false : true,
+        edited: _edited(json['edited']),
         isSelf: json['is_self'],
         isNSFW: json['over_18'],
         saved: json['saved'],

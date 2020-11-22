@@ -43,7 +43,7 @@ class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
   }
 
   Stream<CommentsPageState> _mapLoadCommentsToState() async* {
-    final commentsOrFailure =
+    final Either<Failure, List<BaseCommentModel>> commentsOrFailure =
         await getComments(GetCommentsParams(submission.id));
 
     yield* commentsOrFailure.fold(
