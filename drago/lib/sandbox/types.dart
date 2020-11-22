@@ -261,7 +261,7 @@ class RedditLink implements RedditThing {
         url: json['url'],
         previewUrl: _previewUrl(json['preview']),
         voteState: _voteState(json['likes']),
-        body: json['self_text'],
+        body: json['selftext'],
         createdUtc: _createdUtc(json['created_utc']),
       );
     } catch (e) {
