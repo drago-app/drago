@@ -37,6 +37,8 @@ jobs:
     - run: cd drago
     - run: ls -rathl
     - run: cd drago
+    - run: ls -rathl
+
 
       
 #     - run: flutter pub get
