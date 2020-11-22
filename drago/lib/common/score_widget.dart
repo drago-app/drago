@@ -1,7 +1,6 @@
 import 'package:drago/common/common.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 
 class ScoreViewModel {

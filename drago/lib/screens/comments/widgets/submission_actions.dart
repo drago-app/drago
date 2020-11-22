@@ -2,7 +2,6 @@ import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/submission_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SubmissionActions extends StatelessWidget {
   final Function onUpVote;

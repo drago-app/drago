@@ -4,11 +4,8 @@ import 'package:drago/draw_reddit_adapter.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
-import 'package:draw/draw.dart' as draw;
-import 'package:drago/core/entities/submission_entity.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:flutter/foundation.dart';
-
 import 'user_service.dart';
 
 class RedditService {
@@ -107,16 +104,6 @@ class RedditService {
       return Right(unit);
     } catch (e) {
       return Left(SomeFailure(message: e));
-    }
-  }
-
-  VoteState _mapVoteState(draw.VoteState state) {
-    if (state == draw.VoteState.upvoted) {
-      return VoteState.Up;
-    } else if (state == draw.VoteState.downvoted) {
-      return VoteState.Down;
-    } else {
-      return VoteState.Neutral;
     }
   }
 

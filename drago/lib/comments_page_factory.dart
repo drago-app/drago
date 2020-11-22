@@ -12,7 +12,6 @@ import 'common/common.dart';
 import 'common/drag_to_pop_modal/drag_to_pop_page_route.dart';
 import 'features/subreddit/get_submissions.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'dart:math';
 
 class CommentsPageFactory extends StatefulWidget {
   final SubmissionBloc submissionBloc;

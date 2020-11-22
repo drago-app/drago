@@ -1,8 +1,6 @@
 import 'package:drago/common/tappable_icon_text_span.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/num_comments_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NumCommentsViewModel {
   final NumComments _numComments;
