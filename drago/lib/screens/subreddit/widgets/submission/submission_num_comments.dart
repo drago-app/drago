@@ -1,3 +1,4 @@
+import 'package:drago/common/tappable_icon_text_span.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/num_comments_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,28 +10,19 @@ class NumCommentsViewModel {
   NumCommentsViewModel(this._numComments);
 }
 
-class NumCommentsWidget extends StatelessWidget {
+class NumCommentsWidget extends TappableIconTextSpan {
   final NumCommentsViewModel numCommentsViewModel;
-  NumCommentsWidget(this.numCommentsViewModel);
+  NumCommentsWidget(this.numCommentsViewModel)
+      : super(
+            icon: Icon(CupertinoIcons.chat_bubble,
+                color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
+                size: 14),
+            text: numCommentsViewModel.value,
+            style: TextStyle(
+                color: CupertinoColors.darkBackgroundGray.withOpacity(.7)));
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Icon(
-          CupertinoIcons.chat_bubble,
-          size: 14,
-          color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
-        ),
-        Text(
-          ' ${numCommentsViewModel.value}',
-          style: TextStyle(
-            color: CupertinoColors.darkBackgroundGray.withOpacity(.7),
-            fontSize: 14.0,
-          ),
-        )
-      ],
-    );
+    return super.build(context);
   }
 }
