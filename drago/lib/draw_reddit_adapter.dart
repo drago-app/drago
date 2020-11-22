@@ -35,6 +35,8 @@ abstract class RedditClient {
 
   Future<List<Map<dynamic, dynamic>>> getCommentsForSubmission(
       String submissionId);
+  Future<List<Map<dynamic, dynamic>>> expandMoreComments(
+      Map data, String submissionId);
 }
 
 class DrawRedditClient implements RedditClient {
@@ -206,6 +208,20 @@ class DrawRedditClient implements RedditClient {
         .toList();
 
     return json;
+  }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> expandMoreComments(
+      Map data, String submissionId) async {
+    final List<dynamic> drawMoreOrComments =
+        await draw.MoreComments.parse(_reddit, data, submissionId: submissionId)
+            .comments();
+
+    return drawMoreOrComments
+        .map((c) => (c as draw.RedditBaseInitializedMixin).data)
+        .map((data) =>
+            {'data': data, 'kind': (data['count'] != null) ? 'more' : 't1'})
+        .toList();
   }
 }
 

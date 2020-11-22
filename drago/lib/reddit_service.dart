@@ -26,6 +26,10 @@ class RedditService {
   RedditService({@required this.redditClient});
 
   Future<List<Either>> getMoreComments(Map data, String submissionId) async {
+    final List<Map> jsonComments =
+        await redditClient.expandMoreComments(data, submissionId);
+    return RedditComment.buildComments(jsonComments);
+
     // final List<dynamic> drawMoreOrComments =
     //     await draw.MoreComments.parse(_reddit, data, submissionId: submissionId)
     //         .comments();
@@ -36,11 +40,6 @@ class RedditService {
     final List<Map> jsonComments =
         await redditClient.getCommentsForSubmission(submissionId);
     return RedditComment.buildComments(jsonComments);
-    // final sub = await _reddit.submission(id: submissionId).populate();
-
-    // final drawMoreOrComments = sub.comments.comments;
-
-    // return _buildChildren(drawMoreOrComments);
   }
 
   // RedditComment _mapDrawCommentToRedditComment(draw.Comment c) {

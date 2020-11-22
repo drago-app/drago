@@ -104,7 +104,6 @@ class RedditComment implements RedditThing {
     final Map data = replies['data'];
     final children = data['children'];
 
-    print(children.length);
     return buildComments(children);
   }
 

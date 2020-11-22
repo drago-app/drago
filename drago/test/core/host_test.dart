@@ -41,8 +41,6 @@ void main() {
     final resultStream = Host.getMedia(imgurUrl);
     final result = await resultStream.first;
 
-    (result as GalleryMedia).src.forEach(print);
-
     assert((result as GalleryMedia).size == 11);
   });
 
