@@ -165,10 +165,10 @@ packages:
   flutter_slidable:
     dependency: "direct main"
     description:
-      path: "/Users/Donovan/Desktop/slidable-fork/flutter_slidable"
-      relative: false
-    source: path
-    version: "0.5.3"
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.7"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:

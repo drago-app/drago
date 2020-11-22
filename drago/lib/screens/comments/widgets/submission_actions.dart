@@ -34,14 +34,14 @@ class SubmissionActions extends StatelessWidget {
           SquareActionButton(
             activeBackgroundColor: CupertinoColors.activeOrange,
             inActiveIconColor: CupertinoColors.systemBlue,
-            iconData: CupertinoIcons.arrow_down,
+            iconData: CupertinoIcons.arrow_up,
             onTap: () => onUpVote(),
             switchCondition: voteState == VoteState.Up,
           ),
           SquareActionButton(
             activeBackgroundColor: CupertinoColors.systemPurple,
             inActiveIconColor: CupertinoColors.systemBlue,
-            iconData: CupertinoIcons.arrow_up,
+            iconData: CupertinoIcons.arrow_down,
             onTap: () => onDownVote(),
             switchCondition: voteState == VoteState.Down,
           ),

@@ -14,7 +14,6 @@ import 'user_service.dart';
 class RedditService {
   final RedditClient redditClient;
   String _state = 'thisisarandomstring';
-  // final userAgent = 'ios:com.example.helios:v0.0.1 (by /u/pinkywrinkle)';
 
   RedditService({@required this.redditClient});
 
