@@ -19,14 +19,14 @@ class CommentInitial extends CommentState {
   }
 }
 
-class CommentsLoading extends CommentState {
-  final BaseCommentModel comment;
-  CommentsLoading(this.comment);
-}
+// class CommentsLoading extends CommentState {
+//   final BaseCommentModel comment;
+//   CommentsLoading(this.comment);
+// }
 
-class CommentsLoaded extends CommentState {
-  final BaseCommentModel comment;
-  final List<BaseCommentModel> comments;
+// class CommentsLoaded extends CommentState {
+//   final BaseCommentModel comment;
+//   final List<BaseCommentModel> comments;
 
-  CommentsLoaded({@required this.comment, @required this.comments});
-}
+//   CommentsLoaded({@required this.comment, @required this.comments});
+// }

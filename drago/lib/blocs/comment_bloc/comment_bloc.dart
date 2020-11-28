@@ -21,33 +21,31 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   @override
   get initialState => CommentInitial(comment: comment);
 
-  @override
-  Stream<Transition<CommentEvent, CommentState>> transformEvents(
-    Stream<CommentEvent> events,
-    TransitionFunction<CommentEvent, CommentState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
-    );
-  }
+  // @override
+  // Stream<Transition<CommentEvent, CommentState>> transformEvents(
+  //   Stream<CommentEvent> events,
+  //   TransitionFunction<CommentEvent, CommentState> transitionFn,
+  // ) {
+  //   return super.transformEvents(
+  //     events.debounceTime(const Duration(milliseconds: 500)),
+  //     transitionFn,
+  //   );
+  // }
 
   @override
-  Stream<CommentState> mapEventToState(CommentEvent event) async* {
-    if (event is LoadMoreComments) yield* _mapLoadMoreCommentsToState(event);
-  }
+  Stream<CommentState> mapEventToState(CommentEvent event) async* {}
 
-  Stream<CommentState> _mapLoadMoreCommentsToState(
-      LoadMoreComments event) async* {
-    yield CommentsLoading(comment);
+  // Stream<CommentState> _mapLoadMoreCommentsToState(
+  //     LoadMoreComments event) async* {
+  //   yield CommentsLoading(comment);
 
-    final failureOrComments = await getMoreComments(
-        GetMoreCommentsParams(event.submissionId, event.data));
+  //   final failureOrComments = await getMoreComments(
+  //       GetMoreCommentsParams(event.submissionId, event.data));
 
-    yield* failureOrComments.fold((failure) async* {
-      print('[CommentBloc#_mapLoadMoreCommentsToState] -- ${failure.message}');
-    }, (comments) async* {
-      yield CommentsLoaded(comment: comment, comments: comments);
-    });
-  }
+  //   yield* failureOrComments.fold((failure) async* {
+  //     print('[CommentBloc#_mapLoadMoreCommentsToState] -- ${failure.message}');
+  //   }, (comments) async* {
+  //     yield CommentsLoaded(comment: comment, comments: comments);
+  //   });
+  // }
 }
