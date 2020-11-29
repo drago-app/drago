@@ -11,6 +11,9 @@ on:
     branches: 
       - master
       - dev
+defaults:
+  run:
+    working-directory: drago
 
     
 # on: push    # Default will running for every branch.
@@ -34,6 +37,12 @@ jobs:
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
     
     # Get flutter dependencies.
+#     - run: ls -rathl
+#     - run: cd ./drago
+#     - run: ls -rathl
+#     - run: cd ./drago
+    - run: ls -rathl
+
     - run: flutter pub get
     
     # Check for any formatting issues in the code.
