@@ -21,7 +21,7 @@ class SubredditPage extends StatefulWidget {
 
 class _SubredditPageState extends State<SubredditPage> {
   final _scrollController = ScrollController();
-  final _scrollThreshold = 200.0;
+  final _scrollThreshold = 300.0;
 
   _SubredditPageState() {
     _scrollController.addListener(_onScroll);

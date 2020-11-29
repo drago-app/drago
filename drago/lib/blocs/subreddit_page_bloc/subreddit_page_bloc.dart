@@ -42,7 +42,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
     TransitionFunction<SubredditPageEvent, SubredditPageState> transitionFn,
   ) {
     return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
+      events.debounceTime(const Duration(milliseconds: 0)),
       transitionFn,
     );
   }
