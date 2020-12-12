@@ -16,8 +16,9 @@ class FlairWidget extends StatelessWidget {
         ? SizedBox.shrink()
         : Container(
             child: Padding(
-              padding: EdgeInsets.all(4),
-              child: Text(flairText, style: defaultTextStyle.merge(style)),
+              padding: EdgeInsets.all(2),
+              child: Text(flairText,
+                  style: defaultTextStyle.copyWith(fontSize: 12).merge(style)),
             ),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
@@ -36,7 +37,7 @@ class NSFWFlairWidget extends StatelessWidget {
         ? SizedBox.shrink()
         : Container(
             child: Padding(
-              padding: EdgeInsets.all(4),
+              padding: EdgeInsets.all(2),
               child: Text(
                 'NSFW',
                 style: TextStyle(
