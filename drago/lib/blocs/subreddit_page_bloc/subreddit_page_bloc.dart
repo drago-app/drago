@@ -184,23 +184,6 @@ class ActionModel extends Equatable {
   List<Object> get props => [action, description];
 }
 
-// class ActionModelDetails {
-//   final DragoIcons icon;
-//   final String description;
-//   final bool selected;
-//   final Option<List> options;
-//   final dynamic actionBase;
-
-//   ActionModelDetails(this.icon, this.description,
-//       {@required this.actionBase,
-//       this.selected = false,
-//       this.options = const None()});
-// }
-
-// abstract class Actionable {
-//   ActionModelDetails toAction({bool selected = false});
-// }
-
 class SubmissionSort extends Equatable {
   final DragoIcons icon;
   final String _baseDescription;
