@@ -3,9 +3,11 @@ import 'package:drago/sandbox/types.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import 'subreddit_page_bloc.dart';
+
 abstract class SubredditPageState extends Equatable {
   String get subreddit;
-  SubmissionSortType get currentSort;
+  SubmissionSort get currentSort;
   List<RedditLink> get redditLinks;
 
   @override
@@ -14,7 +16,7 @@ abstract class SubredditPageState extends Equatable {
 
 class SubredditPageInitial extends SubredditPageState {
   final String subreddit;
-  final SubmissionSortType currentSort;
+  final SubmissionSort currentSort;
   final List<RedditLink> redditLinks;
 
   SubredditPageInitial(
@@ -26,7 +28,7 @@ class SubredditPageInitial extends SubredditPageState {
 
 class SubredditPageLoading extends SubredditPageState {
   final String subreddit;
-  final SubmissionSortType currentSort;
+  final SubmissionSort currentSort;
   final List<RedditLink> redditLinks;
 
   SubredditPageLoading(
@@ -39,7 +41,7 @@ class SubredditPageLoading extends SubredditPageState {
 class SubredditPageLoaded extends SubredditPageState {
   final List<RedditLink> redditLinks;
   final String subreddit;
-  final SubmissionSortType currentSort;
+  final SubmissionSort currentSort;
 
   SubredditPageLoaded(
       {@required this.redditLinks,
@@ -60,8 +62,8 @@ class SubredditPageLoaded extends SubredditPageState {
 
 class DisplayingSortOptions extends SubredditPageState {
   final String subreddit;
-  final SubmissionSortType currentSort;
-  final List<SubmissionSortOption> options;
+  final SubmissionSort currentSort;
+  final List<ActionModel> options;
   final List<RedditLink> redditLinks;
 
   DisplayingSortOptions(
@@ -73,19 +75,19 @@ class DisplayingSortOptions extends SubredditPageState {
   List<Object> get props => [subreddit, currentSort, options, redditLinks];
 }
 
-class DisplayingFilterOptions extends SubredditPageState {
-  final String subreddit;
-  final SubmissionSortType currentSort;
-  final List<TimeFilterOption> options;
-  final List<RedditLink> redditLinks;
-  final SubmissionSortType sortType;
+// class DisplayingFilterOptions extends SubredditPageState {
+//   final String subreddit;
+//   final SubmissionSort currentSort;
+//   final List<TimeFilterOption> options;
+//   final List<RedditLink> redditLinks;
+//   final SubmissionSort sortType;
 
-  DisplayingFilterOptions(
-      {@required this.subreddit,
-      this.redditLinks = const [],
-      @required this.sortType,
-      @required this.currentSort,
-      @required this.options});
-  @override
-  List<Object> get props => [subreddit, currentSort, options, redditLinks];
-}
+//   DisplayingFilterOptions(
+//       {@required this.subreddit,
+//       this.redditLinks = const [],
+//       @required this.sortType,
+//       @required this.currentSort,
+//       @required this.options});
+//   @override
+//   List<Object> get props => [subreddit, currentSort, options, redditLinks];
+// }

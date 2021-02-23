@@ -20,10 +20,8 @@ class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
   CommentsPageBloc(
       {@required this.reddit,
       @required this.submission,
-      @required this.getComments});
-
-  @override
-  get initialState => CommentsPageInitial();
+      @required this.getComments})
+      : super(CommentsPageInitial());
 
   @override
   Stream<Transition<CommentsPageEvent, CommentsPageState>> transformEvents(

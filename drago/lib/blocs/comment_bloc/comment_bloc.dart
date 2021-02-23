@@ -16,10 +16,8 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final BaseCommentModel comment;
   final GetMoreComments getMoreComments;
 
-  CommentBloc({@required this.comment, @required this.getMoreComments});
-
-  @override
-  get initialState => CommentInitial(comment: comment);
+  CommentBloc({@required this.comment, @required this.getMoreComments})
+      : super(CommentInitial(comment: comment));
 
   // @override
   // Stream<Transition<CommentEvent, CommentState>> transformEvents(

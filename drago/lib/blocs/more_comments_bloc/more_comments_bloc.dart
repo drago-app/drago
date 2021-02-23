@@ -17,10 +17,8 @@ class MoreCommentsBloc extends Bloc<MoreCommentsEvent, MoreCommentsState> {
   final MoreCommentsModel more;
   final GetMoreComments getMoreComments;
 
-  MoreCommentsBloc({@required this.more, @required this.getMoreComments});
-
-  @override
-  get initialState => MoreCommentsInitial(more: more);
+  MoreCommentsBloc({@required this.more, @required this.getMoreComments})
+      : super(MoreCommentsInitial(more: more));
 
   @override
   Stream<MoreCommentsState> mapEventToState(MoreCommentsEvent event) async* {

@@ -21,7 +21,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "6.1.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -121,7 +121,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.6"
   fake_async:
     dependency: transitive
     description:
@@ -147,7 +147,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "6.1.2"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -353,7 +353,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.3.3"
   quiver:
     dependency: transitive
     description:

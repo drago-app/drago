@@ -169,7 +169,7 @@ class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder(
-        bloc: bloc,
+        cubit: bloc,
         builder: (context, state) => _buildOverlayContent(context, state));
   }
 

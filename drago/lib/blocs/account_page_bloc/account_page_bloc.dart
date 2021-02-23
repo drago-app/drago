@@ -3,6 +3,8 @@ import 'package:bloc/bloc.dart';
 import './account_page.dart';
 
 class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
+  AccountPageBloc() : super(null);
+
   @override
   // TODO: implement initialState
   get initialState => null;

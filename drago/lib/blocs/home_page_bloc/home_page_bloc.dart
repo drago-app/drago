@@ -16,10 +16,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       {@required this.getUsersModerations,
       @required this.getUsersSubscriptions,
       @required this.getDefaultSubreddits,
-      @required this.dialogService});
-
-  @override
-  get initialState => HomePageInitial();
+      @required this.dialogService})
+      : super(HomePageInitial());
 
   @override
   Stream<HomePageState> mapEventToState(HomePageEvent event) async* {

@@ -1,4 +1,5 @@
 import 'package:drago/dialog/dialog_provider.dart';
+import 'package:drago/icons_enum.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/screens/subreddit/widgets/submission/submission_widget_factory.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,30 +41,29 @@ class _SubredditPageState extends State<SubredditPage> {
           listener: (listenerContext, state) {
         if (state is DisplayingSortOptions) {
           showCupertinoModalPopup(
-            useRootNavigator: true,
-            context: context,
-            builder: (context) => SubmissionsSortDialog(
-              options: state.options,
-              bloc: listenerContext.bloc<SubredditPageBloc>(),
-            ),
-          );
-        }
-        if (state is DisplayingFilterOptions) {
-          showCupertinoModalPopup(
               context: listenerContext,
-              builder: (context) => FilterDialog(
-                    bloc: listenerContext.bloc<SubredditPageBloc>(),
-                    filters: state.options,
-                    option: state.sortType,
-                  ));
+              builder: (context) => CupertinoActionSheet(
+                  actions: state.options
+                      .map((a) => DialogAction(action: a))
+                      .toList()));
         }
+        // if (state is DisplayingFilterOptions) {
+        //   showCupertinoModalPopup(
+        //       context: listenerContext,
+        //       builder: (context) => FilterDialog(
+        //             bloc: listenerContext.bloc<SubredditPageBloc>(),
+        //             filters: state.options,
+        //             option: state.sortType,
+        //           ));
+        // }
       }, buildWhen: (prev, current) {
-        if (current is DisplayingSortOptions ||
-            current is DisplayingFilterOptions) {
-          return false;
-        } else {
-          return true;
-        }
+        return !(current is DisplayingSortOptions);
+        // if (current is DisplayingSortOptions ||
+        //     current is DisplayingFilterOptions) {
+        //   return false;
+        // } else {
+        //   return true;
+        // }
       }, builder: (bloccontext, state) {
         return CupertinoPageScaffold(
           child: _buildBody(state),
@@ -77,11 +77,12 @@ class _SubredditPageState extends State<SubredditPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 CupertinoButton(
-                    onPressed: () =>
-                        BlocProvider.of<SubredditPageBloc>(bloccontext)
-                            .add(UserTappedSortButton()),
-                    padding: const EdgeInsets.all(0),
-                    child: Icon(_mapStateToSortIcon(state.currentSort))),
+                  onPressed: () =>
+                      BlocProvider.of<SubredditPageBloc>(bloccontext)
+                          .add(UserTappedSortButton()),
+                  padding: const EdgeInsets.all(0),
+                  child: Icon(getIconData(state.currentSort.icon)),
+                ),
                 CupertinoButton(
                     onPressed: () => null,
                     padding: const EdgeInsets.all(0),
@@ -94,20 +95,20 @@ class _SubredditPageState extends State<SubredditPage> {
     );
   }
 
-  IconData _mapStateToSortIcon(SubmissionSortType type) {
-    switch (type) {
-      case SubmissionSortType.hot:
-        return CupertinoIcons.flame;
-      case SubmissionSortType.top:
-        return CupertinoIcons.sort_up;
-      case SubmissionSortType.controversial:
-        return FontAwesomeIcons.bomb;
-      case SubmissionSortType.newest:
-        return CupertinoIcons.today;
-      case SubmissionSortType.rising:
-        return FontAwesomeIcons.chartLine;
-    }
-  }
+  // IconData _mapStateToSortIcon(SubmissionSortType type) {
+  //   switch (type) {
+  //     case SubmissionSortType.hot:
+  //       return CupertinoIcons.flame;
+  //     case SubmissionSortType.top:
+  //       return CupertinoIcons.sort_up;
+  //     case SubmissionSortType.controversial:
+  //       return FontAwesomeIcons.bomb;
+  //     case SubmissionSortType.newest:
+  //       return CupertinoIcons.today;
+  //     case SubmissionSortType.rising:
+  //       return FontAwesomeIcons.chartLine;
+  //   }
+  // }
 
   Widget _buildBody(SubredditPageState state) {
     if (state is SubredditPageInitial) {
@@ -147,38 +148,36 @@ class _SubredditPageState extends State<SubredditPage> {
   }
 }
 
-class SubmissionsSortDialog extends StatelessWidget {
-  final List<SubmissionSortOption> options;
-  final SubredditPageBloc bloc;
+// class SubmissionsSortDialog extends StatelessWidget {
+//   final List<SubmissionSortOption> options;
+//   final SubredditPageBloc bloc;
 
-  SubmissionsSortDialog({@required this.bloc, @required this.options});
+//   SubmissionsSortDialog({@required this.bloc, @required this.options});
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoActionSheet(
-      title: Text('Sort by...'),
-      cancelButton: CupertinoActionSheetAction(
-        child: Text('Cancel'),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      actions: options
-          .map((option) => SubmissionsSortDialogAction(option, bloc))
-          .toList(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return CupertinoActionSheet(
+//       title: Text('Sort by...'),
+//       cancelButton: CupertinoActionSheetAction(
+//         child: Text('Cancel'),
+//         onPressed: () => Navigator.of(context).pop(),
+//       ),
+//       actions: options
+//           .map((option) => DialogAction(option, bloc))
+//           .toList(),
+//     );
+//   }
+// }
 
-class SubmissionsSortDialogAction extends StatelessWidget {
-  final SubmissionSortOption option;
-  final SubredditPageBloc bloc;
-  SubmissionsSortDialogAction(this.option, this.bloc);
+class DialogAction extends StatelessWidget {
+  final ActionModel action;
+  DialogAction({this.action});
 
   @override
   Widget build(BuildContext context) {
     return CupertinoActionSheetAction(
       onPressed: () {
-        bloc.add(UserSelectedSortOption(sort: option));
-
+        action.action();
         Navigator.of(context).pop();
       },
       child: Container(
@@ -186,31 +185,38 @@ class SubmissionsSortDialogAction extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            FaIcon(option.icon),
+            Icon(getIconData(action.icon)),
             Expanded(
               child: Container(
                 padding: EdgeInsets.only(left: 24),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${option.label}'),
+                    Text('${action.description}'),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        if (bloc.state.currentSort == option.type)
-                          FaIcon(
-                            FontAwesomeIcons.check,
-                            size: 12,
-                          ),
-                        if (option.filterable)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: FaIcon(
-                              FontAwesomeIcons.chevronRight,
-                              color: CupertinoColors.inactiveGray,
-                              size: 12,
-                            ),
-                          ),
+                        (action.selected)
+                            ? Icon(getIconData(DragoIcons.selected))
+                            : SizedBox.shrink(),
+                        (action.hasOptions)
+                            ? Icon(getIconData(DragoIcons.chevron_right))
+                            : SizedBox.shrink()
+
+                        // if (bloc.state.currentSort == option.type)
+                        //   FaIcon(
+                        //     FontAwesomeIcons.check,
+                        //     size: 12,
+                        //   ),
+                        // if (option.filterable)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(left: 8.0),
+                        //     child: FaIcon(
+                        //       FontAwesomeIcons.chevronRight,
+                        //       color: CupertinoColors.inactiveGray,
+                        //       size: 12,
+                        //     ),
+                        //   ),
                       ],
                     )
                   ],
@@ -224,45 +230,45 @@ class SubmissionsSortDialogAction extends StatelessWidget {
   }
 }
 
-class FilterDialog extends StatelessWidget {
-  final List<TimeFilterOption> filters;
-  final SubredditPageBloc bloc;
+// class FilterDialog extends StatelessWidget {
+//   final List<TimeFilterOption> filters;
+//   final SubredditPageBloc bloc;
 
-  final SubmissionSortType option;
+//   final SubmissionSortType option;
 
-  FilterDialog(
-      {@required this.option, @required this.bloc, @required this.filters});
+//   FilterDialog(
+//       {@required this.option, @required this.bloc, @required this.filters});
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoActionSheet(
-      title: Text('Sort for by...'),
-      cancelButton: CupertinoActionSheetAction(
-        child: Text('Cancel'),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      actions: filters
-          .map((f) => FilterDialogAction(option, f.filter, bloc))
-          .toList(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return CupertinoActionSheet(
+//       title: Text('Sort for by...'),
+//       cancelButton: CupertinoActionSheetAction(
+//         child: Text('Cancel'),
+//         onPressed: () => Navigator.of(context).pop(),
+//       ),
+//       actions: filters
+//           .map((f) => FilterDialogAction(option, f.filter, bloc))
+//           .toList(),
+//     );
+//   }
+// }
 
-class FilterDialogAction extends StatelessWidget {
-  final SubmissionSortType option;
-  final TimeFilter_ filter;
-  final SubredditPageBloc bloc;
+// class FilterDialogAction extends StatelessWidget {
+//   final SubmissionSortType option;
+//   final TimeFilter_ filter;
+//   final SubredditPageBloc bloc;
 
-  const FilterDialogAction(this.option, this.filter, this.bloc);
+//   const FilterDialogAction(this.option, this.filter, this.bloc);
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoActionSheetAction(
-      child: Text('${SortUtils.timeFilterToString(filter)}'),
-      onPressed: () => {
-        Navigator.of(context).pop(),
-        bloc.add(LoadSubmissions(sort: option, filter: filter)),
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return CupertinoActionSheetAction(
+//       child: Text('${SortUtils.timeFilterToString(filter)}'),
+//       onPressed: () => {
+//         Navigator.of(context).pop(),
+//         bloc.add(LoadSubmissions(sort: option, filter: filter)),
+//       },
+//     );
+//   }
+// }

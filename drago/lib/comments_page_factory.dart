@@ -27,7 +27,7 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SubmissionBloc, SubmissionState>(
-        bloc: widget.submissionBloc,
+        cubit: widget.submissionBloc,
         listener: (listenerState, state) {},
         builder: (builderContext, state) {
           if (state.submission is SelfSubmission)

@@ -10,10 +10,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final RedditService reddit;
   final UserService userService;
 
-  AppBloc({@required this.reddit, this.userService}) : assert(reddit != null);
-
-  @override
-  get initialState => AppUninitialized();
+  AppBloc({@required this.reddit, this.userService})
+      : assert(reddit != null),
+        super(AppUninitialized());
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {

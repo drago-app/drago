@@ -30,13 +30,11 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
       : assert(redditLink != null),
         assert(upvoteOrClear != null),
         assert(downvoteOrClear != null),
-        assert(saveOrUnsave != null) {
+        assert(saveOrUnsave != null),
+        super(SubmissionInitial(
+            submission: Submission.fromRedditLink(link: redditLink))) {
     _getSubmissionFromRedditLink(redditLink);
   }
-
-  @override
-  get initialState => SubmissionInitial(
-      submission: Submission.fromRedditLink(link: redditLink));
 
   _getSubmissionFromRedditLink(RedditLink redditLink) {
     // final Stream<ExpandoMedia> mediaStream = Host.getMedia(redditLink.url);
