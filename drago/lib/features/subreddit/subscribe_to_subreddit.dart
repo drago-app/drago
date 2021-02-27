@@ -12,7 +12,7 @@ class SubscribeToSubreddit
 
   @override
   Future<Either<Failure, Unit>> call(SubscribeToSubredditParams params) async {
-    throw Exception();
+    return Future.value(Left(SomeFailure(message: "Yaya it failed")));
   }
 }
 

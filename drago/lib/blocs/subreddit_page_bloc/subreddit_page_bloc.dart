@@ -6,7 +6,6 @@ import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
 import 'package:drago/icons_enum.dart';
 import 'package:drago/models/sort_option.dart';
-import 'package:draw/draw.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -60,7 +59,28 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
       yield* _mapUserSelectedSortOptionToState(event);
     } else if (event is UserSelectedFilterOption) {
       yield* _mapUserSelectedFilterOptionToState(event);
+    } else if (event is UserTappedActionsButton) {
+      yield* _mapUserTappedActionsButtonToState();
+    } else if (event is UserSelectedAction) {
+      yield* _mapUserSelectedActionToState(event);
     }
+  }
+
+  Stream<SubredditPageState> _mapUserSelectedActionToState(
+      UserSelectedAction event) async* {
+    yield* event.action.action(this);
+  }
+
+  Stream<SubredditPageState> _mapUserTappedActionsButtonToState() async* {
+    final actions = actionService
+        .getActions(state.subreddit)
+        .map((e) => e.toAction(this))
+        .toList(growable: false);
+    yield DisplayingActions(
+        currentSort: state.currentSort,
+        redditLinks: state.redditLinks,
+        subreddit: state.subreddit,
+        actions: actions);
   }
 
   Stream<SubredditPageState> _mapUserSelectedFilterOptionToState(
@@ -190,10 +210,12 @@ class ActionModel extends Equatable {
   List<Object> get props => [action, description];
 }
 
-typedef StateStream<S, B> = Stream<S> Function(B bloc);
+// typedef StateStream<S, B> = Stream<S> Function(B bloc);
+typedef StateStream<S> = Stream<S> Function(dynamic);
 
 class ActionModel2<S, B> extends Equatable {
-  final StateStream<S, B> action;
+  // final StateStream<S, B> action;
+  final StateStream action;
   final String description;
   final DragoIcons icon;
   final bool selected;
@@ -217,6 +239,9 @@ class ActionService {
   }
 }
 
+// abstract class Actionable<S, B extends Bloc> {
+//   ActionModel2<S, B> toAction(B bloc);
+// }
 abstract class Actionable<S, B extends Bloc> {
   ActionModel2<S, B> toAction(B bloc);
 }
@@ -227,19 +252,32 @@ class SubscribeToSubredditAction
 
   SubscribeToSubredditAction(this.usecase) : assert(usecase != null);
 
+  // @override
+  // ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
+  //         SubredditPageBloc bloc) =>
+  //     ActionModel2(
+  //         (SubredditPageBloc bloc) => _states(bloc), null, "Subscribe");
+
   @override
   ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel2(
-          (SubredditPageBloc bloc) => _states(bloc), null, "Subscribe");
+      ActionModel2((bloc) => _states(bloc), null, "Subscribe");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure =
         await usecase(SubscribeToSubredditParams(bloc.subreddit));
     yield* unitOrFailure.fold((failure) async* {
-      print(failure);
+      print(failure.message);
+      yield SubredditPageLoaded(
+          currentSort: bloc.state.currentSort,
+          redditLinks: bloc.state.redditLinks,
+          subreddit: bloc.state.subreddit);
     }, (_) async* {
       print('SUBSCRIBED TO ${bloc.subreddit}');
+      yield SubredditPageLoaded(
+          currentSort: bloc.state.currentSort,
+          redditLinks: bloc.state.redditLinks,
+          subreddit: bloc.state.subreddit);
     });
   }
 }

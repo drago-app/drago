@@ -36,3 +36,12 @@ class UserSelectedFilterOption extends SubredditPageEvent {
         assert(filter != null);
   List<Object> get props => [sort, filter];
 }
+
+class UserTappedActionsButton extends SubredditPageEvent {}
+
+class UserSelectedAction extends SubredditPageEvent {
+  final ActionModel2 action;
+
+  UserSelectedAction(this.action) : assert(action != null);
+  List<Object> get props => [action];
+}

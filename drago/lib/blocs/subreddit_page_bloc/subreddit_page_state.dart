@@ -75,19 +75,15 @@ class DisplayingSortOptions extends SubredditPageState {
   List<Object> get props => [subreddit, currentSort, options, redditLinks];
 }
 
-// class DisplayingFilterOptions extends SubredditPageState {
-//   final String subreddit;
-//   final SubmissionSort currentSort;
-//   final List<TimeFilterOption> options;
-//   final List<RedditLink> redditLinks;
-//   final SubmissionSort sortType;
+class DisplayingActions extends SubredditPageState {
+  final String subreddit;
+  final SubmissionSort currentSort;
+  final List<ActionModel2> actions;
+  final List<RedditLink> redditLinks;
 
-//   DisplayingFilterOptions(
-//       {@required this.subreddit,
-//       this.redditLinks = const [],
-//       @required this.sortType,
-//       @required this.currentSort,
-//       @required this.options});
-//   @override
-//   List<Object> get props => [subreddit, currentSort, options, redditLinks];
-// }
+  DisplayingActions(
+      {@required this.subreddit,
+      this.redditLinks = const [],
+      @required this.currentSort,
+      @required this.actions});
+}

@@ -1,6 +1,5 @@
 import 'package:drago/dialog/dialog_provider.dart';
 import 'package:drago/icons_enum.dart';
-import 'package:drago/models/sort_option.dart';
 import 'package:drago/screens/subreddit/widgets/submission/submission_widget_factory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +9,6 @@ import 'package:drago/blocs/subreddit_page_bloc/subreddit_page.dart';
 import 'package:drago/common/common.dart';
 
 import 'package:drago/main.dart';
-import 'package:drago/screens/subreddit/widgets/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubredditPage extends StatefulWidget {
   SubredditPage();
@@ -47,23 +43,21 @@ class _SubredditPageState extends State<SubredditPage> {
                       .map((a) => DialogAction(action: a))
                       .toList()));
         }
-        // if (state is DisplayingFilterOptions) {
-        //   showCupertinoModalPopup(
-        //       context: listenerContext,
-        //       builder: (context) => FilterDialog(
-        //             bloc: listenerContext.bloc<SubredditPageBloc>(),
-        //             filters: state.options,
-        //             option: state.sortType,
-        //           ));
-        // }
+
+        if (state is DisplayingActions) {
+          showCupertinoModalPopup(
+              context: listenerContext,
+              builder: (context) => CupertinoActionSheet(
+                  actions: state.actions
+                      .map((a) => DialogAction2<SubredditPageBloc>(
+                          bloc: BlocProvider.of<SubredditPageBloc>(
+                              listenerContext),
+                          action: a))
+                      .toList()));
+        }
       }, buildWhen: (prev, current) {
-        return !(current is DisplayingSortOptions);
-        // if (current is DisplayingSortOptions ||
-        //     current is DisplayingFilterOptions) {
-        //   return false;
-        // } else {
-        //   return true;
-        // }
+        return !(current is DisplayingSortOptions ||
+            current is DisplayingActions);
       }, builder: (bloccontext, state) {
         return CupertinoPageScaffold(
           child: _buildBody(state),
@@ -84,7 +78,9 @@ class _SubredditPageState extends State<SubredditPage> {
                   child: Icon(getIconData(state.currentSort.icon)),
                 ),
                 CupertinoButton(
-                    onPressed: () => null,
+                    onPressed: () =>
+                        BlocProvider.of<SubredditPageBloc>(bloccontext)
+                            .add(UserTappedActionsButton()),
                     padding: const EdgeInsets.all(0),
                     child: Icon(CupertinoIcons.ellipsis)),
               ],
@@ -142,6 +138,55 @@ class DialogAction extends StatelessWidget {
     return CupertinoActionSheetAction(
       onPressed: () {
         action.action();
+        Navigator.of(context).pop();
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Icon(getIconData(action.icon)),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(left: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${action.description}'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        (action.selected)
+                            ? Icon(getIconData(DragoIcons.selected))
+                            : SizedBox.shrink(),
+                        (action.hasOptions)
+                            ? Icon(getIconData(DragoIcons.chevron_right))
+                            : SizedBox.shrink()
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DialogAction2<B extends Bloc> extends StatelessWidget {
+  final ActionModel2 action;
+  final B bloc;
+  DialogAction2({this.bloc, this.action}) {
+    print(bloc);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoActionSheetAction(
+      onPressed: () {
+        bloc.add(UserSelectedAction(action));
         Navigator.of(context).pop();
       },
       child: Container(
