@@ -3,8 +3,10 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
+import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
 import 'package:drago/icons_enum.dart';
 import 'package:drago/models/sort_option.dart';
+import 'package:draw/draw.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,20 +17,24 @@ import 'package:rxdart/rxdart.dart';
 class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   final String subreddit;
   final GetRedditLinks getRedditLinks;
+  final ActionService actionService;
   final Map<SubmissionSortType, SubmissionSort> _sortOptions = {
-    SubmissionSortType.hot: _hotSubmissionSort,
-    SubmissionSortType.newest: _newestSubmissionSort,
-    SubmissionSortType.rising: _risingSubmissionSort,
-    SubmissionSortType.top: _topSubmissionSort,
-    SubmissionSortType.controversial: _controversialSubmissionSort,
+    SubmissionSortType.hot: hotSubmissionSort,
+    SubmissionSortType.newest: newestSubmissionSort,
+    SubmissionSortType.rising: risingSubmissionSort,
+    SubmissionSortType.top: topSubmissionSort,
+    SubmissionSortType.controversial: controversialSubmissionSort,
   };
   // final SortOptionsRepository sortOptionsRepository = SortOptionsRepository();
 
-  SubredditPageBloc({@required this.getRedditLinks, @required this.subreddit})
+  SubredditPageBloc(
+      {@required this.getRedditLinks,
+      @required this.subreddit,
+      @required this.actionService})
       : assert(subreddit != null),
         super(
           SubredditPageInitial(
-              subreddit: subreddit, currentSort: _hotSubmissionSort),
+              subreddit: subreddit, currentSort: hotSubmissionSort),
         );
 
   @override
@@ -168,7 +174,7 @@ final createSortAction = (SubredditPageBloc bloc, SubmissionSort sort) =>
       bloc.add(UserSelectedSortOption(sort: sort));
     }, sort.icon, sort.description,
         selected: bloc.state.currentSort.type == sort.type,
-        hasOptions: sort.filtersOptions.fold(() => false, (some) => true));
+        hasOptions: sort.filtersOptions.fold(() => false, (_) => true));
 
 class ActionModel extends Equatable {
   final Function action;
@@ -184,94 +190,56 @@ class ActionModel extends Equatable {
   List<Object> get props => [action, description];
 }
 
-class SubmissionSort extends Equatable {
-  final DragoIcons icon;
-  final String _baseDescription;
-  final SubmissionSortType type;
-  final Option<SubmissionFilter> selectedFilter;
-  final Option<List<SubmissionFilter>> filtersOptions;
+typedef StateStream<S, B> = Stream<S> Function(B bloc);
 
-  String get description {
-    final desc = selectedFilter.fold(() => _baseDescription,
-        (filter) => '$_baseDescription (${filter.description})');
-
-    return desc;
-  }
-
-  const SubmissionSort(
-    this.icon,
-    this._baseDescription,
-    this.type, {
-    this.filtersOptions = const None(),
-    this.selectedFilter = const None(),
-  });
-
-  @override
-  List<Object> get props =>
-      [icon, description, type, filtersOptions, selectedFilter];
-
-  SubmissionSort copyWith({Option<SubmissionFilter> selectedFilter}) {
-    return SubmissionSort(
-      icon,
-      _baseDescription,
-      type,
-      filtersOptions: filtersOptions,
-      selectedFilter: selectedFilter ?? this.selectedFilter,
-    );
-  }
-}
-
-class SubmissionFilter extends Equatable {
-  final DragoIcons icon;
+class ActionModel2<S, B> extends Equatable {
+  final StateStream<S, B> action;
   final String description;
-  final TimeFilter_ type;
+  final DragoIcons icon;
   final bool selected;
+  final bool hasOptions;
 
-  const SubmissionFilter(this.icon, this.description, this.type,
-      {this.selected = false});
+  ActionModel2(this.action, this.icon, this.description,
+      {this.selected = false, this.hasOptions = false});
 
   @override
-  List<Object> get props => [icon, description, type, selected];
+  List<Object> get props => [action, description];
+}
 
-  SubmissionFilter copyWith({selected}) {
-    return SubmissionFilter(icon, description, type,
-        selected: selected ?? this.selected);
+class ActionService {
+  List<Actionable> _actions = [];
+  ActionService();
+
+  List<Actionable> getActions(String subreddit) => _actions;
+  ActionService add(Actionable action) {
+    _actions.add(action);
+    return this;
   }
 }
 
-final _hotSubmissionSort =
-    SubmissionSort(DragoIcons.sort_hot, "Hot", SubmissionSortType.hot);
-final _newestSubmissionSort =
-    SubmissionSort(DragoIcons.sort_newest, "Newest", SubmissionSortType.newest);
-final _risingSubmissionSort =
-    SubmissionSort(DragoIcons.sort_rising, "Rising", SubmissionSortType.rising);
-final _topSubmissionSort = SubmissionSort(
-    DragoIcons.sort_top, "Top", SubmissionSortType.top,
-    filtersOptions: Some(filters.values.toList()));
-final _controversialSubmissionSort = SubmissionSort(
-    DragoIcons.sort_controversial,
-    "Controversial",
-    SubmissionSortType.controversial,
-    filtersOptions: Some(filters.values.toList()));
+abstract class Actionable<S, B extends Bloc> {
+  ActionModel2<S, B> toAction(B bloc);
+}
 
-const filters = {
-  TimeFilter_.hour: hourFilter,
-  TimeFilter_.day: dayFilter,
-  TimeFilter_.week: weekFilter,
-  TimeFilter_.month: monthFilter,
-  TimeFilter_.year: yearFilter,
-  TimeFilter_.all: allFilter
-};
+class SubscribeToSubredditAction
+    implements Actionable<SubredditPageState, SubredditPageBloc> {
+  SubscribeToSubreddit usecase;
 
-const hourFilter = const SubmissionFilter(
-    DragoIcons.time_filter_hour, 'Hour', TimeFilter_.hour);
-const dayFilter =
-    const SubmissionFilter(DragoIcons.time_filter_day, 'Day', TimeFilter_.day);
-const weekFilter = const SubmissionFilter(
-    DragoIcons.time_filter_week, 'Week', TimeFilter_.week);
-const monthFilter = const SubmissionFilter(
-    DragoIcons.time_filter_month, 'Month', TimeFilter_.month);
-const yearFilter = const SubmissionFilter(
-    DragoIcons.time_filter_year, 'Year', TimeFilter_.year);
-const allFilter =
-    const SubmissionFilter(DragoIcons.time_filter_all, 'All', TimeFilter_.all);
+  SubscribeToSubredditAction(this.usecase) : assert(usecase != null);
+
+  @override
+  ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
+          SubredditPageBloc bloc) =>
+      ActionModel2(
+          (SubredditPageBloc bloc) => _states(bloc), null, "Subscribe");
+
+  Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
+    final unitOrFailure =
+        await usecase(SubscribeToSubredditParams(bloc.subreddit));
+    yield* unitOrFailure.fold((failure) async* {
+      print(failure);
+    }, (_) async* {
+      print('SUBSCRIBED TO ${bloc.subreddit}');
+    });
+  }
+}

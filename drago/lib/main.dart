@@ -1,6 +1,7 @@
 import 'package:drago/draw_reddit_adapter.dart';
 import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/comment/get_more_comments.dart';
+import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
 import 'package:drago/theme.dart';
 import 'package:drago/user_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,7 +53,12 @@ final SaveOrUnsaveSubmission saveOrUnsave =
 final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
 final GetComments getComments = GetComments(reddit: _reddit);
 final GetMoreComments getMoreComments = GetMoreComments(reddit: _reddit);
-
+final SubscribeToSubreddit subscribeToSubreddit =
+    SubscribeToSubreddit(reddit: _reddit);
+final SubscribeToSubredditAction subscribeToSubredditAction =
+    SubscribeToSubredditAction(subscribeToSubreddit);
+final ActionService actionService = ActionService()
+  ..add(subscribeToSubredditAction);
 final DialogService _dialogService = DialogService();
 
 void main() => runApp(MyApp());
@@ -289,7 +295,9 @@ class RouteGenerator {
         return CupertinoPageRoute(
           builder: (context) => BlocProvider<SubredditPageBloc>(
             create: (context) => SubredditPageBloc(
-                getRedditLinks: getRedditLinks, subreddit: args as String)
+                getRedditLinks: getRedditLinks,
+                subreddit: args as String,
+                actionService: actionService)
               ..add(LoadSubmissions()),
             child: SubredditPage(),
           ),

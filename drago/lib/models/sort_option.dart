@@ -1,158 +1,93 @@
+import 'package:dartz/dartz.dart';
+import 'package:drago/icons_enum.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum SubmissionSortType { hot, top, controversial, newest, rising }
 enum TimeFilter_ { all, day, hour, month, week, year }
 
-// class TimeFilterOption extends Equatable {
-//   final TimeFilter_ filter;
-//   final IconData iconData;
-//   final String label;
+class SubmissionSort extends Equatable {
+  final DragoIcons icon;
+  final String _baseDescription;
+  final SubmissionSortType type;
+  final Option<SubmissionFilter> selectedFilter;
+  final Option<List<SubmissionFilter>> filtersOptions;
 
-//   TimeFilterOption(this.filter, this.iconData, this.label);
+  String get description => selectedFilter.fold(() => _baseDescription,
+      (filter) => '$_baseDescription (${filter.description})');
 
-//   factory TimeFilterOption.factory(TimeFilter_ filter) {
-//     switch (filter) {
-//       case TimeFilter_.day:
-//         return TimeFilterOption(filter, FontAwesomeIcons.clock,
-//             SortUtils.timeFilterToString(filter));
+  const SubmissionSort(
+    this.icon,
+    this._baseDescription,
+    this.type, {
+    this.filtersOptions = const None(),
+    this.selectedFilter = const None(),
+  });
 
-//       case TimeFilter_.hour:
-//         return TimeFilterOption(filter, FontAwesomeIcons.clock,
-//             SortUtils.timeFilterToString(filter));
+  @override
+  List<Object> get props => [type];
 
-//       case TimeFilter_.month:
-//         return TimeFilterOption(filter, FontAwesomeIcons.clock,
-//             SortUtils.timeFilterToString(filter));
+  SubmissionSort copyWith({Option<SubmissionFilter> selectedFilter}) {
+    return SubmissionSort(
+      icon,
+      _baseDescription,
+      type,
+      filtersOptions: filtersOptions,
+      selectedFilter: selectedFilter ?? this.selectedFilter,
+    );
+  }
+}
 
-//       case TimeFilter_.week:
-//         return TimeFilterOption(filter, FontAwesomeIcons.clock,
-//             SortUtils.timeFilterToString(filter));
+class SubmissionFilter extends Equatable {
+  final DragoIcons icon;
+  final String description;
+  final TimeFilter_ type;
+  final bool selected;
 
-//       case TimeFilter_.year:
-//         return TimeFilterOption(filter, FontAwesomeIcons.clock,
-//             SortUtils.timeFilterToString(filter));
-//       case TimeFilter_.all:
-//       default:
-//         return TimeFilterOption(filter, FontAwesomeIcons.clock,
-//             SortUtils.timeFilterToString(filter));
-//     }
-//   }
+  const SubmissionFilter(this.icon, this.description, this.type,
+      {this.selected = false});
 
-//   @override
-//   List<Object> get props => [filter, iconData, label];
-// }
+  @override
+  List<Object> get props => [type];
 
-// class SortUtils {
-//   static String timeFilterToString(TimeFilter_ filter) {
-//     switch (filter) {
-//       case TimeFilter_.all:
-//         return 'All';
-//       case TimeFilter_.day:
-//         return 'Day';
-//       case TimeFilter_.hour:
-//         return 'Hour';
-//       case TimeFilter_.month:
-//         return 'Month';
-//       case TimeFilter_.week:
-//         return 'Week';
-//       case TimeFilter_.year:
-//         return 'Year';
-//       default:
-//         return '???';
-//     }
-//   }
+  SubmissionFilter copyWith({selected}) {
+    return SubmissionFilter(icon, description, type,
+        selected: selected ?? this.selected);
+  }
+}
 
-//   static isFilterable(SubmissionSortType type) {
-//     switch (type) {
-//       case SubmissionSortType.top:
-//       case SubmissionSortType.controversial:
-//         {
-//           return true;
-//         }
-//       default:
-//         return false;
-//     }
-//   }
-// }
+final hotSubmissionSort =
+    SubmissionSort(DragoIcons.sort_hot, "Hot", SubmissionSortType.hot);
+final newestSubmissionSort =
+    SubmissionSort(DragoIcons.sort_newest, "Newest", SubmissionSortType.newest);
+final risingSubmissionSort =
+    SubmissionSort(DragoIcons.sort_rising, "Rising", SubmissionSortType.rising);
+final topSubmissionSort = SubmissionSort(
+    DragoIcons.sort_top, "Top", SubmissionSortType.top,
+    filtersOptions: Some(filters.values.toList()));
+final controversialSubmissionSort = SubmissionSort(
+    DragoIcons.sort_controversial,
+    "Controversial",
+    SubmissionSortType.controversial,
+    filtersOptions: Some(filters.values.toList()));
 
-// class SubmissionSortOption extends Equatable {
-//   final IconData icon;
-//   final bool selected;
-//   final SubmissionSortType type;
-//   final String label;
-//   final bool filterable;
+const filters = {
+  TimeFilter_.hour: hourFilter,
+  TimeFilter_.day: dayFilter,
+  TimeFilter_.week: weekFilter,
+  TimeFilter_.month: monthFilter,
+  TimeFilter_.year: yearFilter,
+  TimeFilter_.all: allFilter
+};
 
-//   SubmissionSortOption(
-//       {@required this.icon,
-//       @required this.selected,
-//       @required this.type,
-//       @required this.label,
-//       this.filterable = false});
-
-//   factory SubmissionSortOption.factory({@required type, selected = false}) {
-//     switch (type) {
-//       case SubmissionSortType.hot:
-//         {
-//           return SubmissionSortOption(
-//               icon: FontAwesomeIcons.fireAlt,
-//               selected: selected,
-//               label: 'Hot',
-//               type: type);
-//         }
-//       case SubmissionSortType.top:
-//         {
-//           return SubmissionSortOption(
-//               filterable: true,
-//               icon: FontAwesomeIcons.thumbsUp,
-//               selected: selected,
-//               label: 'Top',
-//               type: type);
-//         }
-//       case SubmissionSortType.rising:
-//         {
-//           return SubmissionSortOption(
-//               icon: FontAwesomeIcons.chartLine,
-//               selected: selected,
-//               label: 'Rising',
-//               type: type);
-//         }
-//       case SubmissionSortType.controversial:
-//         {
-//           return SubmissionSortOption(
-//               filterable: true,
-//               icon: FontAwesomeIcons.bomb,
-//               selected: selected,
-//               label: 'Controversial',
-//               type: type);
-//         }
-//       case SubmissionSortType.newest:
-//         {
-//           return SubmissionSortOption(
-//               icon: FontAwesomeIcons.clock,
-//               selected: selected,
-//               label: 'Newest',
-//               type: type);
-//         }
-//       default:
-//         {
-//           return SubmissionSortOption(
-//               icon: FontAwesomeIcons.fireAlt,
-//               selected: selected,
-//               label: 'Default',
-//               type: type);
-//         }
-//     }
-//   }
-
-//   @override
-//   List<Object> get props => [icon, selected, type, label];
-//   SubmissionSortOption copyWith({selected}) {
-//     return SubmissionSortOption(
-//         icon: this.icon,
-//         type: this.type,
-//         label: this.label,
-//         selected: selected ?? this.selected);
-//   }
-// }
+const hourFilter = const SubmissionFilter(
+    DragoIcons.time_filter_hour, 'Hour', TimeFilter_.hour);
+const dayFilter =
+    const SubmissionFilter(DragoIcons.time_filter_day, 'Day', TimeFilter_.day);
+const weekFilter = const SubmissionFilter(
+    DragoIcons.time_filter_week, 'Week', TimeFilter_.week);
+const monthFilter = const SubmissionFilter(
+    DragoIcons.time_filter_month, 'Month', TimeFilter_.month);
+const yearFilter = const SubmissionFilter(
+    DragoIcons.time_filter_year, 'Year', TimeFilter_.year);
+const allFilter =
+    const SubmissionFilter(DragoIcons.time_filter_all, 'All', TimeFilter_.all);
