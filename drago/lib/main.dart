@@ -1,7 +1,9 @@
+import 'package:dartz/dartz.dart';
 import 'package:drago/draw_reddit_adapter.dart';
 import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/comment/get_more_comments.dart';
 import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
+import 'package:drago/models/sort_option.dart';
 import 'package:drago/theme.dart';
 import 'package:drago/user_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,6 +61,21 @@ final SubscribeToSubredditAction subscribeToSubredditAction =
     SubscribeToSubredditAction(subscribeToSubreddit);
 final ActionService actionService = ActionService()
   ..add(subscribeToSubredditAction);
+
+List<ActionableFn> filterFns = filters
+    .map((filter) => (sort) =>
+        SubmissionFilterAction(getRedditLinks, sort, filter))
+    .toList(growable: false);
+
+final ActionService<SortSubmissionsAction> sortActionService = ActionService()
+  ..add(SortSubmissionsAction(getRedditLinks, hotSubmissionSort))
+  ..add(SortSubmissionsAction(getRedditLinks, newestSubmissionSort))
+  ..add(SortSubmissionsAction(getRedditLinks, controversialSubmissionSort,
+      filterFnsOption: Some(filterFns)))
+  ..add(SortSubmissionsAction(getRedditLinks, topSubmissionSort,
+      filterFnsOption: Some(filterFns)))
+  ..add(SortSubmissionsAction(getRedditLinks, risingSubmissionSort));
+
 final DialogService _dialogService = DialogService();
 
 void main() => runApp(MyApp());
@@ -297,7 +314,8 @@ class RouteGenerator {
             create: (context) => SubredditPageBloc(
                 getRedditLinks: getRedditLinks,
                 subreddit: args as String,
-                actionService: actionService)
+                actionService: actionService,
+                sortActionsService: sortActionService)
               ..add(LoadSubmissions()),
             child: SubredditPage(),
           ),

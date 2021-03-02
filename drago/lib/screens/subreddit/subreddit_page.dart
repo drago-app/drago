@@ -37,11 +37,15 @@ class _SubredditPageState extends State<SubredditPage> {
           listener: (listenerContext, state) {
         if (state is DisplayingSortOptions) {
           showCupertinoModalPopup(
-              context: listenerContext,
-              builder: (context) => CupertinoActionSheet(
-                  actions: state.options
-                      .map((a) => DialogAction(action: a))
-                      .toList()));
+            context: listenerContext,
+            builder: (context) => CupertinoActionSheet(
+                actions: state.options
+                    .map((a) => DialogAction2<SubredditPageBloc>(
+                        bloc:
+                            BlocProvider.of<SubredditPageBloc>(listenerContext),
+                        action: a))
+                    .toList()),
+          );
         }
 
         if (state is DisplayingActions) {
@@ -129,51 +133,51 @@ class _SubredditPageState extends State<SubredditPage> {
   }
 }
 
-class DialogAction extends StatelessWidget {
-  final ActionModel action;
-  DialogAction({this.action});
+// class DialogAction extends StatelessWidget {
+//   final ActionModel action;
+//   DialogAction({this.action});
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoActionSheetAction(
-      onPressed: () {
-        action.action();
-        Navigator.of(context).pop();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Icon(getIconData(action.icon)),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(left: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${action.description}'),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        (action.selected)
-                            ? Icon(getIconData(DragoIcons.selected))
-                            : SizedBox.shrink(),
-                        (action.hasOptions)
-                            ? Icon(getIconData(DragoIcons.chevron_right))
-                            : SizedBox.shrink()
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return CupertinoActionSheetAction(
+//       onPressed: () {
+//         action.action();
+//         Navigator.of(context).pop();
+//       },
+//       child: Container(
+//         padding: EdgeInsets.symmetric(horizontal: 16),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.max,
+//           children: [
+//             Icon(getIconData(action.icon)),
+//             Expanded(
+//               child: Container(
+//                 padding: EdgeInsets.only(left: 24),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Text('${action.description}'),
+//                     Row(
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: <Widget>[
+//                         (action.selected)
+//                             ? Icon(getIconData(DragoIcons.selected))
+//                             : SizedBox.shrink(),
+//                         (action.hasOptions)
+//                             ? Icon(getIconData(DragoIcons.chevron_right))
+//                             : SizedBox.shrink()
+//                       ],
+//                     )
+//                   ],
+//                 ),
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class DialogAction2<B extends Bloc> extends StatelessWidget {
   final ActionModel2 action;
@@ -208,9 +212,11 @@ class DialogAction2<B extends Bloc> extends StatelessWidget {
                         (action.selected)
                             ? Icon(getIconData(DragoIcons.selected))
                             : SizedBox.shrink(),
-                        (action.hasOptions)
-                            ? Icon(getIconData(DragoIcons.chevron_right))
-                            : SizedBox.shrink()
+                        action.options.fold(() => SizedBox.shrink(),
+                            (_) => Icon(getIconData(DragoIcons.chevron_right)))
+                        // (action.options)
+                        //     ? Icon(getIconData(DragoIcons.chevron_right))
+                        //     : SizedBox.shrink()
                       ],
                     )
                   ],

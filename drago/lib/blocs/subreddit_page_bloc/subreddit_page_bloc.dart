@@ -5,6 +5,7 @@ import 'package:drago/core/error/failures.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
 import 'package:drago/icons_enum.dart';
+import 'package:drago/main.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   final String subreddit;
   final GetRedditLinks getRedditLinks;
   final ActionService actionService;
+  final ActionService<SortSubmissionsAction> sortActionsService;
   final Map<SubmissionSortType, SubmissionSort> _sortOptions = {
     SubmissionSortType.hot: hotSubmissionSort,
     SubmissionSortType.newest: newestSubmissionSort,
@@ -24,12 +26,12 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
     SubmissionSortType.top: topSubmissionSort,
     SubmissionSortType.controversial: controversialSubmissionSort,
   };
-  // final SortOptionsRepository sortOptionsRepository = SortOptionsRepository();
 
   SubredditPageBloc(
       {@required this.getRedditLinks,
       @required this.subreddit,
-      @required this.actionService})
+      @required this.actionService,
+      @required this.sortActionsService})
       : assert(subreddit != null),
         super(
           SubredditPageInitial(
@@ -55,11 +57,14 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
       yield* _mapLoadMoreToState();
     } else if (event is UserTappedSortButton) {
       yield* _mapUserTappedSortButtonToState();
-    } else if (event is UserSelectedSortOption) {
-      yield* _mapUserSelectedSortOptionToState(event);
-    } else if (event is UserSelectedFilterOption) {
-      yield* _mapUserSelectedFilterOptionToState(event);
-    } else if (event is UserTappedActionsButton) {
+    }
+    // else if (event is UserSelectedSortOption) {
+    //   yield* _mapUserSelectedSortOptionToState(event);
+    // }
+    // else if (event is UserSelectedFilterOption) {
+    //   yield* _mapUserSelectedFilterOptionToState(event);
+    // }
+    else if (event is UserTappedActionsButton) {
       yield* _mapUserTappedActionsButtonToState();
     } else if (event is UserSelectedAction) {
       yield* _mapUserSelectedActionToState(event);
@@ -83,60 +88,69 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
         actions: actions);
   }
 
-  Stream<SubredditPageState> _mapUserSelectedFilterOptionToState(
-      UserSelectedFilterOption event) async* {
-    final newSort = event.sort.copyWith(selectedFilter: Some(event.filter));
-    yield SubredditPageLoading(
-        subreddit: state.subreddit, currentSort: newSort);
-    final failureOrSubmissions = await getRedditLinks(GetRedditLinksParams(
-        subreddit: this.subreddit,
-        filter: event.filter.type,
-        sort: event.sort.type));
+  // Stream<SubredditPageState> _mapUserSelectedFilterOptionToState(
+  //     UserSelectedFilterOption event) async* {
+  //   final newSort = event.sort.copyWith(selectedFilter: Some(event.filter));
+  //   yield SubredditPageLoading(
+  //       subreddit: state.subreddit, currentSort: newSort);
+  //   final failureOrSubmissions = await getRedditLinks(GetRedditLinksParams(
+  //       subreddit: this.subreddit,
+  //       filter: event.filter.type,
+  //       sort: event.sort.type));
 
-    yield* failureOrSubmissions.fold(
-      (left) async* {
-        print(left);
-      },
-      (redditLinks) async* {
-        yield SubredditPageLoaded(
-            subreddit: this.subreddit,
-            redditLinks: redditLinks,
-            currentSort: newSort);
-      },
-    );
-  }
+  //   yield* failureOrSubmissions.fold(
+  //     (left) async* {
+  //       print(left);
+  //     },
+  //     (redditLinks) async* {
+  //       yield SubredditPageLoaded(
+  //           subreddit: this.subreddit,
+  //           redditLinks: redditLinks,
+  //           currentSort: newSort);
+  //     },
+  //   );
+  // }
 
-  Stream<SubredditPageState> _mapUserSelectedSortOptionToState(
-      UserSelectedSortOption event) async* {
-    yield* event.sort.filtersOptions.fold(() async* {
-      yield* _mapLoadSubmissionsToState(
-          event: LoadSubmissions(sort: event.sort.type));
-    }, (options) async* {
-      await Future.delayed(
-        Duration(milliseconds: 200),
-      );
+  // Stream<SubredditPageState> _mapUserSelectedSortOptionToState(
+  //     UserSelectedSortOption event) async* {
+  //   yield* event.sort.filtersOptions.fold(() async* {
+  //     yield* _mapLoadSubmissionsToState(
+  //         event: LoadSubmissions(sort: event.sort.type));
+  //   }, (options) async* {
+  //     await Future.delayed(
+  //       Duration(milliseconds: 200),
+  //     );
 
-      yield DisplayingSortOptions(
-          redditLinks: state.redditLinks,
-          currentSort: state.currentSort,
-          subreddit: state.subreddit,
-          options: options
-              .map<ActionModel>(
-                  (type) => createFilterAction(this, event.sort, type))
-              .toList(growable: false));
-    });
-  }
+  //     yield DisplayingSortOptions(
+  //         redditLinks: state.redditLinks,
+  //         currentSort: state.currentSort,
+  //         subreddit: state.subreddit,
+  //         options: options
+  //             .map<ActionModel>(
+  //                 (type) => createFilterAction(this, event.sort, type))
+  //             .toList(growable: false));
+  //   });
+  // }
 
   Stream<SubredditPageState> _mapUserTappedSortButtonToState() async* {
     yield DisplayingSortOptions(
-        redditLinks: state.redditLinks,
-        currentSort: state.currentSort,
-        subreddit: state.subreddit,
-        options: _sortOptions.values
-            .map((SubmissionSort sort) =>
-                sort.type == state.currentSort.type ? state.currentSort : sort)
-            .map((SubmissionSort sort) => createSortAction(this, sort))
-            .toList(growable: false));
+      redditLinks: state.redditLinks,
+      currentSort: state.currentSort,
+      subreddit: state.subreddit,
+      options: sortActionsService
+          .getActions(state.subreddit)
+          .map((a) => a.toAction(this))
+          .toList(),
+    );
+    // yield DisplayingSortOptions(
+    //     redditLinks: state.redditLinks,
+    //     currentSort: state.currentSort,
+    //     subreddit: state.subreddit,
+    //     options: _sortOptions.values
+    //         .map((SubmissionSort sort) =>
+    //             sort.type == state.currentSort.type ? state.currentSort : sort)
+    //         .map((SubmissionSort sort) => createSortAction(this, sort))
+    //         .toList(growable: false));
   }
 
   Stream<SubredditPageState> _mapLoadSubmissionsToState(
@@ -155,7 +169,8 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
       (submissions) async* {
         yield SubredditPageLoaded(
             subreddit: this.subreddit,
-            redditLinks: (failureOrSubmissions as Right).value,
+            redditLinks: (failureOrSubmissions as Right)
+                .value, // just use 'submissions'???
             currentSort: _sortOptions[event.sort]);
       },
     );
@@ -179,84 +194,57 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   }
 }
 
-final createFilterAction =
-    (SubredditPageBloc bloc, SubmissionSort sort, SubmissionFilter filter) =>
-        ActionModel(
-          () {
-            bloc.add(UserSelectedFilterOption(sort: sort, filter: filter));
-          },
-          filter.icon,
-          filter.description,
-        );
+// class ActionModel extends Equatable {
+//   final Function action;
+//   final String description;
+//   final DragoIcons icon;
+//   final bool selected;
+//   final bool hasOptions;
 
-final createSortAction = (SubredditPageBloc bloc, SubmissionSort sort) =>
-    ActionModel(() {
-      bloc.add(UserSelectedSortOption(sort: sort));
-    }, sort.icon, sort.description,
-        selected: bloc.state.currentSort.type == sort.type,
-        hasOptions: sort.filtersOptions.fold(() => false, (_) => true));
+//   ActionModel(this.action, this.icon, this.description,
+//       {this.selected = false, this.hasOptions = false});
 
-class ActionModel extends Equatable {
-  final Function action;
-  final String description;
-  final DragoIcons icon;
-  final bool selected;
-  final bool hasOptions;
+//   @override
+//   List<Object> get props => [action, description];
+// }
 
-  ActionModel(this.action, this.icon, this.description,
-      {this.selected = false, this.hasOptions = false});
+class ActionService<A extends Actionable> {
+  List<A> _actions = [];
 
-  @override
-  List<Object> get props => [action, description];
-}
-
-// typedef StateStream<S, B> = Stream<S> Function(B bloc);
-typedef StateStream<S> = Stream<S> Function(dynamic);
-
-class ActionModel2<S, B> extends Equatable {
-  // final StateStream<S, B> action;
-  final StateStream action;
-  final String description;
-  final DragoIcons icon;
-  final bool selected;
-  final bool hasOptions;
-
-  ActionModel2(this.action, this.icon, this.description,
-      {this.selected = false, this.hasOptions = false});
-
-  @override
-  List<Object> get props => [action, description];
-}
-
-class ActionService {
-  List<Actionable> _actions = [];
-  ActionService();
-
-  List<Actionable> getActions(String subreddit) => _actions;
+  List<A> getActions(String subreddit) => _actions;
   ActionService add(Actionable action) {
     _actions.add(action);
     return this;
   }
 }
 
-// abstract class Actionable<S, B extends Bloc> {
-//   ActionModel2<S, B> toAction(B bloc);
-// }
+typedef StateStream<S> = Stream<S> Function(dynamic);
+
+class ActionModel2<S, B> extends Equatable {
+  final StateStream action;
+  final String description;
+  final DragoIcons icon;
+  final bool selected;
+  final Option<List<ActionableFn>> options;
+
+  ActionModel2(this.action, this.icon, this.description,
+      {this.selected = false, this.options = const None()});
+
+  @override
+  List<Object> get props => [action, description];
+}
+
 abstract class Actionable<S, B extends Bloc> {
   ActionModel2<S, B> toAction(B bloc);
 }
+
+typedef ActionableFn = Actionable Function(dynamic);
 
 class SubscribeToSubredditAction
     implements Actionable<SubredditPageState, SubredditPageBloc> {
   SubscribeToSubreddit usecase;
 
   SubscribeToSubredditAction(this.usecase) : assert(usecase != null);
-
-  // @override
-  // ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
-  //         SubredditPageBloc bloc) =>
-  //     ActionModel2(
-  //         (SubredditPageBloc bloc) => _states(bloc), null, "Subscribe");
 
   @override
   ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
@@ -268,16 +256,113 @@ class SubscribeToSubredditAction
         await usecase(SubscribeToSubredditParams(bloc.subreddit));
     yield* unitOrFailure.fold((failure) async* {
       print(failure.message);
-      yield SubredditPageLoaded(
-          currentSort: bloc.state.currentSort,
-          redditLinks: bloc.state.redditLinks,
-          subreddit: bloc.state.subreddit);
     }, (_) async* {
       print('SUBSCRIBED TO ${bloc.subreddit}');
       yield SubredditPageLoaded(
           currentSort: bloc.state.currentSort,
           redditLinks: bloc.state.redditLinks,
           subreddit: bloc.state.subreddit);
+    });
+  }
+}
+
+class SortSubmissionsAction
+    implements Actionable<SubredditPageState, SubredditPageBloc> {
+  GetRedditLinks usecase;
+
+  SubmissionSort sort;
+  Option<List<ActionableFn>> filterFnsOption;
+
+  SortSubmissionsAction(
+    this.usecase,
+    this.sort, {
+    this.filterFnsOption = const None(),
+  })  : assert(usecase != null),
+        assert(sort != null);
+
+  @override
+  ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
+          SubredditPageBloc bloc) =>
+      ActionModel2(
+          (bloc) => _states(bloc),
+          sort.icon,
+          (bloc.state.currentSort == sort)
+              ? bloc.state.currentSort.description
+              : sort.description,
+          options: filterFnsOption,
+          selected: bloc.state.currentSort == sort);
+
+  Stream<SubredditPageState> _states(bloc) async* {
+    yield* filterFnsOption.fold(() async* {
+      yield SubredditPageLoading(
+          currentSort: sort, subreddit: bloc.state.subreddit);
+      final params = GetRedditLinksParams(
+          subreddit: bloc.state.subreddit, sort: sort.type);
+
+      final redditLinksOrFailure = await usecase(params);
+
+      yield* redditLinksOrFailure.fold((failure) async* {
+        print(failure);
+      }, (redditLinks) async* {
+        yield SubredditPageLoaded(
+            redditLinks: redditLinks,
+            subreddit: bloc.state.subreddit,
+            currentSort: sort);
+      });
+    }, (filterFns) async* {
+      await Future.delayed(Duration(milliseconds: 200));
+      yield DisplayingActions(
+          currentSort: bloc.state.currentSort,
+          subreddit: bloc.state.subreddit,
+          actions: filterFns
+              .map((fn) => fn(sort))
+              .map((actionable) => actionable.toAction(bloc))
+              .toList());
+    });
+  }
+}
+
+class SubmissionFilterAction implements Actionable {
+  GetRedditLinks usecase;
+  SubmissionSort sort;
+  SubmissionFilter filter;
+
+  SubmissionFilterAction(this.usecase, this.sort, this.filter)
+      : assert(usecase != null),
+        assert(sort != null),
+        assert(filter != null);
+
+  @override
+  ActionModel2<SubredditPageState, SubredditPageBloc> toAction(bloc) =>
+      ActionModel2(
+        (bloc) => _states(bloc),
+        filter.icon,
+        filter.description,
+        selected: bloc.state.currentSort.selectedFilter
+            .fold(() => false, (selectedFilter) => selectedFilter == filter),
+      );
+
+  Stream<SubredditPageState> _states(bloc) async* {
+    yield SubredditPageLoading(
+        subreddit: bloc.state.subreddit,
+        currentSort: sort.copyWith(selectedFilter: Some(filter)));
+
+    final redditLinksOrFailure = await usecase(
+      GetRedditLinksParams(
+        subreddit: bloc.state.subreddit,
+        sort: sort.type,
+        filter: filter.type,
+      ),
+    );
+
+    yield* redditLinksOrFailure.fold((failure) async* {
+      print('${failure.message}');
+    }, (redditLinks) async* {
+      yield SubredditPageLoaded(
+        currentSort: bloc.state.currentSort,
+        redditLinks: redditLinks,
+        subreddit: bloc.state.subreddit,
+      );
     });
   }
 }

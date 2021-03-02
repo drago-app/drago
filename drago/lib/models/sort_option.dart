@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:drago/blocs/subreddit_page_bloc/subreddit_page.dart';
 import 'package:drago/icons_enum.dart';
 import 'package:equatable/equatable.dart';
 
@@ -10,7 +11,7 @@ class SubmissionSort extends Equatable {
   final String _baseDescription;
   final SubmissionSortType type;
   final Option<SubmissionFilter> selectedFilter;
-  final Option<List<SubmissionFilter>> filtersOptions;
+  // final Option<List<SubmissionFilter>> filtersOptions;
 
   String get description => selectedFilter.fold(() => _baseDescription,
       (filter) => '$_baseDescription (${filter.description})');
@@ -19,7 +20,6 @@ class SubmissionSort extends Equatable {
     this.icon,
     this._baseDescription,
     this.type, {
-    this.filtersOptions = const None(),
     this.selectedFilter = const None(),
   });
 
@@ -31,7 +31,6 @@ class SubmissionSort extends Equatable {
       icon,
       _baseDescription,
       type,
-      filtersOptions: filtersOptions,
       selectedFilter: selectedFilter ?? this.selectedFilter,
     );
   }
@@ -62,22 +61,34 @@ final newestSubmissionSort =
 final risingSubmissionSort =
     SubmissionSort(DragoIcons.sort_rising, "Rising", SubmissionSortType.rising);
 final topSubmissionSort = SubmissionSort(
-    DragoIcons.sort_top, "Top", SubmissionSortType.top,
-    filtersOptions: Some(filters.values.toList()));
+  DragoIcons.sort_top,
+  "Top",
+  SubmissionSortType.top,
+  // filtersOptions: Some(filters.values.toList()),
+);
 final controversialSubmissionSort = SubmissionSort(
-    DragoIcons.sort_controversial,
-    "Controversial",
-    SubmissionSortType.controversial,
-    filtersOptions: Some(filters.values.toList()));
+  DragoIcons.sort_controversial,
+  "Controversial",
+  SubmissionSortType.controversial,
+  // filtersOptions: Some(filters.values.toList()),
+);
+const filters = [
+  hourFilter,
+  dayFilter,
+  weekFilter,
+  monthFilter,
+  yearFilter,
+  allFilter
+];
 
-const filters = {
-  TimeFilter_.hour: hourFilter,
-  TimeFilter_.day: dayFilter,
-  TimeFilter_.week: weekFilter,
-  TimeFilter_.month: monthFilter,
-  TimeFilter_.year: yearFilter,
-  TimeFilter_.all: allFilter
-};
+// const filters = {
+//   TimeFilter_.hour: hourFilter,
+//   TimeFilter_.day: dayFilter,
+//   TimeFilter_.week: weekFilter,
+//   TimeFilter_.month: monthFilter,
+//   TimeFilter_.year: yearFilter,
+//   TimeFilter_.all: allFilter
+// };
 
 const hourFilter = const SubmissionFilter(
     DragoIcons.time_filter_hour, 'Hour', TimeFilter_.hour);

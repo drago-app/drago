@@ -63,7 +63,7 @@ class SubredditPageLoaded extends SubredditPageState {
 class DisplayingSortOptions extends SubredditPageState {
   final String subreddit;
   final SubmissionSort currentSort;
-  final List<ActionModel> options;
+  final List<ActionModel2> options;
   final List<RedditLink> redditLinks;
 
   DisplayingSortOptions(

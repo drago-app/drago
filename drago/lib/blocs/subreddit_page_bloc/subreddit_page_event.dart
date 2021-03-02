@@ -27,15 +27,15 @@ class UserSelectedSortOption extends SubredditPageEvent {
   List<Object> get props => [sort];
 }
 
-class UserSelectedFilterOption extends SubredditPageEvent {
-  final SubmissionSort sort;
-  final SubmissionFilter filter;
+// class UserSelectedFilterOption extends SubredditPageEvent {
+//   final SubmissionSort sort;
+//   final SubmissionFilter filter;
 
-  UserSelectedFilterOption({@required this.sort, @required this.filter})
-      : assert(sort != null),
-        assert(filter != null);
-  List<Object> get props => [sort, filter];
-}
+//   UserSelectedFilterOption({@required this.sort, @required this.filter})
+//       : assert(sort != null),
+//         assert(filter != null);
+//   List<Object> get props => [sort, filter];
+// }
 
 class UserTappedActionsButton extends SubredditPageEvent {}
 
