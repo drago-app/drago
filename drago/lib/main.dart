@@ -63,8 +63,8 @@ final ActionService actionService = ActionService()
   ..add(subscribeToSubredditAction);
 
 List<ActionableFn> filterFns = filters
-    .map((filter) => (sort) =>
-        SubmissionFilterAction(getRedditLinks, sort, filter))
+    .map((filter) =>
+        (sort) => SubmissionFilterAction(getRedditLinks, sort, filter))
     .toList(growable: false);
 
 final ActionService<SortSubmissionsAction> sortActionService = ActionService()

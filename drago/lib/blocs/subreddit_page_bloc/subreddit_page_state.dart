@@ -60,25 +60,25 @@ class SubredditPageLoaded extends SubredditPageState {
   List<Object> get props => [redditLinks, subreddit, currentSort];
 }
 
-class DisplayingSortOptions extends SubredditPageState {
-  final String subreddit;
-  final SubmissionSort currentSort;
-  final List<ActionModel2> options;
-  final List<RedditLink> redditLinks;
+// class DisplayingSortOptions extends SubredditPageState {
+//   final String subreddit;
+//   final SubmissionSort currentSort;
+//   final List<ActionModel> options;
+//   final List<RedditLink> redditLinks;
 
-  DisplayingSortOptions(
-      {@required this.subreddit,
-      this.redditLinks = const [],
-      @required this.currentSort,
-      @required this.options});
-  @override
-  List<Object> get props => [subreddit, currentSort, options, redditLinks];
-}
+//   DisplayingSortOptions(
+//       {@required this.subreddit,
+//       this.redditLinks = const [],
+//       @required this.currentSort,
+//       @required this.options});
+//   @override
+//   List<Object> get props => [subreddit, currentSort, options, redditLinks];
+// }
 
 class DisplayingActions extends SubredditPageState {
   final String subreddit;
   final SubmissionSort currentSort;
-  final List<ActionModel2> actions;
+  final List<ActionModel> actions;
   final List<RedditLink> redditLinks;
 
   DisplayingActions(
@@ -86,4 +86,7 @@ class DisplayingActions extends SubredditPageState {
       this.redditLinks = const [],
       @required this.currentSort,
       @required this.actions});
+
+  @override
+  List<Object> get props => [subreddit, currentSort, actions, redditLinks];
 }

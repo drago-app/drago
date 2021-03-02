@@ -35,33 +35,32 @@ class _SubredditPageState extends State<SubredditPage> {
       top: false,
       child: BlocConsumer<SubredditPageBloc, SubredditPageState>(
           listener: (listenerContext, state) {
-        if (state is DisplayingSortOptions) {
-          showCupertinoModalPopup(
-            context: listenerContext,
-            builder: (context) => CupertinoActionSheet(
-                actions: state.options
-                    .map((a) => DialogAction2<SubredditPageBloc>(
-                        bloc:
-                            BlocProvider.of<SubredditPageBloc>(listenerContext),
-                        action: a))
-                    .toList()),
-          );
-        }
+        // if (state is DisplayingSortOptions) {
+        //   showCupertinoModalPopup(
+        //     context: listenerContext,
+        //     builder: (context) => CupertinoActionSheet(
+        //         actions: state.options
+        //             .map((a) => DialogAction2<SubredditPageBloc>(
+        //                 bloc:
+        //                     BlocProvider.of<SubredditPageBloc>(listenerContext),
+        //                 action: a))
+        //             .toList()),
+        //   );
+        // }
 
         if (state is DisplayingActions) {
           showCupertinoModalPopup(
               context: listenerContext,
               builder: (context) => CupertinoActionSheet(
                   actions: state.actions
-                      .map((a) => DialogAction2<SubredditPageBloc>(
+                      .map((a) => DialogAction<SubredditPageBloc>(
                           bloc: BlocProvider.of<SubredditPageBloc>(
                               listenerContext),
                           action: a))
                       .toList()));
         }
       }, buildWhen: (prev, current) {
-        return !(current is DisplayingSortOptions ||
-            current is DisplayingActions);
+        return !(current is DisplayingActions);
       }, builder: (bloccontext, state) {
         return CupertinoPageScaffold(
           child: _buildBody(state),
@@ -133,56 +132,10 @@ class _SubredditPageState extends State<SubredditPage> {
   }
 }
 
-// class DialogAction extends StatelessWidget {
-//   final ActionModel action;
-//   DialogAction({this.action});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return CupertinoActionSheetAction(
-//       onPressed: () {
-//         action.action();
-//         Navigator.of(context).pop();
-//       },
-//       child: Container(
-//         padding: EdgeInsets.symmetric(horizontal: 16),
-//         child: Row(
-//           mainAxisSize: MainAxisSize.max,
-//           children: [
-//             Icon(getIconData(action.icon)),
-//             Expanded(
-//               child: Container(
-//                 padding: EdgeInsets.only(left: 24),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Text('${action.description}'),
-//                     Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: <Widget>[
-//                         (action.selected)
-//                             ? Icon(getIconData(DragoIcons.selected))
-//                             : SizedBox.shrink(),
-//                         (action.hasOptions)
-//                             ? Icon(getIconData(DragoIcons.chevron_right))
-//                             : SizedBox.shrink()
-//                       ],
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class DialogAction2<B extends Bloc> extends StatelessWidget {
-  final ActionModel2 action;
+class DialogAction<B extends Bloc> extends StatelessWidget {
+  final ActionModel action;
   final B bloc;
-  DialogAction2({this.bloc, this.action}) {
+  DialogAction({this.bloc, this.action}) {
     print(bloc);
   }
 
@@ -214,9 +167,6 @@ class DialogAction2<B extends Bloc> extends StatelessWidget {
                             : SizedBox.shrink(),
                         action.options.fold(() => SizedBox.shrink(),
                             (_) => Icon(getIconData(DragoIcons.chevron_right)))
-                        // (action.options)
-                        //     ? Icon(getIconData(DragoIcons.chevron_right))
-                        //     : SizedBox.shrink()
                       ],
                     )
                   ],

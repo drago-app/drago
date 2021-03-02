@@ -20,12 +20,12 @@ class LoadMore extends SubredditPageEvent {}
 
 class UserTappedSortButton extends SubredditPageEvent {}
 
-class UserSelectedSortOption extends SubredditPageEvent {
-  final SubmissionSort sort;
+// class UserSelectedSortOption extends SubredditPageEvent {
+//   final SubmissionSort sort;
 
-  UserSelectedSortOption({@required this.sort});
-  List<Object> get props => [sort];
-}
+//   UserSelectedSortOption({@required this.sort});
+//   List<Object> get props => [sort];
+// }
 
 // class UserSelectedFilterOption extends SubredditPageEvent {
 //   final SubmissionSort sort;
@@ -40,7 +40,7 @@ class UserSelectedSortOption extends SubredditPageEvent {
 class UserTappedActionsButton extends SubredditPageEvent {}
 
 class UserSelectedAction extends SubredditPageEvent {
-  final ActionModel2 action;
+  final ActionModel action;
 
   UserSelectedAction(this.action) : assert(action != null);
   List<Object> get props => [action];

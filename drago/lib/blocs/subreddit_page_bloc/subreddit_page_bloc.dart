@@ -5,7 +5,6 @@ import 'package:drago/core/error/failures.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
 import 'package:drago/icons_enum.dart';
-import 'package:drago/main.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -57,14 +56,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
       yield* _mapLoadMoreToState();
     } else if (event is UserTappedSortButton) {
       yield* _mapUserTappedSortButtonToState();
-    }
-    // else if (event is UserSelectedSortOption) {
-    //   yield* _mapUserSelectedSortOptionToState(event);
-    // }
-    // else if (event is UserSelectedFilterOption) {
-    //   yield* _mapUserSelectedFilterOptionToState(event);
-    // }
-    else if (event is UserTappedActionsButton) {
+    } else if (event is UserTappedActionsButton) {
       yield* _mapUserTappedActionsButtonToState();
     } else if (event is UserSelectedAction) {
       yield* _mapUserSelectedActionToState(event);
@@ -88,69 +80,16 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
         actions: actions);
   }
 
-  // Stream<SubredditPageState> _mapUserSelectedFilterOptionToState(
-  //     UserSelectedFilterOption event) async* {
-  //   final newSort = event.sort.copyWith(selectedFilter: Some(event.filter));
-  //   yield SubredditPageLoading(
-  //       subreddit: state.subreddit, currentSort: newSort);
-  //   final failureOrSubmissions = await getRedditLinks(GetRedditLinksParams(
-  //       subreddit: this.subreddit,
-  //       filter: event.filter.type,
-  //       sort: event.sort.type));
-
-  //   yield* failureOrSubmissions.fold(
-  //     (left) async* {
-  //       print(left);
-  //     },
-  //     (redditLinks) async* {
-  //       yield SubredditPageLoaded(
-  //           subreddit: this.subreddit,
-  //           redditLinks: redditLinks,
-  //           currentSort: newSort);
-  //     },
-  //   );
-  // }
-
-  // Stream<SubredditPageState> _mapUserSelectedSortOptionToState(
-  //     UserSelectedSortOption event) async* {
-  //   yield* event.sort.filtersOptions.fold(() async* {
-  //     yield* _mapLoadSubmissionsToState(
-  //         event: LoadSubmissions(sort: event.sort.type));
-  //   }, (options) async* {
-  //     await Future.delayed(
-  //       Duration(milliseconds: 200),
-  //     );
-
-  //     yield DisplayingSortOptions(
-  //         redditLinks: state.redditLinks,
-  //         currentSort: state.currentSort,
-  //         subreddit: state.subreddit,
-  //         options: options
-  //             .map<ActionModel>(
-  //                 (type) => createFilterAction(this, event.sort, type))
-  //             .toList(growable: false));
-  //   });
-  // }
-
   Stream<SubredditPageState> _mapUserTappedSortButtonToState() async* {
-    yield DisplayingSortOptions(
+    yield DisplayingActions(
       redditLinks: state.redditLinks,
       currentSort: state.currentSort,
       subreddit: state.subreddit,
-      options: sortActionsService
+      actions: sortActionsService
           .getActions(state.subreddit)
           .map((a) => a.toAction(this))
           .toList(),
     );
-    // yield DisplayingSortOptions(
-    //     redditLinks: state.redditLinks,
-    //     currentSort: state.currentSort,
-    //     subreddit: state.subreddit,
-    //     options: _sortOptions.values
-    //         .map((SubmissionSort sort) =>
-    //             sort.type == state.currentSort.type ? state.currentSort : sort)
-    //         .map((SubmissionSort sort) => createSortAction(this, sort))
-    //         .toList(growable: false));
   }
 
   Stream<SubredditPageState> _mapLoadSubmissionsToState(
@@ -194,20 +133,6 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   }
 }
 
-// class ActionModel extends Equatable {
-//   final Function action;
-//   final String description;
-//   final DragoIcons icon;
-//   final bool selected;
-//   final bool hasOptions;
-
-//   ActionModel(this.action, this.icon, this.description,
-//       {this.selected = false, this.hasOptions = false});
-
-//   @override
-//   List<Object> get props => [action, description];
-// }
-
 class ActionService<A extends Actionable> {
   List<A> _actions = [];
 
@@ -220,14 +145,14 @@ class ActionService<A extends Actionable> {
 
 typedef StateStream<S> = Stream<S> Function(dynamic);
 
-class ActionModel2<S, B> extends Equatable {
+class ActionModel<S, B> extends Equatable {
   final StateStream action;
   final String description;
   final DragoIcons icon;
   final bool selected;
   final Option<List<ActionableFn>> options;
 
-  ActionModel2(this.action, this.icon, this.description,
+  ActionModel(this.action, this.icon, this.description,
       {this.selected = false, this.options = const None()});
 
   @override
@@ -235,7 +160,7 @@ class ActionModel2<S, B> extends Equatable {
 }
 
 abstract class Actionable<S, B extends Bloc> {
-  ActionModel2<S, B> toAction(B bloc);
+  ActionModel<S, B> toAction(B bloc);
 }
 
 typedef ActionableFn = Actionable Function(dynamic);
@@ -247,9 +172,9 @@ class SubscribeToSubredditAction
   SubscribeToSubredditAction(this.usecase) : assert(usecase != null);
 
   @override
-  ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
+  ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel2((bloc) => _states(bloc), null, "Subscribe");
+      ActionModel((bloc) => _states(bloc), null, "Subscribe");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure =
@@ -281,9 +206,9 @@ class SortSubmissionsAction
         assert(sort != null);
 
   @override
-  ActionModel2<SubredditPageState, SubredditPageBloc> toAction(
+  ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel2(
+      ActionModel(
           (bloc) => _states(bloc),
           sort.icon,
           (bloc.state.currentSort == sort)
@@ -333,8 +258,8 @@ class SubmissionFilterAction implements Actionable {
         assert(filter != null);
 
   @override
-  ActionModel2<SubredditPageState, SubredditPageBloc> toAction(bloc) =>
-      ActionModel2(
+  ActionModel<SubredditPageState, SubredditPageBloc> toAction(bloc) =>
+      ActionModel(
         (bloc) => _states(bloc),
         filter.icon,
         filter.description,
