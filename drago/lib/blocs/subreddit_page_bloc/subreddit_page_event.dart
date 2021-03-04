@@ -9,10 +9,10 @@ abstract class SubredditPageEvent extends Equatable {
 
 class LoadSubmissions extends SubredditPageEvent {
   final SubmissionSortType sort;
-  final TimeFilter_ filter;
+  final TimeFilter filter;
 
   LoadSubmissions(
-      {this.sort = SubmissionSortType.hot, this.filter = TimeFilter_.all});
+      {this.sort = SubmissionSortType.hot, this.filter = TimeFilter.all});
 }
 
 class LoadMore extends SubredditPageEvent {}

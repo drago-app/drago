@@ -365,7 +365,7 @@ class GetRedditLinksParams {
   final String after;
   final String subreddit;
   final SubmissionSortType sort;
-  final TimeFilter_ filter;
+  final TimeFilter filter;
 
   GetRedditLinksParams(
       {@required this.subreddit, this.sort, this.filter, this.after});

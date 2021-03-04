@@ -3,7 +3,7 @@ import 'package:drago/icons_enum.dart';
 import 'package:equatable/equatable.dart';
 
 enum SubmissionSortType { hot, top, controversial, newest, rising }
-enum TimeFilter_ { all, day, hour, month, week, year }
+enum TimeFilter { all, day, hour, month, week, year }
 
 class SubmissionSort extends Equatable {
   final DragoIcons icon;
@@ -37,7 +37,7 @@ class SubmissionSort extends Equatable {
 class SubmissionFilter extends Equatable {
   final DragoIcons icon;
   final String description;
-  final TimeFilter_ type;
+  final TimeFilter type;
   final bool selected;
 
   const SubmissionFilter(this.icon, this.description, this.type,
@@ -78,14 +78,14 @@ const filters = [
 ];
 
 const hourFilter = const SubmissionFilter(
-    DragoIcons.time_filter_hour, 'Hour', TimeFilter_.hour);
+    DragoIcons.time_filter_hour, 'Hour', TimeFilter.hour);
 const dayFilter =
-    const SubmissionFilter(DragoIcons.time_filter_day, 'Day', TimeFilter_.day);
+    const SubmissionFilter(DragoIcons.time_filter_day, 'Day', TimeFilter.day);
 const weekFilter = const SubmissionFilter(
-    DragoIcons.time_filter_week, 'Week', TimeFilter_.week);
+    DragoIcons.time_filter_week, 'Week', TimeFilter.week);
 const monthFilter = const SubmissionFilter(
-    DragoIcons.time_filter_month, 'Month', TimeFilter_.month);
+    DragoIcons.time_filter_month, 'Month', TimeFilter.month);
 const yearFilter = const SubmissionFilter(
-    DragoIcons.time_filter_year, 'Year', TimeFilter_.year);
+    DragoIcons.time_filter_year, 'Year', TimeFilter.year);
 const allFilter =
-    const SubmissionFilter(DragoIcons.time_filter_all, 'All', TimeFilter_.all);
+    const SubmissionFilter(DragoIcons.time_filter_all, 'All', TimeFilter.all);

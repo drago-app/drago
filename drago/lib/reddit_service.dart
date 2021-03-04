@@ -108,14 +108,14 @@ class RedditService {
   }
 
   Future<List<RedditLink>> _hot(
-      String subreddit, TimeFilter_ filter, String after) async {
+      String subreddit, TimeFilter filter, String after) async {
     final linksAsJson = await redditClient.hotSubmissions(subreddit, after);
 
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<List<RedditLink>> _newest(
-      String subreddit, TimeFilter_ filter, String after) async {
+      String subreddit, TimeFilter filter, String after) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.newestSubmissions(subreddit, after);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
@@ -128,14 +128,14 @@ class RedditService {
   }
 
   Future<List<RedditLink>> _controversial(
-      String subreddit, String after, TimeFilter_ filter) async {
+      String subreddit, String after, TimeFilter filter) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.controversialSubmissions(subreddit, after, filter);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<List<RedditLink>> _top(
-      String subreddit, String after, TimeFilter_ filter) async {
+      String subreddit, String after, TimeFilter filter) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.topSubmissions(subreddit, after, filter);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
@@ -144,7 +144,7 @@ class RedditService {
   Future<Either<Failure, List<RedditLink>>> getRedditLinks(String subreddit,
       {String after,
       SubmissionSortType sort = SubmissionSortType.hot,
-      TimeFilter_ filter = TimeFilter_.all}) async {
+      TimeFilter filter = TimeFilter.all}) async {
     try {
       List<RedditLink> response;
       if (sort == SubmissionSortType.hot) {
