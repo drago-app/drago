@@ -1,4 +1,5 @@
 import '../../../features/subreddit/subscribe_to_subreddit.dart';
+import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
 import '../subreddit_page_state.dart';
 
@@ -11,7 +12,7 @@ class SubscribeToSubredditAction
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel((bloc) => _states(bloc), null, "Subscribe");
+      ActionModel((bloc) => _states(bloc), DragoIcons.subscribe, "Subscribe");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure =

@@ -1,6 +1,7 @@
 import 'package:drago/features/subreddit/hide_read_submissions.dart';
 import 'package:drago/features/subreddit/subreddit.dart';
 
+import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
 import '../subreddit_page_state.dart';
 
@@ -13,7 +14,7 @@ class ShowSidebarAction
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel((bloc) => _states(bloc), null, "Sidebar");
+      ActionModel((bloc) => _states(bloc), DragoIcons.side_bar, "Sidebar");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure =

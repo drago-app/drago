@@ -1,6 +1,7 @@
 import 'package:drago/features/subreddit/filter_subreddit.dart';
 import 'package:drago/features/subreddit/hide_read_submissions.dart';
 
+import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
 import '../subreddit_page_state.dart';
 
@@ -13,7 +14,8 @@ class FilterSubredditAction
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel((bloc) => _states(bloc), null, "Filter Subreddit");
+      ActionModel(
+          (bloc) => _states(bloc), DragoIcons.filter, "Filter Subreddit");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure = await usecase(FilterSubredditParams(bloc.subreddit));

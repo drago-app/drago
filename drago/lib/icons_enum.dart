@@ -38,6 +38,7 @@ enum DragoIcons {
   subscribe,
   unsubscribe,
   favorite,
+  unfavorite,
   side_bar,
   subreddit_rules,
   filter,
@@ -90,7 +91,17 @@ final Map<DragoIcons, dynamic> iconMap = {
   DragoIcons.time_filter_month: CupertinoIcons.calendar,
   DragoIcons.time_filter_year: CupertinoIcons.calendar,
   DragoIcons.time_filter_all: CupertinoIcons.calendar,
-  DragoIcons.selected: CupertinoIcons.checkmark_alt
+  DragoIcons.selected: CupertinoIcons.checkmark_alt,
+  DragoIcons.subscribe: CupertinoIcons.heart,
+  DragoIcons.unsubscribe: CupertinoIcons.heart_slash,
+  DragoIcons.filter: CupertinoIcons.nosign,
+  DragoIcons.side_bar: CupertinoIcons.sidebar_right,
+  DragoIcons.moderator: CupertinoIcons.shield,
+  DragoIcons.favorite: CupertinoIcons.star,
+  DragoIcons.unfavorite: CupertinoIcons.star_slash,
+  DragoIcons.hide_read_posts: CupertinoIcons.eye_slash,
+  DragoIcons.set_user_flair: CupertinoIcons.tag,
+  DragoIcons.rules: CupertinoIcons.square_list,
 };
 
 final getIconData =

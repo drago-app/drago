@@ -34,6 +34,7 @@ import 'dialog/dialog_service.dart';
 import 'features/subreddit/get_submissions.dart';
 import 'features/subreddit/subreddit.dart';
 import 'features/user/usecases.dart';
+import 'icons_enum.dart';
 import 'screens/screens.dart';
 
 import 'package:bot_toast/bot_toast.dart';
@@ -189,27 +190,20 @@ class UnAuthenticatedApp extends StatelessWidget {
 Widget _unAuthscaffold() {
   return CupertinoTabScaffold(
     tabBar: CupertinoTabBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.news_solid),
-          title: Text('Post'),
+          icon: Icon(getIconData(DragoIcons.post_tab)),
+          label: 'Post',
         ),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.mail_solid),
-          title: Text('Inbox'),
-        ),
+            icon: Icon(getIconData(DragoIcons.inbox_tab)), label: 'Inbox'),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.profile_circled),
-          title: Text('Accounts'),
-        ),
+            icon: Icon(getIconData(DragoIcons.accounts_tab)), label: 'Account'),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.search),
-          title: Text('Search'),
-        ),
+            icon: Icon(getIconData(DragoIcons.search_tab)), label: 'Search'),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.settings_solid),
-          title: Text('Settings'),
-        ),
+            icon: Icon(getIconData(DragoIcons.settings_tab)),
+            label: 'Settings'),
       ],
     ),
     tabBuilder: (context, index) {
@@ -291,27 +285,21 @@ class AuthenticatedApp extends StatelessWidget {
   Widget _scaffold() {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.today),
-            label: 'Posts',
+            icon: Icon(getIconData(DragoIcons.post_tab)),
+            label: 'Post',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.envelope_fill),
-            label: 'Inbox',
-          ),
+              icon: Icon(getIconData(DragoIcons.inbox_tab)), label: 'Inbox'),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.profile_circled),
-            label: 'Accounts',
-          ),
+              icon: Icon(getIconData(DragoIcons.accounts_tab)),
+              label: 'Account'),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
-            label: 'Search',
-          ),
+              icon: Icon(getIconData(DragoIcons.search_tab)), label: 'Search'),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.settings_solid),
-            label: 'Settings',
-          ),
+              icon: Icon(getIconData(DragoIcons.settings_tab)),
+              label: 'Settings'),
         ],
       ),
       tabBuilder: (context, index) {

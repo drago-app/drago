@@ -1,5 +1,6 @@
 import 'package:drago/features/subreddit/subreddit.dart';
 
+import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
 import '../subreddit_page_state.dart';
 
@@ -12,7 +13,7 @@ class FavoriteSubredditAction
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel((bloc) => _states(bloc), null, "Favorite");
+      ActionModel((bloc) => _states(bloc), DragoIcons.favorite, "Favorite");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure =

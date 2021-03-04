@@ -1,5 +1,6 @@
 import 'package:drago/features/subreddit/hide_read_submissions.dart';
 
+import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
 import '../subreddit_page_state.dart';
 
@@ -12,7 +13,8 @@ class HideReadSubmissionsAction
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel((bloc) => _states(bloc), null, "Hide Read Posts");
+      ActionModel((bloc) => _states(bloc), DragoIcons.hide_read_posts,
+          "Hide Read Posts");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure =

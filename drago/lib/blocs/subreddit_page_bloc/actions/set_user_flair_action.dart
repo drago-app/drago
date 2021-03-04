@@ -1,6 +1,5 @@
-import 'package:drago/features/subreddit/hide_read_submissions.dart';
 import 'package:drago/features/subreddit/set_user_flair.dart';
-
+import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
 import '../subreddit_page_state.dart';
 
@@ -13,7 +12,8 @@ class SetUserFlairAction
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
           SubredditPageBloc bloc) =>
-      ActionModel((bloc) => _states(bloc), null, "Set User Flair");
+      ActionModel(
+          (bloc) => _states(bloc), DragoIcons.set_user_flair, "Set User Flair");
 
   Stream<SubredditPageState> _states(SubredditPageBloc bloc) async* {
     final unitOrFailure = await usecase(SetUserFlairParams(bloc.subreddit));
