@@ -28,6 +28,8 @@ import 'features/subreddit/get_submissions.dart';
 import 'features/user/usecases.dart';
 import 'screens/screens.dart';
 
+import 'package:bot_toast/bot_toast.dart';
+
 final RedditClient _redditClient = DrawRedditClient();
 
 final RedditService _reddit = RedditService(redditClient: _redditClient);
@@ -110,6 +112,8 @@ class UnAuthenticatedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       theme: appThemeData[AppTheme.light],
       home: DialogProvider(
         service: _dialogService,

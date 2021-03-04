@@ -1,3 +1,5 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:drago/common/toast_widget.dart';
 import 'package:drago/dialog/dialog_provider.dart';
 import 'package:drago/icons_enum.dart';
 import 'package:drago/screens/subreddit/widgets/submission/submission_widget_factory.dart';
@@ -35,32 +37,31 @@ class _SubredditPageState extends State<SubredditPage> {
       top: false,
       child: BlocConsumer<SubredditPageBloc, SubredditPageState>(
           listener: (listenerContext, state) {
-        // if (state is DisplayingSortOptions) {
-        //   showCupertinoModalPopup(
-        //     context: listenerContext,
-        //     builder: (context) => CupertinoActionSheet(
-        //         actions: state.options
-        //             .map((a) => DialogAction2<SubredditPageBloc>(
-        //                 bloc:
-        //                     BlocProvider.of<SubredditPageBloc>(listenerContext),
-        //                 action: a))
-        //             .toList()),
-        //   );
-        // }
-
+        if (state is SubredditPageError) {
+          BotToast.showCustomNotification(
+              toastBuilder: (_) => ToastWidget.warning(state.error));
+        }
         if (state is DisplayingActions) {
           showCupertinoModalPopup(
-              context: listenerContext,
-              builder: (context) => CupertinoActionSheet(
-                  actions: state.actions
-                      .map((a) => DialogAction<SubredditPageBloc>(
-                          bloc: BlocProvider.of<SubredditPageBloc>(
-                              listenerContext),
-                          action: a))
-                      .toList()));
+            context: listenerContext,
+            builder: (context) => CupertinoActionSheet(
+              cancelButton: CupertinoActionSheetAction(
+                isDefaultAction: true,
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              actions: state.actions
+                  .map((a) => DialogAction<SubredditPageBloc>(
+                      bloc: BlocProvider.of<SubredditPageBloc>(listenerContext),
+                      action: a))
+                  .toList(),
+            ),
+          );
         }
       }, buildWhen: (prev, current) {
-        return !(current is DisplayingActions);
+        return !(current is DisplayingActions || current is SubredditPageError);
       }, builder: (bloccontext, state) {
         return CupertinoPageScaffold(
           child: _buildBody(state),

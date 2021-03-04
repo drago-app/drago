@@ -4,19 +4,18 @@ import 'package:drago/core/usecases/usecase.dart';
 import 'package:drago/reddit_service.dart';
 import 'package:flutter/foundation.dart';
 
-class SubscribeToSubreddit
-    implements UseCase<Unit, SubscribeToSubredditParams> {
+class HideReadSubmissions implements UseCase<Unit, HideReadSubmissionsParams> {
   final RedditService reddit;
 
-  SubscribeToSubreddit({@required this.reddit});
+  HideReadSubmissions({@required this.reddit});
 
   @override
-  Future<Either<Failure, Unit>> call(SubscribeToSubredditParams params) async {
+  Future<Either<Failure, Unit>> call(HideReadSubmissionsParams params) async {
     return Future.value(Left(SomeFailure(message: "Feature not implemented")));
   }
 }
 
-class SubscribeToSubredditParams {
+class HideReadSubmissionsParams {
   final String subreddit;
-  SubscribeToSubredditParams(this.subreddit) : assert(subreddit != null);
+  HideReadSubmissionsParams(this.subreddit) : assert(subreddit != null);
 }

@@ -75,3 +75,17 @@ class DisplayingActions extends SubredditPageState {
   @override
   List<Object> get props => [subreddit, currentSort, actions, redditLinks];
 }
+
+class SubredditPageError extends SubredditPageState {
+  final String subreddit;
+  final SubmissionSort currentSort;
+  final List<RedditLink> redditLinks;
+  final String error;
+
+  SubredditPageError(
+      {this.subreddit, this.currentSort, this.redditLinks, this.error});
+
+  @override
+  List<Object> get props =>
+      [subreddit, currentSort, this.redditLinks, this.error];
+}

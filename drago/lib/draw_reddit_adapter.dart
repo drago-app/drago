@@ -22,9 +22,9 @@ abstract class RedditClient {
   Future<List<Map<dynamic, dynamic>>> risingSubmissions(
       String subreddit, String after);
   Future<List<Map<dynamic, dynamic>>> controversialSubmissions(
-      String subreddit, String after, TimeFilter_ filter);
+      String subreddit, String after, TimeFilter filter);
   Future<List<Map<dynamic, dynamic>>> topSubmissions(
-      String subreddit, String after, TimeFilter_ filter);
+      String subreddit, String after, TimeFilter filter);
 
   Future<void> saveSubmission(String submissionId);
   Future<void> unsaveSubmission(String submissionId);
@@ -134,7 +134,7 @@ class DrawRedditClient implements RedditClient {
 
   @override
   Future<List<Map<dynamic, dynamic>>> controversialSubmissions(
-      String subreddit, String after, TimeFilter_ filter) async {
+      String subreddit, String after, TimeFilter filter) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).controversial, subreddit, after,
         filter: filter);
@@ -142,7 +142,7 @@ class DrawRedditClient implements RedditClient {
 
   @override
   Future<List<Map<dynamic, dynamic>>> topSubmissions(
-      String subreddit, String after, TimeFilter_ filter) async {
+      String subreddit, String after, TimeFilter filter) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).controversial, subreddit, after,
         filter: filter);
@@ -152,7 +152,7 @@ class DrawRedditClient implements RedditClient {
     Function drawMethod,
     String subreddit,
     String after, {
-    TimeFilter_ filter,
+    TimeFilter filter,
   }) async {
     var params = Map<String, String>();
     params['limit'] = '25';
@@ -256,16 +256,16 @@ _launchURL(url) async {
   }
 }
 
-draw.TimeFilter _mapTimeFilter(TimeFilter_ filter) {
-  if (filter == TimeFilter_.all) {
+draw.TimeFilter _mapTimeFilter(TimeFilter filter) {
+  if (filter == TimeFilter.all) {
     return draw.TimeFilter.all;
-  } else if (filter == TimeFilter_.day) {
+  } else if (filter == TimeFilter.day) {
     return draw.TimeFilter.day;
-  } else if (filter == TimeFilter_.hour) {
+  } else if (filter == TimeFilter.hour) {
     return draw.TimeFilter.hour;
-  } else if (filter == TimeFilter_.month) {
+  } else if (filter == TimeFilter.month) {
     return draw.TimeFilter.month;
-  } else if (filter == TimeFilter_.week) {
+  } else if (filter == TimeFilter.week) {
     return draw.TimeFilter.week;
   } else {
     return draw.TimeFilter.year;
