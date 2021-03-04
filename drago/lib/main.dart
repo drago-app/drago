@@ -1,7 +1,14 @@
 import 'package:dartz/dartz.dart';
+import 'package:drago/blocs/subreddit_page_bloc/actions/favorite_subreddit_action.dart';
+import 'package:drago/blocs/subreddit_page_bloc/actions/filter_subreddit_action.dart';
+import 'package:drago/blocs/subreddit_page_bloc/actions/hide_read_submissions_action.dart';
+import 'package:drago/blocs/subreddit_page_bloc/actions/set_user_flair_action.dart';
+import 'package:drago/blocs/subreddit_page_bloc/actions/show_rules_action.dart';
+import 'package:drago/blocs/subreddit_page_bloc/actions/show_sidebar_action.dart';
 import 'package:drago/draw_reddit_adapter.dart';
 import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/comment/get_more_comments.dart';
+import 'package:drago/features/subreddit/favorite_subreddit.dart';
 import 'package:drago/features/subreddit/subscribe_to_subreddit.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/theme.dart';
@@ -25,6 +32,7 @@ import 'dialog/dialog_manager.dart';
 import 'dialog/dialog_provider.dart';
 import 'dialog/dialog_service.dart';
 import 'features/subreddit/get_submissions.dart';
+import 'features/subreddit/subreddit.dart';
 import 'features/user/usecases.dart';
 import 'screens/screens.dart';
 
@@ -57,12 +65,49 @@ final SaveOrUnsaveSubmission saveOrUnsave =
 final GetRedditLinks getRedditLinks = GetRedditLinks(reddit: _reddit);
 final GetComments getComments = GetComments(reddit: _reddit);
 final GetMoreComments getMoreComments = GetMoreComments(reddit: _reddit);
+
 final SubscribeToSubreddit subscribeToSubreddit =
     SubscribeToSubreddit(reddit: _reddit);
 final SubscribeToSubredditAction subscribeToSubredditAction =
     SubscribeToSubredditAction(subscribeToSubreddit);
+
+final FavoriteSubreddit favoriteSubreddit = FavoriteSubreddit(reddit: _reddit);
+final FavoriteSubredditAction favoriteSubredditAction =
+    FavoriteSubredditAction(favoriteSubreddit);
+
+final FilterSubreddit filterSubreddit = FilterSubreddit(reddit: _reddit);
+final FilterSubredditAction filterSubredditAction =
+    FilterSubredditAction(filterSubreddit);
+
+final GetSubredditRules getSubredditRules = GetSubredditRules(reddit: _reddit);
+final ShowRulesAction showRulesAction = ShowRulesAction(getSubredditRules);
+
+final GetSubredditSidebar getSubredditSidebar =
+    GetSubredditSidebar(reddit: _reddit);
+
+final ShowSidebarAction showSidebarAction =
+    ShowSidebarAction(getSubredditSidebar);
+
+final SetUserFlair setUserFlair = SetUserFlair(reddit: _reddit);
+final SetUserFlairAction setUserFlairAction = SetUserFlairAction(setUserFlair);
+
+final SaveSubmissionSize saveSubmissionSize =
+    SaveSubmissionSize(reddit: _reddit);
+
+final HideReadSubmissions hideReadSubmissions =
+    HideReadSubmissions(reddit: _reddit);
+
+final HideReadSubmissionsAction hideReadSubmissionsAction =
+    HideReadSubmissionsAction(hideReadSubmissions);
+
 final ActionService actionService = ActionService()
-  ..add(subscribeToSubredditAction);
+  ..add(subscribeToSubredditAction)
+  ..add(favoriteSubredditAction)
+  ..add(filterSubredditAction)
+  ..add(showRulesAction)
+  ..add(showSidebarAction)
+  ..add(setUserFlairAction)
+  ..add(hideReadSubmissionsAction);
 
 List<ActionableFn> filterFns = filters
     .map((filter) =>
