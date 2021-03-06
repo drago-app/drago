@@ -6,14 +6,16 @@ import 'package:drago/user_service.dart';
 import 'package:draw/draw.dart' as draw;
 import 'package:url_launcher/url_launcher.dart';
 
+import 'core/entities/subreddit.dart';
+
 abstract class RedditClient {
   Future<void> initializeWithoutAuth();
   String initializeWithAuth(String token);
   Future<AuthUser> loginWithNewAccount(List<String> scopes, String state);
 
-  Future<List<String>> defaultSubreddits();
-  Future<List<String>> subscriptions();
-  Future<List<String>> moderatedSubreddits();
+  Future<List<Subreddit>> defaultSubreddits();
+  Future<List<Subreddit>> subscriptions();
+  Future<List<Subreddit>> moderatedSubreddits();
 
   Future<List<Map<dynamic, dynamic>>> hotSubmissions(
       String subreddit, String after);
@@ -95,21 +97,23 @@ class DrawRedditClient implements RedditClient {
         name: me.displayName, token: _reddit.auth.credentials.toJson());
   }
 
+  Future<List<Subreddit>> _drawSubToSubreddit(
+      Stream<draw.SubredditRef> refs) async {
+    return refs
+        .map((sub) => sub as draw.RedditBaseInitializedMixin)
+        .map((sub) => Subreddit.fromJson(sub.data))
+        .toList();
+  }
+
   @override
-  Future<List<String>> defaultSubreddits() async {
-    final subredditRefs = await _reddit.subreddits.defaults().toList();
-    return subredditRefs.map((ref) => ref.displayName).toList();
-  }
+  Future<List<Subreddit>> defaultSubreddits() async =>
+      _drawSubToSubreddit(_reddit.subreddits.defaults());
 
-  Future<List<String>> subscriptions() async {
-    final subredditRefs = await _reddit.user.subreddits().toList();
-    return subredditRefs.map((ref) => ref.displayName).toList();
-  }
+  Future<List<Subreddit>> subscriptions() async =>
+      _drawSubToSubreddit(_reddit.user.subreddits());
 
-  Future<List<String>> moderatedSubreddits() async {
-    final subredditRefs = await _reddit.user.moderatorSubreddits().toList();
-    return subredditRefs.map((ref) => ref.displayName).toList();
-  }
+  Future<List<Subreddit>> moderatedSubreddits() async =>
+      _drawSubToSubreddit(_reddit.user.moderatorSubreddits());
 
   @override
   Future<List<Map<dynamic, dynamic>>> hotSubmissions(

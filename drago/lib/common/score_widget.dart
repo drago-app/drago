@@ -1,7 +1,7 @@
 import 'package:drago/common/common.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/vote_state.dart';
 
 class ScoreViewModel {
   final Function onTap;

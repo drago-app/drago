@@ -2,7 +2,7 @@ import 'package:drago/common/common.dart';
 import 'package:drago/common/text_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/screens/subreddit/widgets/widgets.dart';
 
 class SubredditListItem extends StatelessWidget {

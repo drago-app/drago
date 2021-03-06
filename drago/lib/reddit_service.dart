@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
-import 'package:drago/draw_reddit_adapter.dart';
+import 'package:drago/reddit_client.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:flutter/foundation.dart';
+import 'core/entities/subreddit.dart';
 import 'user_service.dart';
 
 class RedditService {
@@ -26,38 +27,31 @@ class RedditService {
     return RedditComment.buildComments(jsonComments);
   }
 
-  Future<Either<Failure, List<String>>> defaultSubreddits() async {
+  Future<Either<Failure, List<Subreddit>>> tryAndSortSubreddits(
+      Function subsFn, String failureMsgPrefix) async {
     try {
-      final subs = await redditClient.defaultSubreddits();
-      return Right(
-          subs..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
+      final List<Subreddit> subs = await subsFn();
+      return Right(subs
+        ..sort((a, b) => a.displayName
+            .toLowerCase()
+            .compareTo(b.displayName.toLowerCase())));
     } catch (e) {
-      return Left(SomeFailure(
-          message: '[RedditService#defaultSubreddit] ${e.toString()}'));
+      return Left(SomeFailure(message: '[$failureMsgPrefix] ${e.toString()}'));
     }
   }
 
-  Future<Either<Failure, List<String>>> subscriptions() async {
-    try {
-      final subs = await redditClient.subscriptions();
-      return Right(
-          subs..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
-    } catch (e) {
-      return Left(SomeFailure(
-          message: '[RedditService#subscriptions] ${e.toString()}'));
-    }
+  Future<Either<Failure, List<Subreddit>>> defaultSubreddits() async {
+    return tryAndSortSubreddits(
+        redditClient.defaultSubreddits, 'RedditService#defaultSubreddit');
   }
 
-  Future<Either<Failure, List<String>>> moderatedSubreddits() async {
-    try {
-      final subs = await redditClient.subscriptions();
-      return Right(
-          subs..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())));
-    } catch (e) {
-      return Left(SomeFailure(
-          message: '[RedditService#moderatedSubreddits] ${e.toString()}'));
-    }
-  }
+  Future<Either<Failure, List<Subreddit>>> subscriptions() async =>
+      tryAndSortSubreddits(
+          redditClient.subscriptions, 'RedditService#subscriptions');
+
+  Future<Either<Failure, List<Subreddit>>> moderatedSubreddits() async =>
+      tryAndSortSubreddits(
+          redditClient.subscriptions, 'RedditService#moderatedSubreddits');
 
   Future<Either<Failure, Unit>> saveSubmission(
       Submission submissionModel) async {

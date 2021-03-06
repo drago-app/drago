@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/models/num_comments_model.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:drago/models/sort_option.dart';

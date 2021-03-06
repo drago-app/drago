@@ -1,4 +1,4 @@
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:drago/sandbox/types.dart';

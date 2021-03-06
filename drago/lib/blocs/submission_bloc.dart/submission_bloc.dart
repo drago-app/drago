@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/dialog/dialog_service.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';

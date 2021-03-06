@@ -1,6 +1,6 @@
 //https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/master/lib/types/reddit.js
 import 'package:dartz/dartz.dart';
-import 'package:drago/core/entities/submission_entity.dart';
+import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/utils.dart';
 import 'package:flutter/foundation.dart';
 

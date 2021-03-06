@@ -5,7 +5,7 @@ import 'package:drago/blocs/subreddit_page_bloc/actions/hide_read_submissions_ac
 import 'package:drago/blocs/subreddit_page_bloc/actions/set_user_flair_action.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/show_rules_action.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/show_sidebar_action.dart';
-import 'package:drago/draw_reddit_adapter.dart';
+import 'package:drago/reddit_client.dart';
 import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/comment/get_more_comments.dart';
 import 'package:drago/features/subreddit/favorite_subreddit.dart';
