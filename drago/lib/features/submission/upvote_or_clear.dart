@@ -19,6 +19,9 @@ class UpvoteOrClear implements UseCase<Submission, VoteParams> {
     if (!await userService.isUserLoggedIn()) {
       return Left(NotAuthorizedFailure());
     }
+    if (params.submission.archived) {
+      return Left(PostArchivedFailure());
+    }
 
     if (params.submission.voteState == VoteState.Up) {
       reddit.clearVote(params.submission);

@@ -15,3 +15,8 @@ class SomeFailure extends Failure {
 class NotAuthorizedFailure extends Failure {
   NotAuthorizedFailure({message}) : super(message);
 }
+
+class PostArchivedFailure extends Failure {
+  static String _message = "Posts older than six months are archived";
+  PostArchivedFailure({message}) : super(message ?? _message);
+}

@@ -137,6 +137,10 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
               title: "Sign In to Upvote",
               content: 'You need to be signed in to upvote.');
         }
+        if (left is PostArchivedFailure) {
+          yield SubmissionActionError(
+              submission: oldState.submission, title: left.message);
+        }
       },
       (right) async* {},
     );
@@ -168,6 +172,10 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
               submission: oldState.submission,
               title: "Sign In to Downvote",
               content: 'You need to be signed in to downvote.');
+        }
+        if (left is PostArchivedFailure) {
+          yield SubmissionActionError(
+              submission: oldState.submission, title: left.message);
         }
       },
       (right) async* {},

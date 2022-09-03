@@ -37,7 +37,7 @@ class Submission extends Equatable {
       authorFlairText,
       linkFlairText;
   final DateTime createdUtc;
-  final bool edited, saved, isNSFW, stickied;
+  final bool edited, saved, isNSFW, stickied, archived;
   final NumComments numComments;
   final ScoreModel score; //todo I don't likke this
   final VoteState voteState;
@@ -58,6 +58,7 @@ class Submission extends Equatable {
       @required this.saved,
       @required this.isNSFW,
       @required this.stickied,
+      @required this.archived,
       @required this.subreddit,
       @required this.voteState});
 
@@ -68,6 +69,7 @@ class Submission extends Equatable {
         domain = link.domain,
         id = link.id,
         isNSFW = link.isNSFW,
+        archived = link.archived,
         stickied = link.stickied,
         saved = link.saved,
         authorFlairText = link.authorFlairText,
@@ -88,6 +90,7 @@ class Submission extends Equatable {
         edited: edited ?? this.edited,
         domain: this.domain,
         id: this.id,
+        archived: this.archived,
         isNSFW: isNSFW ?? this.isNSFW,
         subreddit: this.subreddit,
         numComments: numComments ?? this.numComments,
@@ -197,6 +200,7 @@ class SelfSubmission extends Submission {
 
   SelfSubmission(
       {@required this.body,
+      @required archived,
       @required stickied,
       @required authorFlairText,
       @required linkFlairText,
@@ -217,6 +221,7 @@ class SelfSubmission extends Submission {
       : super(
             author: author,
             stickied: stickied,
+            archived: archived,
             createdUtc: createdUtc,
             edited: edited,
             domain: domain,
@@ -238,6 +243,7 @@ class SelfSubmission extends Submission {
     return SelfSubmission(
         linkFlairText: this.linkFlairText,
         stickied: stickied ?? this.stickied,
+        archived: this.archived,
         authorFlairText: this.authorFlairText,
         body: body ?? this.body,
         author: this.author,
@@ -278,6 +284,7 @@ class MediaSubmission extends Submission {
   MediaSubmission(
       {@required this.media,
       @required stickied,
+      @required archived,
       @required linkFlairText,
       @required authorFlairText,
       @required author,
@@ -297,6 +304,7 @@ class MediaSubmission extends Submission {
       : super(
             linkFlairText: linkFlairText,
             stickied: stickied,
+            archived: archived,
             authorFlairText: authorFlairText,
             author: author,
             createdUtc: createdUtc,
@@ -333,7 +341,8 @@ class MediaSubmission extends Submission {
         previewUrl: this.previewUrl,
         saved: saved ?? this.saved,
         voteState: voteState ?? this.voteState,
-        isNSFW: isNSFW ?? this.isNSFW);
+        isNSFW: isNSFW ?? this.isNSFW,
+        archived: null);
   }
 }
 

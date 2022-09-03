@@ -19,6 +19,9 @@ class DownvoteOrClear implements UseCase<Submission, DownVoteParams> {
     if (!await userService.isUserLoggedIn()) {
       return Left(NotAuthorizedFailure());
     }
+    if (params.submission.archived) {
+      return Left(PostArchivedFailure());
+    }
 
     if (params.submission.voteState == VoteState.Down) {
       reddit.clearVote(params.submission);

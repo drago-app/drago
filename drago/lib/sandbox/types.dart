@@ -173,6 +173,7 @@ class RedditLink implements RedditThing {
   final String author;
   // final num created;
   final DateTime createdUtc;
+  final bool archived;
   final bool edited;
   final bool isSelf;
   final bool saved;
@@ -200,6 +201,7 @@ class RedditLink implements RedditThing {
   RedditLink(
       {@required this.author,
       @required this.createdUtc,
+      @required this.archived,
       @required this.edited,
       @required this.isSelf,
       @required this.isNSFW,
@@ -240,6 +242,8 @@ class RedditLink implements RedditThing {
           ? VoteState.Up
           : VoteState.Down;
 
+  static bool _parseArchived(bool archived) => archived;
+
   static DateTime _createdUtc(dynamic created_utc) {
     return DateTime.fromMillisecondsSinceEpoch(
         ((created_utc as double).round() * 1000),
@@ -249,27 +253,27 @@ class RedditLink implements RedditThing {
   factory RedditLink.fromJson(Map<dynamic, dynamic> json) {
     try {
       return RedditLink(
-        author: json['author'],
-        edited: _edited(json['edited']),
-        isSelf: json['is_self'],
-        isNSFW: json['over_18'],
-        saved: json['saved'],
-        stickied: json['stickied'],
-        domain: json['domain'],
-        distinguished: json['distinguished'],
-        id: json['id'],
-        numComments: json['num_comments'],
-        score: json['score'],
-        subreddit: json['subreddit'],
-        authorFlairText: json['author_flair_text'] ?? '',
-        linkFlairText: json['link_flair_text'] ?? '',
-        title: json['title'],
-        url: json['url'],
-        previewUrl: _previewUrl(json['preview']),
-        voteState: _parseLikes(json['likes']),
-        body: json['selftext'],
-        createdUtc: _createdUtc(json['created_utc']),
-      );
+          author: json['author'],
+          edited: _edited(json['edited']),
+          isSelf: json['is_self'],
+          isNSFW: json['over_18'],
+          saved: json['saved'],
+          stickied: json['stickied'],
+          domain: json['domain'],
+          distinguished: json['distinguished'],
+          id: json['id'],
+          numComments: json['num_comments'],
+          score: json['score'],
+          subreddit: json['subreddit'],
+          authorFlairText: json['author_flair_text'] ?? '',
+          linkFlairText: json['link_flair_text'] ?? '',
+          title: json['title'],
+          url: json['url'],
+          previewUrl: _previewUrl(json['preview']),
+          voteState: _parseLikes(json['likes']),
+          body: json['selftext'],
+          createdUtc: _createdUtc(json['created_utc']),
+          archived: _parseArchived(json['archived'] ?? false));
     } catch (e) {
       // print("previewUrl -- " + _previewUrl(json['preview']));
       print(json['url']);

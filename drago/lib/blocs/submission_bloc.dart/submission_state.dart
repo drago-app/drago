@@ -41,3 +41,21 @@ class SubmissionAuthError extends SubmissionState {
     );
   }
 }
+
+class SubmissionActionError extends SubmissionState {
+  final Submission submission;
+  final String title;
+  final String content;
+
+  SubmissionActionError(
+      {@required this.submission, @required this.title, this.content});
+
+  @override
+  SubmissionActionError copyWith({submission, title}) {
+    return SubmissionActionError(
+      submission: submission ?? this.submission,
+      title: title ?? this.title,
+      content: content ?? this.content,
+    );
+  }
+}

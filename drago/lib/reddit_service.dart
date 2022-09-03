@@ -78,7 +78,7 @@ class RedditService {
       await redditClient.downvoteSubmission(submissionModel.id);
       return Right(unit);
     } catch (e) {
-      return Left(SomeFailure(message: e));
+      return Left(SomeFailure(message: e.toString()));
     }
   }
 
@@ -87,7 +87,7 @@ class RedditService {
       await redditClient.removeVoteSubmission(submissionModel.id);
       return Right(unit);
     } catch (e) {
-      return Left(SomeFailure(message: e));
+      return Left(SomeFailure(message: e.toString()));
     }
   }
 
@@ -97,7 +97,7 @@ class RedditService {
 
       return Right(unit);
     } catch (e) {
-      return Left(SomeFailure(message: e));
+      return Left(SomeFailure(message: e.toString()));
     }
   }
 
