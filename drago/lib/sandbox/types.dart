@@ -234,6 +234,12 @@ class RedditLink implements RedditThing {
           ? VoteState.Up
           : VoteState.Down;
 
+  static VoteState _parseLikes(likes) => (likes == null)
+      ? VoteState.Neutral
+      : (likes == true)
+          ? VoteState.Up
+          : VoteState.Down;
+
   static DateTime _createdUtc(dynamic created_utc) {
     return DateTime.fromMillisecondsSinceEpoch(
         ((created_utc as double).round() * 1000),
@@ -260,7 +266,7 @@ class RedditLink implements RedditThing {
         title: json['title'],
         url: json['url'],
         previewUrl: _previewUrl(json['preview']),
-        voteState: _voteState(json['likes']),
+        voteState: _parseLikes(json['likes']),
         body: json['selftext'],
         createdUtc: _createdUtc(json['created_utc']),
       );
