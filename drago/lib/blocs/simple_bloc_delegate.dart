@@ -11,13 +11,13 @@ class SimpleBlocDelegate extends BlocObserver {
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    print(transition);
     super.onTransition(bloc, transition);
+    print('${bloc.runtimeType} $transition');
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
-    print(error);
-    super.onError(cubit, error, stackTrace);
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    print('${bloc.runtimeType} $error $stackTrace');
+    super.onError(bloc, error, stackTrace);
   }
 }

@@ -57,7 +57,7 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
           DragToPopPageRoute(
             builder: (_) => SecondPage(
               body: ImageViewerWidget(media),
-              bloc: context.bloc<SubmissionBloc>(),
+              bloc: context.read()<SubmissionBloc>(),
             ),
           ),
         ),
@@ -87,7 +87,7 @@ class SubmissionWidgetFactoryState extends State<SubmissionWidgetFactory>
             DragToPopPageRoute(
               builder: (_) => GalleryWidget(
                 media: media,
-                bloc: context.bloc<SubmissionBloc>(),
+                bloc: context.read()<SubmissionBloc>(),
               ),
             ),
           );

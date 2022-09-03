@@ -9,6 +9,7 @@ import './app.dart';
 class AppBloc extends Bloc<AppEvent, AppState> {
   final RedditService reddit;
   final UserService userService;
+  List<Object> get props => [];
 
   AppBloc({@required this.reddit, this.userService})
       : assert(reddit != null),
@@ -34,7 +35,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
     final user = await userService.loggedInUser();
     if (user is UnAuthUser) {
-      yield AppInitializedWithoutAuthUser();
+      yield AppInitializedWithoutAuthUser(user: UnAuthUser());
     } else {
       yield AppInitializedWithAuthUser(user: user);
     }

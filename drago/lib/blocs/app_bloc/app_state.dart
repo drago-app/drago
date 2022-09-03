@@ -1,3 +1,4 @@
+import 'package:draw/draw.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,6 +7,9 @@ import '../../user_service.dart';
 abstract class AppState extends Equatable {
   @override
   List<Object> get props => [];
+
+  @override
+  bool get stringify => false;
 }
 
 class AppUninitialized extends AppState {}
@@ -22,10 +26,10 @@ class AppInitializedWithAuthUser extends AppState {
 }
 
 class AppInitializedWithoutAuthUser extends AppState {
-  // final AuthUser user;
+  final AuthUser user;
 
-  AppInitializedWithoutAuthUser();
+  AppInitializedWithoutAuthUser({@required this.user});
 
-  // @override
-  // List<Object> get props => [user];
+  @override
+  List<Object> get props => [user];
 }
