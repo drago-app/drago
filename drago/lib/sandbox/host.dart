@@ -214,7 +214,6 @@ class GenericaMedia implements ExpandoMedia {
 
   //generate: () => HTMLElement;
   // onAttach?: () => void;
-
 }
 
 final Host defaultHost = Host(
@@ -291,8 +290,12 @@ final Host imgurAlbumHost = Host(
     handleLink: (href, detectResult) async {
       final src = (hash, ext) => 'https://imgur.com/${hash}m${ext ?? '.png'}';
 
-      var response = await http.get(
-          "http://imgur.com/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true");
+      var response = await http.get(Uri(
+          scheme: "http",
+          host: "imgur.com",
+          path:
+              "/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true"));
+
       var body = jsonDecode(response.body);
 
       List<ExpandoMedia> images = body['data']['images']
