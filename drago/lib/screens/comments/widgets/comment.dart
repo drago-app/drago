@@ -80,7 +80,7 @@ class CommentWidget extends StatelessWidget {
     return MarkdownBody(
       styleSheet: MarkdownTheme.of(context),
       data: unescape.convert(comment.body),
-      onTapLink: (url) => _launchURL(url),
+      // onTapLink: (url) => _launchURL(url),
     );
   }
 
