@@ -58,46 +58,52 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
   Widget galleryWidget(maxHeight, GalleryMedia media) {
     final height = MediaQuery.of(context).size.height * .3;
     return Container(
-      height: height,
-      child: Stack(
-        children: [
-          StaggeredGridView.countBuilder(
-            scrollDirection: Axis.horizontal,
-            crossAxisCount: 2,
-            itemCount: 8,
-            itemBuilder: (BuildContext context, int index) => Container(
-              height: height,
-              child: GalleryPreviewElement(
-                media.src[index],
-                height: height,
-                onTap: () => Navigator.of(context, rootNavigator: true).push(
-                  DragToPopPageRoute(
-                    builder: (_) => GalleryWidget(
-                      media: media,
-                      startingIndex: index,
-                      bloc: widget.submissionBloc,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            staggeredTileBuilder: (int index) =>
-                StaggeredTile.extent(2, height),
-            mainAxisSpacing: 4.0,
-            crossAxisSpacing: 4.0,
-          ),
-          Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: FlairWidget(
-                    flairText: '${media.size} IMAGES',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
-              ))
-        ],
-      ),
-    );
+        height: height,
+        child: Center(
+          child: Text(
+              "This was removed during NNBD conversion. It needs to be fixed. Look in comments_page_factory.dart"),
+        ));
+    // return Container(
+    //   height: height,
+    //   child: Stack(
+    //     children: [
+    //       StaggeredGridView.countBuilder(
+    //         scrollDirection: Axis.horizontal,
+    //         crossAxisCount: 2,
+    //         itemCount: 8,
+    //         itemBuilder: (BuildContext context, int index) => Container(
+    //           height: height,
+    //           child: GalleryPreviewElement(
+    //             media.src[index],
+    //             height: height,
+    //             onTap: () => Navigator.of(context, rootNavigator: true).push(
+    //               DragToPopPageRoute(
+    //                 builder: (_) => GalleryWidget(
+    //                   media: media,
+    //                   startingIndex: index,
+    //                   bloc: widget.submissionBloc,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //         staggeredTileBuilder: (int index) =>
+    //             StaggeredTile.extent(2, height),
+    //         mainAxisSpacing: 4.0,
+    //         crossAxisSpacing: 4.0,
+    //       ),
+    //       Align(
+    //           alignment: Alignment.bottomRight,
+    //           child: Padding(
+    //             padding: const EdgeInsets.all(10.0),
+    //             child: FlairWidget(
+    //                 flairText: '${media.size} IMAGES',
+    //                 style:
+    //                     TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+    //           ))
+    //     ],
+    //   ),
+    // );
   }
 
   Widget imageWidget(maxHeight, ImageMedia media) {
