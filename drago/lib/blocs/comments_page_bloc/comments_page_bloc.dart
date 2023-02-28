@@ -23,16 +23,16 @@ class CommentsPageBloc extends Bloc<CommentsPageEvent, CommentsPageState> {
       @required this.getComments})
       : super(CommentsPageInitial());
 
-  @override
-  Stream<Transition<CommentsPageEvent, CommentsPageState>> transformEvents(
-    Stream<CommentsPageEvent> events,
-    TransitionFunction<CommentsPageEvent, CommentsPageState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
-    );
-  }
+  // @override
+  // Stream<Transition<CommentsPageEvent, CommentsPageState>> transformEvents(
+  //   Stream<CommentsPageEvent> events,
+  //   TransitionFunction<CommentsPageEvent, CommentsPageState> transitionFn,
+  // ) {
+  //   return super.transformEvents(
+  //     events.debounceTime(const Duration(milliseconds: 500)),
+  //     transitionFn,
+  //   );
+  // }
 
   @override
   Stream<CommentsPageState> mapEventToState(CommentsPageEvent event) async* {

@@ -37,16 +37,16 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
               subreddit: subreddit, currentSort: hotSubmissionSort),
         );
 
-  @override
-  Stream<Transition<SubredditPageEvent, SubredditPageState>> transformEvents(
-    Stream<SubredditPageEvent> events,
-    TransitionFunction<SubredditPageEvent, SubredditPageState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 0)),
-      transitionFn,
-    );
-  }
+  // @override
+  // Stream<Transition<SubredditPageEvent, SubredditPageState>> transformEvents(
+  //   Stream<SubredditPageEvent> events,
+  //   TransitionFunction<SubredditPageEvent, SubredditPageState> transitionFn,
+  // ) {
+  //   return super.transformEvents(
+  //     events.debounceTime(const Duration(milliseconds: 0)),
+  //     transitionFn,
+  //   );
+  // }
 
   @override
   Stream<SubredditPageState> mapEventToState(SubredditPageEvent event) async* {

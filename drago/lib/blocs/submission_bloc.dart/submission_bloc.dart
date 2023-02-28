@@ -61,16 +61,16 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
     });
   }
 
-  @override
-  Stream<Transition<SubmissionEvent, SubmissionState>> transformEvents(
-    Stream<SubmissionEvent> events,
-    TransitionFunction<SubmissionEvent, SubmissionState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 1)),
-      transitionFn,
-    );
-  }
+  // @override
+  // Stream<Transition<SubmissionEvent, SubmissionState>> transformEvents(
+  //   Stream<SubmissionEvent> events,
+  //   TransitionFunction<SubmissionEvent, SubmissionState> transitionFn,
+  // ) {
+  //   return super.transformEvents(
+  //     events.debounceTime(const Duration(milliseconds: 1)),
+  //     transitionFn,
+  //   );
+  // }
 
   @override
   Stream<SubmissionState> mapEventToState(SubmissionEvent event) async* {
