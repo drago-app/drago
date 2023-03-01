@@ -1,17 +1,19 @@
+
+
 import 'package:drago/common/common.dart';
 import 'package:drago/models/score_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:drago/core/entities/vote_state.dart';
 
 class ScoreViewModel {
-  final Function onTap;
-  final VoteState voteState;
-  final ScoreModel score;
+  final Function? onTap;
+  final VoteState? voteState;
+  final ScoreModel? score;
 
-  ScoreViewModel({this.onTap, @required this.voteState, @required this.score});
+  ScoreViewModel({this.onTap, required this.voteState, required this.score});
   Color get color => _mapStateToColor(voteState);
 
-  Color _mapStateToColor(VoteState state) {
+  Color _mapStateToColor(VoteState? state) {
     if (state == VoteState.Up) {
       return CupertinoColors.activeOrange;
     } else if (state == VoteState.Down) {

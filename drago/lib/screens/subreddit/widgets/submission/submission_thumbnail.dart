@@ -64,7 +64,7 @@ class GalleryThumbnailLabel extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(4))),
         child: Center(
           child: Text(
-            "${galleryMedia.size ?? 0}",
+            "${galleryMedia.size}",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
           ),
         ),
@@ -100,29 +100,29 @@ class LinkThumbnailLabel extends StatelessWidget {
 }
 
 class SubmissionThumbnail extends StatelessWidget {
-  final String previewUrl;
+  final String? previewUrl;
   final Widget label;
-  final Function onTap;
-  final String heroTag;
+  final Function? onTap;
+  final String? heroTag;
 
   SubmissionThumbnail(
       {this.previewUrl,
       this.label = const SizedBox.shrink(),
       this.onTap,
-      @required this.heroTag});
+      required this.heroTag});
 
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Hero(
-        tag: heroTag,
+        tag: heroTag!,
         child: Stack(
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.circular(4.0),
               child: CachedNetworkImage(
                 fadeInDuration: Duration(),
-                imageUrl: previewUrl,
+                imageUrl: previewUrl!,
                 useOldImageOnUrlChange: true,
                 placeholder: (context, submission) => Container(
                   height: 55,
@@ -155,14 +155,14 @@ class SubmissionThumbnail extends StatelessWidget {
 }
 
 class SecondPage extends StatelessWidget {
-  final Bloc bloc;
+  final Bloc? bloc;
   final Widget body;
   final Widget topRightCorner;
   final Widget caption;
 
   SecondPage(
-      {@required this.bloc,
-      @required this.body,
+      {required this.bloc,
+      required this.body,
       this.topRightCorner = const SizedBox.shrink(),
       this.caption = const SizedBox.shrink()});
 
@@ -170,7 +170,8 @@ class SecondPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder(
         bloc: bloc,
-        builder: (context, state) => _buildOverlayContent(context, state));
+        builder: (context, dynamic state) =>
+            _buildOverlayContent(context, state));
   }
 
   Widget _buildOverlayContent(BuildContext context, SubmissionState state) {
@@ -185,7 +186,7 @@ class SecondPage extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: MediaViewerBottomRow(
                 submission: state.submission,
-                bloc: bloc,
+                bloc: bloc!,
               ),
             ),
           ),
@@ -193,7 +194,7 @@ class SecondPage extends StatelessWidget {
             alignment: Alignment.center,
             child: Hero(
                 transitionOnUserGestures: true,
-                tag: state.submission.url,
+                tag: state.submission.url!,
                 child: body),
           ),
           Align(

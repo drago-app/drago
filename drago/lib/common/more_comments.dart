@@ -1,3 +1,5 @@
+
+
 import 'package:drago/blocs/blocs.dart';
 import 'package:drago/models/comment_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ContinueThreadWidget extends StatelessWidget {
   final ContinueThreadModel continueThread;
 
-  ContinueThreadWidget({@required this.continueThread});
+  ContinueThreadWidget({required this.continueThread});
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +62,10 @@ class ContinueThreadWidget extends StatelessWidget {
 /* -----------*/
 
 class MoreCommentsWidget extends StatefulWidget {
-  final MoreCommentsModel moreComments;
+  final MoreCommentsModel? moreComments;
   final Function onTap;
 
-  MoreCommentsWidget(this.moreComments, {@required this.onTap});
+  MoreCommentsWidget(this.moreComments, {required this.onTap});
   @override
   _MoreCommentsState createState() => _MoreCommentsState();
 }
@@ -72,10 +74,10 @@ class _MoreCommentsState extends State<MoreCommentsWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: widget.onTap as void Function()?,
       child: Padding(
         padding:
-            EdgeInsets.only(right: 0, left: widget.moreComments.depth * 8.0),
+            EdgeInsets.only(right: 0, left: widget.moreComments!.depth * 8.0),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -90,7 +92,7 @@ class _MoreCommentsState extends State<MoreCommentsWidget> {
                 border: Border(
                   left: BorderSide(
                       width: 3,
-                      color: widget.moreComments.depth > 0
+                      color: widget.moreComments!.depth > 0
                           ? CupertinoColors.destructiveRed
                           : CupertinoColors.lightBackgroundGray.withOpacity(0)),
                 ),
@@ -104,7 +106,7 @@ class _MoreCommentsState extends State<MoreCommentsWidget> {
                   alignment: Alignment.centerLeft,
                   child: Container(
                     child: Text(
-                      '${widget.moreComments.numReplies} more replies',
+                      '${widget.moreComments!.numReplies} more replies',
                       style: TextStyle(color: CupertinoColors.systemBlue),
                     ),
                   ),

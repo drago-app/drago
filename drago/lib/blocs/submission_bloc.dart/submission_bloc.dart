@@ -10,8 +10,6 @@ import 'package:drago/sandbox/types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/features/submission/usecases.dart';
-import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
 
 class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   final RedditLink redditLink;
@@ -19,19 +17,15 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   final DownvoteOrClear downvoteOrClear;
   final SaveOrUnsaveSubmission saveOrUnsave;
 
-  final DialogService service;
+  final DialogService? service;
 
   SubmissionBloc(
-      {@required this.redditLink,
-      @required this.upvoteOrClear,
-      @required this.downvoteOrClear,
-      @required this.saveOrUnsave,
-      @required this.service})
-      : assert(redditLink != null),
-        assert(upvoteOrClear != null),
-        assert(downvoteOrClear != null),
-        assert(saveOrUnsave != null),
-        super(SubmissionInitial(
+      {required this.redditLink,
+      required this.upvoteOrClear,
+      required this.downvoteOrClear,
+      required this.saveOrUnsave,
+      required this.service})
+      : super(SubmissionInitial(
             submission: Submission.fromRedditLink(link: redditLink))) {
     _getSubmissionFromRedditLink(redditLink);
   }
@@ -92,10 +86,10 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   }
 
   Stream<SubmissionState> _mapSaveToState() async* {
-    final oldState = state;
+    final SubmissionState oldState = state;
 
     yield state.copyWith(
-      submission: state.submission.copyWith(saved: !state.submission.saved),
+      submission: state.submission.copyWith(saved: !state.submission.saved!),
     );
     final saveOrFailure =
         await saveOrUnsave(SaveOrUnsaveParams(submission: oldState.submission));
@@ -110,7 +104,7 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   }
 
   Stream<SubmissionState> _mapUpvoteToState() async* {
-    final oldState = state;
+    final SubmissionState oldState = state;
 
     final newSubmission = state.submission.copyWith(
       voteState: (state.submission.voteState == VoteState.Up)
@@ -118,8 +112,8 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
           : VoteState.Up,
       score: ScoreModel(
           score: (state.submission.voteState == VoteState.Up)
-              ? state.submission.score.score - 1
-              : state.submission.score.score + 1),
+              ? state.submission.score.score! - 1
+              : state.submission.score.score! + 1),
     );
 
     final newState = state.copyWith(submission: newSubmission);
@@ -147,7 +141,7 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
   }
 
   Stream<SubmissionState> _mapDownvoteToState() async* {
-    final oldState = state;
+    final SubmissionState oldState = state;
 
     final newSubmission = state.submission.copyWith(
       voteState: (state.submission.voteState == VoteState.Down)
@@ -155,8 +149,8 @@ class SubmissionBloc extends Bloc<SubmissionEvent, SubmissionState> {
           : VoteState.Down,
       score: ScoreModel(
           score: (state.submission.voteState == VoteState.Up)
-              ? state.submission.score.score + 1
-              : state.submission.score.score - 1),
+              ? state.submission.score.score! + 1
+              : state.submission.score.score! - 1),
     );
 
     final newState = state.copyWith(submission: newSubmission);

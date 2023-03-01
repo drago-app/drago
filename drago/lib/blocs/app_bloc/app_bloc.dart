@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:drago/reddit_service.dart';
 import 'package:meta/meta.dart';
 import '../../user_service.dart';
@@ -11,9 +10,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final UserService userService;
   List<Object> get props => [];
 
-  AppBloc({@required this.reddit, this.userService})
-      : assert(reddit != null),
-        super(AppUninitialized());
+  AppBloc({required this.reddit, required this.userService})
+      : super(AppUninitialized());
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {
@@ -35,7 +33,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
     final user = await userService.loggedInUser();
     if (user is UnAuthUser) {
-      yield AppInitializedWithoutAuthUser(user: UnAuthUser());
+      yield AppInitializedWithoutAuthUser(
+          user: UnAuthUser(name: "", token: ""));
     } else {
       yield AppInitializedWithAuthUser(user: user);
     }

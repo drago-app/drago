@@ -1,3 +1,5 @@
+
+
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SubmissionRatio extends StatelessWidget {
   final Submission submission;
 
-  SubmissionRatio({@required this.submission});
+  SubmissionRatio({required this.submission});
 
   @override
   Widget build(BuildContext context) {

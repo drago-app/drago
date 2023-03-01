@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -6,7 +8,7 @@ import 'page_transition.dart';
 class DragToPopPageRoute<T> extends PageRoute<T> {
   DragToPopPageRoute({this.builder}) : super();
 
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
 
   @override
   bool get opaque => true;
@@ -47,9 +49,9 @@ class DragToPopPageRoute<T> extends PageRoute<T> {
       Animation<double> secondaryAnimation) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 
-    return builder(context);
+    return builder!(context);
   }
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 }

@@ -1,27 +1,29 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
 class Subreddit {
   /// This is the common name of the subreddit
   /// e.g. 'gadgets'
-  final String displayName;
+  final String? displayName;
 
   /// This is a high level description of the subreddit
   /// e.g. "r/Apple - the unofficial Apple community",
-  final String title;
+  final String? title;
 
   /// This is the 'thing' name  of the subreddit
   /// e.g. 't5_2qgzt
-  final String name;
+  final String? name;
   final Option<Uri> iconImage;
-  final bool quarantined;
-  final bool over18;
+  final bool? quarantined;
+  final bool? over18;
 
   /// Does every subreddit have this??
-  final String publicDescription;
+  final String? publicDescription;
 
   // Does every subreddit have this??
-  final String submitText;
+  final String? submitText;
 
   /// This is the allowable submission types
   /// Some subreddits can be 'link' others can be any.
@@ -30,17 +32,17 @@ class Subreddit {
   // final List submissionType;
 
   Subreddit({
-    @required this.displayName,
-    @required this.title,
-    @required this.name,
-    @required this.quarantined,
-    @required this.over18,
-    @required this.publicDescription,
-    @required this.submitText,
-    @required this.iconImage,
+    required this.displayName,
+    required this.title,
+    required this.name,
+    required this.quarantined,
+    required this.over18,
+    required this.publicDescription,
+    required this.submitText,
+    required this.iconImage,
   });
 
-  factory Subreddit.fromJson(Map<String, dynamic> json) {
+  factory Subreddit.fromJson(Map<String?, dynamic> json) {
     return Subreddit(
       displayName: json['display_name'],
       title: json['title'],

@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/foundation.dart';
@@ -12,14 +14,14 @@ class DownvoteOrClear implements UseCase<Submission, DownVoteParams> {
   final RedditService reddit;
   final UserService userService;
 
-  DownvoteOrClear({@required this.reddit, @required this.userService});
+  DownvoteOrClear({required this.reddit, required this.userService});
 
   @override
   Future<Either<Failure, Submission>> call(params) async {
     if (!await userService.isUserLoggedIn()) {
       return Left(NotAuthorizedFailure());
     }
-    if (params.submission.archived) {
+    if (params.submission.archived!) {
       return Left(PostArchivedFailure());
     }
 
@@ -41,5 +43,5 @@ class DownvoteOrClear implements UseCase<Submission, DownVoteParams> {
 class DownVoteParams {
   final Submission submission;
 
-  DownVoteParams({@required this.submission}) : assert(submission != null);
+  DownVoteParams({required this.submission}) : assert(submission != null);
 }

@@ -11,7 +11,7 @@ class UserService {
   // SharedPreferences prefs;
   final RedditService reddit;
 
-  UserService({@required this.reddit}) : assert(reddit != null);
+  UserService({required this.reddit}) : assert(reddit != null);
 
   Future<bool> isUserLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
@@ -23,16 +23,16 @@ class UserService {
     AuthUser authUser = await reddit.loginWithNewAccount();
     final users = (prefs.containsKey(_accounts))
         ? prefs
-            .getStringList(_accounts)
+            .getStringList(_accounts)!
             .map((account) => AuthUser.fromJson(jsonDecode(account)))
             .toList()
         : [];
 
     users.add(authUser);
-    final List<String> usersAsString =
-        users.map<String>((user) => user.toJson()).toList();
+    final List<String?> usersAsString =
+        users.map<String?>((user) => user.toJson()).toList();
 
-    prefs.setStringList(_accounts, usersAsString);
+    prefs.setStringList(_accounts, usersAsString as List<String>);
     prefs.setString(_lastLoggedin, authUser.toJson());
     return authUser;
   }
@@ -42,21 +42,22 @@ class UserService {
 
     try {
       AuthUser userLastLoggedIn =
-          AuthUser.fromJson(jsonDecode(prefs.getString(_lastLoggedin)));
+          AuthUser.fromJson(jsonDecode(prefs.getString(_lastLoggedin)!));
       reddit.initializeWithAuth(userLastLoggedIn.token);
       prefs.setString(_lastLoggedin, userLastLoggedIn.toJson());
       return userLastLoggedIn;
     } catch (e) {
       try {
         final users = prefs
-            .getStringList(_accounts)
+            .getStringList(_accounts)!
             .map((account) => AuthUser.fromJson(jsonDecode(account)));
         reddit.initializeWithAuth(users.last.token);
       } catch (e) {
         await reddit.initializeWithoutAuth();
-        return UnAuthUser();
+        return UnAuthUser(name: '', token: '');
       }
     }
+    return UnAuthUser(name: '', token: '');
   }
 }
 
@@ -64,12 +65,12 @@ class AuthUser extends Equatable {
   final String name;
   final String token;
 
-  AuthUser({@required this.name, @required this.token});
+  AuthUser({required this.name, required this.token});
 
   @override
-  List<Object> get props => [name, token];
+  List<Object?> get props => [name, token];
 
-  AuthUser copyWith({String name, String token}) {
+  AuthUser copyWith({String? name, String? token}) {
     return AuthUser(name: name ?? this.name, token: token ?? this.token);
   }
 
@@ -84,5 +85,5 @@ class AuthUser extends Equatable {
 }
 
 class UnAuthUser extends AuthUser {
-  // UnAuthUser();
+  UnAuthUser({required name, required, token}) : super(name: '', token: '');
 }

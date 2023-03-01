@@ -9,7 +9,7 @@ abstract class MoreCommentsState {
 class MoreCommentsInitial extends MoreCommentsState {
   final MoreCommentsModel more;
 
-  MoreCommentsInitial({@required this.more});
+  MoreCommentsInitial({required this.more});
 
   @override
   MoreCommentsInitial copyWith({more}) {
@@ -20,7 +20,7 @@ class MoreCommentsInitial extends MoreCommentsState {
 class MoreCommentsLoading extends MoreCommentsState {
   final MoreCommentsModel more;
 
-  MoreCommentsLoading({@required this.more});
+  MoreCommentsLoading({required this.more});
 
   @override
   MoreCommentsLoading copyWith({more}) {
@@ -32,7 +32,7 @@ class MoreCommentsLoaded extends MoreCommentsState {
   final MoreCommentsModel more;
   final List expandedComments;
 
-  MoreCommentsLoaded({@required this.more, @required this.expandedComments});
+  MoreCommentsLoaded({required this.more, required this.expandedComments});
 
   @override
   MoreCommentsLoaded copyWith({more, expandedComments}) {

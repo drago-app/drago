@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/models/comment_model.dart';
 import 'package:drago/sandbox/types.dart';
@@ -10,12 +12,13 @@ class GetMoreComments
     implements UseCase<List<BaseCommentModel>, GetMoreCommentsParams> {
   final RedditService reddit;
 
-  GetMoreComments({@required this.reddit});
+  GetMoreComments({required this.reddit});
 
   @override
   Future<Either<Failure, List<BaseCommentModel>>> call(params) async {
     final List<Either<More, RedditComment>> failureOrComments =
-        await reddit.getMoreComments(params.data, params.submissionId);
+        await (reddit.getMoreComments(params.data, params.submissionId)
+            as FutureOr<List<Either<More, RedditComment>>>);
 
     final List<BaseCommentModel> comments = failureOrComments
         .map((moc) => moc.fold(

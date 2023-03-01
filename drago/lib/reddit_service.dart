@@ -13,15 +13,17 @@ class RedditService {
   final RedditClient redditClient;
   String _state = 'thisisarandomstring';
 
-  RedditService({@required this.redditClient});
+  RedditService({required this.redditClient});
 
-  Future<List<Either>> getMoreComments(Map data, String submissionId) async {
+  Future<List<Either<More, RedditComment>>> getMoreComments(
+      Map data, String submissionId) async {
     final List<Map> jsonComments =
         await redditClient.expandMoreComments(data, submissionId);
     return RedditComment.buildComments(jsonComments);
   }
 
-  Future<List<Either>> getComments(String submissionId) async {
+  Future<List<Either<More, RedditComment>>> getComments(
+      String submissionId) async {
     final List<Map> jsonComments =
         await redditClient.getCommentsForSubmission(submissionId);
     return RedditComment.buildComments(jsonComments);
@@ -32,9 +34,9 @@ class RedditService {
     try {
       final List<Subreddit> subs = await subsFn();
       return Right(subs
-        ..sort((a, b) => a.displayName
+        ..sort((a, b) => a.displayName!
             .toLowerCase()
-            .compareTo(b.displayName.toLowerCase())));
+            .compareTo(b.displayName!.toLowerCase())));
     } catch (e) {
       return Left(SomeFailure(message: '[$failureMsgPrefix] ${e.toString()}'));
     }
@@ -102,43 +104,43 @@ class RedditService {
   }
 
   Future<List<RedditLink>> _hot(
-      String subreddit, TimeFilter filter, String after) async {
+      String subreddit, TimeFilter? filter, String? after) async {
     final linksAsJson = await redditClient.hotSubmissions(subreddit, after);
 
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<List<RedditLink>> _newest(
-      String subreddit, TimeFilter filter, String after) async {
+      String subreddit, TimeFilter? filter, String? after) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.newestSubmissions(subreddit, after);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
-  Future<List<RedditLink>> _rising(String subreddit, String after) async {
+  Future<List<RedditLink>> _rising(String subreddit, String? after) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.risingSubmissions(subreddit, after);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<List<RedditLink>> _controversial(
-      String subreddit, String after, TimeFilter filter) async {
+      String subreddit, String? after, TimeFilter? filter) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.controversialSubmissions(subreddit, after, filter);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<List<RedditLink>> _top(
-      String subreddit, String after, TimeFilter filter) async {
+      String subreddit, String? after, TimeFilter? filter) async {
     final List<Map<dynamic, dynamic>> linksAsJson =
         await redditClient.topSubmissions(subreddit, after, filter);
     return linksAsJson.map((link) => RedditLink.fromJson(link)).toList();
   }
 
   Future<Either<Failure, List<RedditLink>>> getRedditLinks(String subreddit,
-      {String after,
-      SubmissionSortType sort = SubmissionSortType.hot,
-      TimeFilter filter = TimeFilter.all}) async {
+      {String? after,
+      SubmissionSortType? sort = SubmissionSortType.hot,
+      TimeFilter? filter = TimeFilter.all}) async {
     try {
       List<RedditLink> response;
       if (sort == SubmissionSortType.hot) {
@@ -189,7 +191,7 @@ class RedditService {
     await redditClient.initializeWithoutAuth();
   }
 
-  String initializeWithAuth(String token) {
+  String initializeWithAuth(String? token) {
     return redditClient.initializeWithAuth(token);
   }
 }

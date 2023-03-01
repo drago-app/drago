@@ -1,9 +1,11 @@
+
+
 import 'package:flutter/cupertino.dart';
 
 class SubmissionAge extends StatelessWidget {
   final String age;
 
-  SubmissionAge({@required this.age});
+  SubmissionAge({required this.age});
 
   @override
   Widget build(BuildContext context) {

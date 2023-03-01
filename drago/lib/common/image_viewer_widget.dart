@@ -1,3 +1,5 @@
+
+
 import 'package:drago/common/common.dart';
 import 'package:drago/common/picture.dart';
 import 'package:drago/sandbox/host.dart';
@@ -49,8 +51,8 @@ class ImageViewerWidgetState extends State<ImageViewerWidget> {
 }
 
 class ImageViewCaptionWidget extends StatefulWidget {
-  final String caption;
-  final Function onTap;
+  final String? caption;
+  final Function? onTap;
 
   ImageViewCaptionWidget({this.caption, this.onTap});
 
@@ -65,7 +67,7 @@ class ImageViewCaptionWidgetState extends State<ImageViewCaptionWidget> {
         ? Container(
             // width: MediaQuery.of(context).size.width * .8,
             child: ExpandableText(
-              widget.caption,
+              widget.caption!,
               onTap: widget.onTap,
               trimLines: 4,
             ),

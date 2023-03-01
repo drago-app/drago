@@ -10,12 +10,7 @@ import 'package:drago/reddit_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  DownvoteOrClear downvoteOrClear;
-  RedditService redditService;
-
-  setUp() {
-    redditService = RedditService();
-  }
+  setUp() {}
 
   test(
       'Given a submission, when the user is not authenticated, then it returns a NotAuthorized failure',

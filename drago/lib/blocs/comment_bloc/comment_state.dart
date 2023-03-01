@@ -12,7 +12,7 @@ abstract class CommentState extends Equatable {
 class CommentInitial extends CommentState {
   final BaseCommentModel comment;
 
-  CommentInitial({@required this.comment});
+  CommentInitial({required this.comment});
 
   CommentInitial copyWith({comment}) {
     return CommentInitial(comment: comment ?? this.comment);

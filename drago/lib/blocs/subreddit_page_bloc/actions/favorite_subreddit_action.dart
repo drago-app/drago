@@ -28,7 +28,7 @@ class FavoriteSubredditAction
     }, (_) async* {
       yield SubredditPageLoaded(
         currentSort: bloc.state.currentSort,
-        redditLinks: bloc.state.redditLinks,
+        redditLinks: bloc.state.redditLinks!,
         subreddit: bloc.state.subreddit,
       );
     });

@@ -13,10 +13,10 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final DialogService dialogService;
 
   HomePageBloc(
-      {@required this.getUsersModerations,
-      @required this.getUsersSubscriptions,
-      @required this.getDefaultSubreddits,
-      @required this.dialogService})
+      {required this.getUsersModerations,
+      required this.getUsersSubscriptions,
+      required this.getDefaultSubreddits,
+      required this.dialogService})
       : super(HomePageInitial());
 
   @override

@@ -1,14 +1,16 @@
+
+
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/vote_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 class SubmissionActions extends StatelessWidget {
-  final Function onUpVote;
-  final Function onDownVote;
-  final Function onSave;
-  final VoteState voteState;
-  final bool saved;
+  final Function? onUpVote;
+  final Function? onDownVote;
+  final Function? onSave;
+  final VoteState? voteState;
+  final bool? saved;
 
   const SubmissionActions(
       {this.onUpVote,
@@ -34,21 +36,21 @@ class SubmissionActions extends StatelessWidget {
             activeBackgroundColor: CupertinoColors.activeOrange,
             inActiveIconColor: CupertinoColors.systemBlue,
             iconData: CupertinoIcons.arrow_up,
-            onTap: () => onUpVote(),
+            onTap: () => onUpVote!(),
             switchCondition: voteState == VoteState.Up,
           ),
           SquareActionButton(
             activeBackgroundColor: CupertinoColors.systemPurple,
             inActiveIconColor: CupertinoColors.systemBlue,
             iconData: CupertinoIcons.arrow_down,
-            onTap: () => onDownVote(),
+            onTap: () => onDownVote!(),
             switchCondition: voteState == VoteState.Down,
           ),
           SquareActionButton(
             activeBackgroundColor: CupertinoColors.activeGreen,
             inActiveIconColor: CupertinoColors.systemBlue,
             iconData: CupertinoIcons.bookmark,
-            onTap: () => onSave(),
+            onTap: () => onSave!(),
             switchCondition: saved == true,
           ),
           SquareActionButton(

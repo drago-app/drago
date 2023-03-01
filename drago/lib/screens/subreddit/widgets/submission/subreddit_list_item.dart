@@ -1,3 +1,5 @@
+
+
 import 'package:drago/common/common.dart';
 import 'package:drago/common/text_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,39 +9,39 @@ import 'package:drago/screens/subreddit/widgets/widgets.dart';
 
 class SubredditListItem extends StatelessWidget {
   final Function onTap;
-  final String title, authorFlairText, linkFlairText;
+  final String? title, authorFlairText, linkFlairText;
   final VoteState voteState;
   final Function onUpVote;
   final Function onDownVote;
   final Widget thumbnail;
-  final bool saved, nsfw, stickied;
+  final bool? saved, nsfw, stickied;
   final AuthorViewModel authorViewModel;
   final ScoreViewModel scoreViewModel;
   final NumCommentsViewModel numCommentsViewModel;
 
   const SubredditListItem(
-      {Key key,
-      @required this.thumbnail,
-      @required this.title,
-      @required this.authorFlairText,
-      @required this.linkFlairText,
-      @required this.voteState,
-      @required this.onUpVote,
-      @required this.onDownVote,
-      @required this.onTap,
-      @required this.saved,
-      @required this.nsfw,
-      @required this.stickied,
-      @required this.authorViewModel,
-      @required this.scoreViewModel,
-      @required this.numCommentsViewModel})
+      {Key? key,
+      required this.thumbnail,
+      required this.title,
+      required this.authorFlairText,
+      required this.linkFlairText,
+      required this.voteState,
+      required this.onUpVote,
+      required this.onDownVote,
+      required this.onTap,
+      required this.saved,
+      required this.nsfw,
+      required this.stickied,
+      required this.authorViewModel,
+      required this.scoreViewModel,
+      required this.numCommentsViewModel})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoListTile(
       onTap: () => onTap(context),
-      bottomRightCorner: SubmissionSave(saved: saved),
+      bottomRightCorner: SubmissionSave(saved: saved!),
       leading: thumbnail,
       title: RichText(
         text: TextSpan(
@@ -51,7 +53,7 @@ class SubredditListItem extends StatelessWidget {
                   child: NSFWFlairWidget(nsfw)),
               WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
-                  child: FlairWidget(flairText: linkFlairText))
+                  child: FlairWidget(flairText: linkFlairText!))
             ]),
       ),
       subtitle: SubredditListItemBottomBar(
@@ -82,20 +84,20 @@ class SubredditListItem extends StatelessWidget {
 }
 
 class SubredditListItemBottomBar extends StatelessWidget {
-  final String age;
+  final String? age;
   final AuthorViewModel author;
   final ScoreViewModel score;
   final NumCommentsViewModel numComments;
-  final String authorFlairText;
-  final bool stickied;
+  final String? authorFlairText;
+  final bool? stickied;
 
   SubredditListItemBottomBar(
-      {@required this.age,
-      @required this.stickied,
-      @required this.author,
-      @required this.authorFlairText,
-      @required this.score,
-      @required this.numComments});
+      {required this.age,
+      required this.stickied,
+      required this.author,
+      required this.authorFlairText,
+      required this.score,
+      required this.numComments});
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +106,9 @@ class SubredditListItemBottomBar extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: <Widget>[
-        StickiedWidget(stickied),
+        StickiedWidget(stickied!),
         AuthorWidget(author),
-        FlairWidget(flairText: authorFlairText),
+        FlairWidget(flairText: authorFlairText!),
         ScoreWidgetSpan(score),
 
         NumCommentsWidget(numComments),
@@ -154,15 +156,15 @@ class SubredditListItemBottomBar extends StatelessWidget {
 }
 
 class CupertinoListTile extends StatefulWidget {
-  final Widget leading;
-  final Widget title;
-  final Widget subtitle;
-  final Widget trailing;
-  final Widget bottomRightCorner;
-  final Function onTap;
+  final Widget? leading;
+  final Widget? title;
+  final Widget? subtitle;
+  final Widget? trailing;
+  final Widget? bottomRightCorner;
+  final Function? onTap;
 
   CupertinoListTile({
-    Key key,
+    Key? key,
     this.leading,
     this.title,
     this.subtitle,
@@ -199,7 +201,7 @@ class _StatefulStateCupertino extends State<CupertinoListTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: widget.onTap as void Function()?,
       onTapCancel: onTapCancel,
       onTapDown: onTapDown,
       onTapUp: onTapUp,

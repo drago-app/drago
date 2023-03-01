@@ -6,12 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'subreddit_page_bloc.dart';
 
 abstract class SubredditPageState extends Equatable {
-  String get subreddit;
-  SubmissionSort get currentSort;
-  List<RedditLink> get redditLinks;
+  String? get subreddit;
+  SubmissionSort? get currentSort;
+  List<RedditLink>? get redditLinks;
 
   @override
-  List<Object> get props => [subreddit, currentSort];
+  List<Object?> get props => [subreddit, currentSort];
 }
 
 class SubredditPageInitial extends SubredditPageState {
@@ -20,33 +20,33 @@ class SubredditPageInitial extends SubredditPageState {
   final List<RedditLink> redditLinks;
 
   SubredditPageInitial(
-      {@required this.subreddit,
-      @required this.currentSort,
+      {required this.subreddit,
+      required this.currentSort,
       this.redditLinks = const []})
       : assert(subreddit != null);
 }
 
 class SubredditPageLoading extends SubredditPageState {
   final String subreddit;
-  final SubmissionSort currentSort;
+  final SubmissionSort? currentSort;
   final List<RedditLink> redditLinks;
 
   SubredditPageLoading(
-      {@required this.subreddit,
-      @required this.currentSort,
+      {required this.subreddit,
+      required this.currentSort,
       this.redditLinks = const []})
       : assert(subreddit != null);
 }
 
 class SubredditPageLoaded extends SubredditPageState {
   final List<RedditLink> redditLinks;
-  final String subreddit;
-  final SubmissionSort currentSort;
+  final String? subreddit;
+  final SubmissionSort? currentSort;
 
   SubredditPageLoaded(
-      {@required this.redditLinks,
-      @required this.subreddit,
-      @required this.currentSort})
+      {required this.redditLinks,
+      required this.subreddit,
+      required this.currentSort})
       : assert(redditLinks != null);
 
   SubredditPageLoaded copyWith({redditLinks, subreddit}) {
@@ -57,35 +57,35 @@ class SubredditPageLoaded extends SubredditPageState {
   }
 
   @override
-  List<Object> get props => [redditLinks, subreddit, currentSort];
+  List<Object?> get props => [redditLinks, subreddit, currentSort];
 }
 
 class DisplayingActions extends SubredditPageState {
-  final String subreddit;
-  final SubmissionSort currentSort;
+  final String? subreddit;
+  final SubmissionSort? currentSort;
   final List<ActionModel> actions;
-  final List<RedditLink> redditLinks;
+  final List<RedditLink>? redditLinks;
 
   DisplayingActions(
-      {@required this.subreddit,
+      {required this.subreddit,
       this.redditLinks = const [],
-      @required this.currentSort,
-      @required this.actions});
+      required this.currentSort,
+      required this.actions});
 
   @override
-  List<Object> get props => [subreddit, currentSort, actions, redditLinks];
+  List<Object?> get props => [subreddit, currentSort, actions, redditLinks];
 }
 
 class SubredditPageError extends SubredditPageState {
-  final String subreddit;
-  final SubmissionSort currentSort;
-  final List<RedditLink> redditLinks;
-  final String error;
+  final String? subreddit;
+  final SubmissionSort? currentSort;
+  final List<RedditLink>? redditLinks;
+  final String? error;
 
   SubredditPageError(
       {this.subreddit, this.currentSort, this.redditLinks, this.error});
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [subreddit, currentSort, this.redditLinks, this.error];
 }

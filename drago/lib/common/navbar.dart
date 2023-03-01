@@ -5,7 +5,7 @@ const _HeroTag _defaultHeroTag = _HeroTag(null);
 class _HeroTag {
   const _HeroTag(this.navigator);
 
-  final NavigatorState navigator;
+  final NavigatorState? navigator;
 
   // Let the Hero tag be described in tree dumps.
   @override
@@ -20,7 +20,7 @@ class _HeroTag {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    final _HeroTag otherTag = other;
+    final _HeroTag otherTag = other as _HeroTag;
     return navigator == otherTag.navigator;
   }
 
@@ -44,7 +44,7 @@ class CustomCupertinoNavigationBar extends StatefulWidget
     implements ObstructingPreferredSizeWidget {
   /// Creates a navigation bar in the iOS style.
   const CustomCupertinoNavigationBar({
-    Key key,
+    Key? key,
     this.leading,
     this.automaticallyImplyLeading = true,
     this.automaticallyImplyMiddle = true,
@@ -77,29 +77,29 @@ class CustomCupertinoNavigationBar extends StatefulWidget
         super(key: key);
 
   /// parameters for the navbar
-  final Widget leading;
+  final Widget? leading;
   final bool automaticallyImplyLeading;
   final bool automaticallyImplyMiddle;
-  final String previousPageTitle;
-  final Widget middle;
-  final Widget trailing;
-  final Color backgroundColor;
-  final EdgeInsetsDirectional padding;
+  final String? previousPageTitle;
+  final Widget? middle;
+  final Widget? trailing;
+  final Color? backgroundColor;
+  final EdgeInsetsDirectional? padding;
   final Border border;
   @Deprecated('Use CupertinoTheme and primaryColor to propagate color')
-  final Color actionsForegroundColor;
+  final Color? actionsForegroundColor;
   final bool transitionBetweenRoutes;
   final Object heroTag;
 
   /// parameters for the underlying gesture detecor
-  final VoidCallback onTap;
-  final VoidCallback onTapCancel;
-  final VoidCallback onDoubleTap;
-  final VoidCallback onLongPress;
+  final VoidCallback? onTap;
+  final VoidCallback? onTapCancel;
+  final VoidCallback? onDoubleTap;
+  final VoidCallback? onLongPress;
 
   @override
-  bool get fullObstruction =>
-      backgroundColor == null ? null : backgroundColor.alpha == 0xFF;
+  bool? get fullObstruction =>
+      backgroundColor == null ? null : backgroundColor!.alpha == 0xFF;
 
   @override
   Size get preferredSize {
@@ -113,8 +113,8 @@ class CustomCupertinoNavigationBar extends StatefulWidget
 
   @override
   bool shouldFullyObstruct(BuildContext context) {
-    // TODO: implement shouldFullyObstruct
-    return null;
+    // (DONOVAN) I have no idea whether this should be true or false
+    return false;
   }
 }
 

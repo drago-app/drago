@@ -26,7 +26,7 @@ class SortSubmissionsAction
           (bloc) => _states(bloc),
           sort.icon,
           (bloc.state.currentSort == sort)
-              ? bloc.state.currentSort.description
+              ? bloc.state.currentSort!.description
               : sort.description,
           options: filterFnsOption,
           selected: bloc.state.currentSort == sort);

@@ -6,7 +6,7 @@ import 'package:drago/blocs/blocs.dart';
 
 class AccountsPage extends StatefulWidget {
   AccountsPage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

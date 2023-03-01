@@ -4,7 +4,6 @@ import 'package:drago/dialog/dialog_provider.dart';
 import 'package:drago/icons_enum.dart';
 import 'package:drago/screens/subreddit/widgets/submission/submission_widget_factory.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/blocs/subreddit_page_bloc/subreddit_page.dart';
@@ -79,7 +78,7 @@ class _SubredditPageState extends State<SubredditPage> {
                       BlocProvider.of<SubredditPageBloc>(bloccontext)
                           .add(UserTappedSortButton()),
                   padding: const EdgeInsets.all(0),
-                  child: Icon(getIconData(state.currentSort.icon)),
+                  child: Icon(getIconData(state.currentSort!.icon)),
                 ),
                 CupertinoButton(
                     onPressed: () =>
@@ -101,7 +100,7 @@ class _SubredditPageState extends State<SubredditPage> {
     } else if (state is SubredditPageLoading) {
       return Center(child: LoadingIndicator());
     } else if (state is SubredditPageLoaded) {
-      final _service = DialogProvider.of(context).service;
+      final _service = DialogProvider.of(context)!.service;
       return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
@@ -117,6 +116,7 @@ class _SubredditPageState extends State<SubredditPage> {
         ),
       );
     }
+    return Placeholder(child: Text("_buildBody in subreddit_page.dart"));
   }
 
   @override
@@ -134,8 +134,8 @@ class _SubredditPageState extends State<SubredditPage> {
 }
 
 class DialogAction<B extends Bloc> extends StatelessWidget {
-  final ActionModel action;
-  final B bloc;
+  final ActionModel? action;
+  final B? bloc;
   DialogAction({this.bloc, this.action}) {
     print(bloc);
   }
@@ -144,7 +144,7 @@ class DialogAction<B extends Bloc> extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheetAction(
       onPressed: () {
-        bloc.add(UserSelectedAction(action));
+        bloc!.add(UserSelectedAction(action!));
         Navigator.of(context).pop();
       },
       child: Container(
@@ -152,21 +152,21 @@ class DialogAction<B extends Bloc> extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Icon(getIconData(action.icon)),
+            Icon(getIconData(action!.icon)),
             Expanded(
               child: Container(
                 padding: EdgeInsets.only(left: 24),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${action.description}'),
+                    Text('${action!.description}'),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        (action.selected)
+                        action!.selected!
                             ? Icon(getIconData(DragoIcons.selected))
                             : SizedBox.shrink(),
-                        action.options.fold(() => SizedBox.shrink(),
+                        action!.options.fold(() => SizedBox.shrink(),
                             (_) => Icon(getIconData(DragoIcons.chevron_right)))
                       ],
                     )

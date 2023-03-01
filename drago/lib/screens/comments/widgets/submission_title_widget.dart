@@ -1,10 +1,12 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 class SubmissionTitleWidget extends StatelessWidget {
   final String title;
 
-  const SubmissionTitleWidget(this.title, {Key key})
+  const SubmissionTitleWidget(this.title, {Key? key})
       : assert(title != null),
         super(key: key);
 

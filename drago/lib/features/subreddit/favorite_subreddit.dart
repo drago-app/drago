@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/core/usecases/usecase.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/foundation.dart';
 class FavoriteSubreddit implements UseCase<Unit, FavoriteSubredditParams> {
   final RedditService reddit;
 
-  FavoriteSubreddit({@required this.reddit});
+  FavoriteSubreddit({required this.reddit});
 
   @override
   Future<Either<Failure, Unit>> call(FavoriteSubredditParams params) async {

@@ -1,3 +1,5 @@
+
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +10,10 @@ class RedditUser extends Equatable {
   final DateTime createdOn;
 
   RedditUser(
-      {@required this.displayName,
-      @required this.postKarma,
-      @required this.commentKarma,
-      @required this.createdOn})
+      {required this.displayName,
+      required this.postKarma,
+      required this.commentKarma,
+      required this.createdOn})
       : assert(displayName != null),
         assert(postKarma != null),
         assert(commentKarma != null),

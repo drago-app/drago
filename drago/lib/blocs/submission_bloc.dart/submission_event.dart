@@ -18,7 +18,7 @@ class DialogDismissed extends SubmissionEvent {}
 class SubmissionResolved extends SubmissionEvent {
   final Submission submission;
 
-  SubmissionResolved({@required this.submission});
+  SubmissionResolved({required this.submission});
 
   @override
   List<Object> get props => [submission];

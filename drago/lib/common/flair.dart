@@ -1,13 +1,15 @@
+
+
 import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class FlairWidget extends StatelessWidget {
   final String flairText;
-  final TextStyle style;
+  final TextStyle? style;
   final color;
   static final _defaultColor = CupertinoColors.lightBackgroundGray;
 
-  FlairWidget({@required this.flairText, this.style, this.color})
+  FlairWidget({required this.flairText, this.style, this.color})
       : assert(flairText != null);
 
   @override
@@ -27,13 +29,13 @@ class FlairWidget extends StatelessWidget {
 }
 
 class NSFWFlairWidget extends StatelessWidget {
-  final bool nsfw;
+  final bool? nsfw;
 
   const NSFWFlairWidget(this.nsfw);
 
   @override
   Widget build(BuildContext context) {
-    return (!nsfw)
+    return (!nsfw!)
         ? SizedBox.shrink()
         : Container(
             child: Padding(

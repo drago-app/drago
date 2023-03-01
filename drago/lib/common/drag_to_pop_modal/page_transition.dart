@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/animation.dart' show Curves;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -17,8 +19,8 @@ class DragDownToPopPageTransitionsBuilder extends PageTransitionsBuilder {
     this.backgroundBuilder,
   });
 
-  final Color backgroundColor;
-  final TransitionBackgroundBuilder backgroundBuilder;
+  final Color? backgroundColor;
+  final TransitionBackgroundBuilder? backgroundBuilder;
 
   @override
   Widget buildTransitions<T>(
@@ -41,13 +43,13 @@ class DragDownToPopPageTransitionsBuilder extends PageTransitionsBuilder {
 
 class SlideAndFadeTransition extends StatelessWidget {
   SlideAndFadeTransition({
-    Key key,
-    @required Animation<double> primaryRouteAnimation,
-    @required Animation<double> secondaryRouteAnimation,
-    @required bool linearTransition,
-    @required this.child,
-    Color backgroundColor,
-    TransitionBackgroundBuilder backgroundBuilder,
+    Key? key,
+    required Animation<double> primaryRouteAnimation,
+    required Animation<double> secondaryRouteAnimation,
+    required bool linearTransition,
+    required this.child,
+    Color? backgroundColor,
+    TransitionBackgroundBuilder? backgroundBuilder,
   })  : assert(linearTransition != null),
         _primaryAnimation1 = (linearTransition
                 ? primaryRouteAnimation

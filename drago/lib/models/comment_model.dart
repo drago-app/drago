@@ -1,3 +1,5 @@
+
+
 import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/score_model.dart';
@@ -14,10 +16,10 @@ abstract class BaseCommentModel extends Equatable {
   final String submissionId;
 
   @override
-  List<Object> get props => [depth, id, submissionId];
+  List<Object?> get props => [depth, id, submissionId];
 
   BaseCommentModel(
-      {@required this.depth, @required this.id, @required this.submissionId})
+      {required this.depth, required this.id, required this.submissionId})
       : assert(depth != null),
         assert(submissionId != null),
         assert(id != null);
@@ -57,12 +59,12 @@ abstract class BaseCommentModel extends Equatable {
     );
   }
 
-  static int _getCount(redditComment) {
+  static int? _getCount(redditComment) {
     return redditComment.children.fold(
         1,
         (acc, moc) => moc.fold(
               (more) => more.count + acc,
-              (comment) => _getCount(comment) + acc,
+              (comment) => _getCount(comment)! + acc,
             ));
   }
 
@@ -85,15 +87,15 @@ class CommentModel extends BaseCommentModel {
   final bool edited;
   final Author author;
   final ScoreModel score;
-  final int count;
-  final String body;
-  final String authorFlairText;
+  final int? count;
+  final String? body;
+  final String? authorFlairText;
   final String age;
 
   final List<BaseCommentModel> children;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         depth,
         edited,
@@ -108,18 +110,18 @@ class CommentModel extends BaseCommentModel {
       ];
 
   CommentModel({
-    @required this.voteState,
-    @required id,
-    @required depth,
-    @required this.edited,
-    @required this.author,
-    @required this.score,
-    @required this.body,
-    @required this.authorFlairText,
-    @required this.age,
-    @required submissionId,
-    @required this.children,
-    @required this.count,
+    required this.voteState,
+    required id,
+    required depth,
+    required this.edited,
+    required this.author,
+    required this.score,
+    required this.body,
+    required this.authorFlairText,
+    required this.age,
+    required submissionId,
+    required this.children,
+    required this.count,
   }) : super(depth: depth, id: id, submissionId: submissionId);
 }
 
@@ -127,17 +129,17 @@ class ContinueThreadModel extends BaseCommentModel {
   final Map data;
 
   ContinueThreadModel(
-      {@required id,
-      @required depth,
-      @required this.data,
-      @required submissionId})
+      {required id,
+      required depth,
+      required this.data,
+      required submissionId})
       : super(depth: depth, id: id, submissionId: submissionId);
 
   List<Object> get props => [id, depth, submissionId];
 }
 
 class MoreCommentsModel extends BaseCommentModel {
-  final int numReplies;
+  final int? numReplies;
 
   final Map data;
   // final String submissionId;
@@ -145,11 +147,11 @@ class MoreCommentsModel extends BaseCommentModel {
   // MoreCommentsModel();
 
   MoreCommentsModel(
-      {@required id,
-      @required depth,
-      @required this.numReplies,
-      @required this.data,
-      @required submissionId})
+      {required id,
+      required depth,
+      required this.numReplies,
+      required this.data,
+      required submissionId})
       : super(depth: depth, id: id, submissionId: submissionId);
-  List<Object> get props => [id, depth, numReplies, submissionId];
+  List<Object?> get props => [id, depth, numReplies, submissionId];
 }

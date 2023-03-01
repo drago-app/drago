@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/core/usecases/usecase.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/foundation.dart';
 class FilterSubreddit implements UseCase<Unit, FilterSubredditParams> {
   final RedditService reddit;
 
-  FilterSubreddit({@required this.reddit});
+  FilterSubreddit({required this.reddit});
 
   @override
   Future<Either<Failure, Unit>> call(FilterSubredditParams params) async {

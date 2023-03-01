@@ -1,17 +1,16 @@
-import 'dart:async';
 import 'package:bloc/bloc.dart';
 import './account_page.dart';
 
 class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
-  AccountPageBloc() : super(null);
+  AccountPageBloc() : super(AccountPageInitial());
 
-  @override
-  // TODO: implement initialState
-  get initialState => null;
+  // @override
+  // get initialState => AccountPageInitial;
 
   @override
   Stream<AccountPageState> mapEventToState(AccountPageEvent event) {
-    // TODO: implement mapEventToState
-    return null;
+    return _map();
   }
+
+  Stream<AccountPageInitial> _map() async* {}
 }

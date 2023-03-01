@@ -1,11 +1,13 @@
+
+
 import 'dart:async';
 
 import 'alert_request.dart';
 import 'alert_response.dart';
 
 class DialogService {
-  Function(AlertRequest) _showDialogListener;
-  Completer<AlertResponse> _dialogCompleter;
+  late Function(AlertRequest) _showDialogListener;
+  Completer<AlertResponse>? _dialogCompleter;
 
   void registerDialogListener(Function(AlertRequest) showDialogListener) {
     print('2');
@@ -14,7 +16,7 @@ class DialogService {
   }
 
   Future<AlertResponse> showDialog(
-      {String title, String description, String buttonTitle = 'OK'}) {
+      {String? title, String? description, String buttonTitle = 'OK'}) {
     _dialogCompleter = Completer<AlertResponse>();
     _showDialogListener(
       AlertRequest(
@@ -23,11 +25,11 @@ class DialogService {
         buttonTitle: buttonTitle,
       ),
     );
-    return _dialogCompleter.future;
+    return _dialogCompleter!.future;
   }
 
   void dialogComplete(AlertResponse response) {
-    _dialogCompleter.complete(response);
+    _dialogCompleter!.complete(response);
     _dialogCompleter = null;
   }
 }

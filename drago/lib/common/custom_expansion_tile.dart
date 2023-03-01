@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,10 +15,10 @@ class CustomExpansionTile extends StatefulWidget {
   /// the tile to reveal or hide the [children]. The [initiallyExpanded] property must
   /// be non-null.
   const CustomExpansionTile({
-    Key key,
+    Key? key,
     this.indentation = 4.0,
     this.sideBorderColor = Colors.transparent,
-    @required this.title,
+    required this.title,
     this.backgroundColor,
     this.onExpansionChanged,
     this.body,
@@ -29,7 +31,7 @@ class CustomExpansionTile extends StatefulWidget {
 
   final Widget title;
 
-  final Widget body;
+  final Widget? body;
   final double indentation;
   final Color sideBorderColor;
 
@@ -38,7 +40,7 @@ class CustomExpansionTile extends StatefulWidget {
   /// When the tile starts expanding, this function is called with the value
   /// true. When the tile starts collapsing, this function is called with
   /// the value false.
-  final ValueChanged<bool> onExpansionChanged;
+  final ValueChanged<bool>? onExpansionChanged;
 
   /// The widgets that are displayed when the tile expands.
   ///
@@ -46,11 +48,11 @@ class CustomExpansionTile extends StatefulWidget {
   final List<Widget> children;
 
   /// The color to display behind the sublist when expanded.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// A widget to display instead of a rotating arrow icon.
-  final List<Widget> trailingOpen;
-  final List<Widget> trailingClosed;
+  final List<Widget>? trailingOpen;
+  final List<Widget>? trailingClosed;
 
   /// Specifies if the list tile is initially expanded (true) or collapsed (false, the default).
   final bool initiallyExpanded;
@@ -74,9 +76,9 @@ class _ExpansionTileState extends State<CustomExpansionTile>
   // final ColorTween _iconColorTween = ColorTween();
   // final ColorTween _backgroundColorTween = ColorTween();
 
-  AnimationController _controller;
+  late AnimationController _controller;
   // Animation<double> _iconTurns;
-  Animation<double> _heightFactor;
+  late Animation<double> _heightFactor;
   // Animation<Color> _borderColor;
   // Animation<Color> _headerColor;
   // Animation<Color> _iconColor;
@@ -98,7 +100,7 @@ class _ExpansionTileState extends State<CustomExpansionTile>
     //     _controller.drive(_backgroundColorTween.chain(_easeOutTween));
 
     _isExpanded =
-        PageStorage.of(context)?.readState(context) ?? widget.initiallyExpanded;
+        PageStorage.of(context).readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -121,10 +123,10 @@ class _ExpansionTileState extends State<CustomExpansionTile>
           });
         });
       }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
+      PageStorage.of(context).writeState(context, _isExpanded);
     });
     if (widget.onExpansionChanged != null)
-      widget.onExpansionChanged(_isExpanded);
+      widget.onExpansionChanged!(_isExpanded);
   }
 
   void onTapDown(TapDownDetails details) {
@@ -145,7 +147,7 @@ class _ExpansionTileState extends State<CustomExpansionTile>
     });
   }
 
-  Widget _buildChildren(BuildContext context, Widget child) {
+  Widget _buildChildren(BuildContext context, Widget? child) {
     final bool closed = !_isExpanded && _controller.isDismissed;
 
     return Container(
@@ -202,7 +204,7 @@ class _ExpansionTileState extends State<CustomExpansionTile>
                                   )
                                 ]),
                           ),
-                          (!closed) ? widget.body : SizedBox.shrink()
+                          (!closed) ? widget.body! : SizedBox.shrink()
                         ],
                       ),
                     ),

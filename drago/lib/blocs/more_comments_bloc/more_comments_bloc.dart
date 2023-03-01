@@ -10,7 +10,7 @@ class MoreCommentsBloc extends Bloc<MoreCommentsEvent, MoreCommentsState> {
   final MoreCommentsModel more;
   final GetMoreComments getMoreComments;
 
-  MoreCommentsBloc({@required this.more, @required this.getMoreComments})
+  MoreCommentsBloc({required this.more, required this.getMoreComments})
       : super(MoreCommentsInitial(more: more));
 
   @override

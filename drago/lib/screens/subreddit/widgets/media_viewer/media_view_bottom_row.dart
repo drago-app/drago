@@ -1,3 +1,5 @@
+
+
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
@@ -11,8 +13,8 @@ class MediaViewerBottomRow extends StatelessWidget {
   final Bloc bloc;
 
   MediaViewerBottomRow({
-    @required this.submission,
-    this.bloc,
+    required this.submission,
+    required this.bloc,
   })  : assert(submission != null),
         assert(bloc != null);
   @override

@@ -1,13 +1,15 @@
+
+
 import 'package:drago/common/common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SubmissionSummary extends StatelessWidget {
-  final String subreddit;
-  final AuthorViewModel authorViewModel;
-  final ScoreViewModel scoreViewModel;
-  final Function onSubredditTapped;
+  final String? subreddit;
+  final AuthorViewModel? authorViewModel;
+  final ScoreViewModel? scoreViewModel;
+  final Function? onSubredditTapped;
 
   const SubmissionSummary(
       {this.subreddit,
@@ -33,30 +35,30 @@ class SubmissionSummary extends StatelessWidget {
                 style: DefaultTextStyle.of(context).style.copyWith(
                     fontSize: 14,
                     letterSpacing: 0,
-                    color: Colors.grey[700].withOpacity(.9)),
+                    color: Colors.grey[700]!.withOpacity(.9)),
                 children: [
                   TextSpan(
                     text: '$subreddit',
                     style: DefaultTextStyle.of(context).style.copyWith(
-                          color: Colors.grey[700].withOpacity(.9),
+                          color: Colors.grey[700]!.withOpacity(.9),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0,
                         ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => onSubredditTapped(context),
+                      ..onTap = () => onSubredditTapped!(context),
                   ),
                   TextSpan(text: ' by '),
                   TextSpan(
-                      text: '${authorViewModel.name}',
+                      text: '${authorViewModel!.name}',
                       style: DefaultTextStyle.of(context).style.copyWith(
-                            color: authorViewModel.color,
+                            color: authorViewModel!.color,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 0,
                           ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => authorViewModel.onTap(context)),
+                        ..onTap = () => authorViewModel!.onTap!(context)),
                 ],
               ),
             ),
@@ -65,7 +67,7 @@ class SubmissionSummary extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
               children: <Widget>[
-                ScoreWidgetSpan(scoreViewModel)
+                ScoreWidgetSpan(scoreViewModel!)
                 // Padding(
                 //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 //   child: SubmissionRatio(submission: submission),

@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/core/usecases/usecase.dart';
@@ -8,7 +10,7 @@ class SubscribeToSubreddit
     implements UseCase<Unit, SubscribeToSubredditParams> {
   final RedditService reddit;
 
-  SubscribeToSubreddit({@required this.reddit});
+  SubscribeToSubreddit({required this.reddit});
 
   @override
   Future<Either<Failure, Unit>> call(SubscribeToSubredditParams params) async {

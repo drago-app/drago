@@ -27,10 +27,10 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   };
 
   SubredditPageBloc(
-      {@required this.getRedditLinks,
-      @required this.subreddit,
-      @required this.actionService,
-      @required this.sortActionsService})
+      {required this.getRedditLinks,
+      required this.subreddit,
+      required this.actionService,
+      required this.sortActionsService})
       : assert(subreddit != null),
         super(
           SubredditPageInitial(
@@ -65,7 +65,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
 
   Stream<SubredditPageState> _mapUserSelectedActionToState(
       UserSelectedAction event) async* {
-    yield* event.action.action(this);
+    yield* event.action.action(this) as Stream<SubredditPageState>;
   }
 
   Stream<SubredditPageState> _mapUserTappedActionsButtonToState() async* {
@@ -93,7 +93,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
   }
 
   Stream<SubredditPageState> _mapLoadSubmissionsToState(
-      {LoadSubmissions event}) async* {
+      {required LoadSubmissions event}) async* {
     yield SubredditPageLoading(
         subreddit: subreddit, currentSort: _sortOptions[event.sort]);
 
@@ -120,7 +120,7 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
       final s = state as SubredditPageLoaded;
       final lastSubmission = s.redditLinks.last;
       final failureOrSubmissions = await getRedditLinks(GetRedditLinksParams(
-          sort: state.currentSort.type,
+          sort: state.currentSort!.type,
           subreddit: this.subreddit,
           after: lastSubmission.id));
 
@@ -136,9 +136,9 @@ class SubredditPageBloc extends Bloc<SubredditPageEvent, SubredditPageState> {
 class ActionService<A extends Actionable> {
   List<A> _actions = [];
 
-  List<A> getActions(String subreddit) => _actions;
+  List<A> getActions(String? subreddit) => _actions;
   ActionService add(Actionable action) {
-    _actions.add(action);
+    _actions.add(action as A);
     return this;
   }
 }
@@ -149,7 +149,7 @@ class ActionModel<S, B> extends Equatable {
   final StateStream action;
   final String description;
   final DragoIcons icon;
-  final bool selected;
+  final bool? selected;
   final Option<List<ActionableFn>> options;
 
   ActionModel(this.action, this.icon, this.description,

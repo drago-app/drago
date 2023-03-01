@@ -1,10 +1,12 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 
 class SubmissionSave extends StatelessWidget {
   final bool saved;
 
-  const SubmissionSave({@required this.saved}) : assert(saved != null);
+  const SubmissionSave({required this.saved}) : assert(saved != null);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class SubmissionSave extends StatelessWidget {
 }
 
 class DrawTriangle extends CustomPainter {
-  Paint _paint;
+  late Paint _paint;
 
   DrawTriangle() {
     _paint = Paint()

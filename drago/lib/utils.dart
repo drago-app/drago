@@ -1,3 +1,5 @@
+
+
 import 'package:html_unescape/html_unescape.dart';
 
 import 'package:number_display/number_display.dart';
@@ -22,7 +24,7 @@ String doubleToString(double d) {
 }
 
 final display = createDisplay(length: 3, decimal: 2);
-String truncateLongInt(int upvotes) {
+String truncateLongInt(int? upvotes) {
   return display(upvotes);
 }
 

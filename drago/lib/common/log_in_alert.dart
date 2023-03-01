@@ -1,3 +1,5 @@
+
+
 import 'package:drago/blocs/app_bloc/app_bloc.dart';
 import 'package:drago/blocs/app_bloc/app_event.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CupertinoLogInAlert extends CupertinoAlertDialog {
   final BuildContext context;
-  final String titleText;
-  final String contentText;
+  final String? titleText;
+  final String? contentText;
   final onDismiss;
 
   CupertinoLogInAlert(
-      {@required this.context,
+      {required this.context,
       this.titleText,
       this.contentText,
       this.onDismiss});

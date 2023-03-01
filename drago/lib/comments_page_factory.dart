@@ -14,9 +14,9 @@ import 'features/subreddit/get_submissions.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class CommentsPageFactory extends StatefulWidget {
-  final SubmissionBloc submissionBloc;
+  final SubmissionBloc? submissionBloc;
 
-  const CommentsPageFactory({Key key, @required this.submissionBloc})
+  const CommentsPageFactory({Key? key, required this.submissionBloc})
       : super(key: key);
 
   @override
@@ -53,6 +53,12 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
     if (media is GifMedia) {
       return gifWidget(maxHeight, media);
     }
+    return Container(
+      height: maxHeight,
+      child: Center(
+          child: Text(
+              "oops, something went wrong at mapMediaTypeToWidget in comments_page_factory.dart")),
+    );
   }
 
   Widget galleryWidget(maxHeight, GalleryMedia media) {
@@ -117,7 +123,7 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
         ),
       ),
       child: Hero(
-        tag: widget.submissionBloc.state.submission.url,
+        tag: widget.submissionBloc!.state.submission.url!,
         child: Picture(
           maxHeight: maxHeight,
           url: media.src,
@@ -137,7 +143,7 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
       //   ),
       // ),
       child: Hero(
-        tag: widget.submissionBloc.state.submission.url,
+        tag: widget.submissionBloc!.state.submission.url!,
         child: Picture(
           maxHeight: maxHeight,
           url: media.src,
@@ -201,7 +207,7 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
   Widget selfSubmissionCommentsPage(submissionBloc) => CommentsPage(
         numComments: submissionBloc.state.submission.numComments.toString(),
         bottomWidget: SelfSubmissionBodyWidget(
-            (submissionBloc.state.submission as SelfSubmission).body),
+            (submissionBloc.state.submission as SelfSubmission).body!),
         topWidget: SubmissionTitleWidget(submissionBloc.state.submission.title),
         submissionSummary: SubmissionSummary(
           subreddit: submissionBloc.state.submission.subreddit,
@@ -226,9 +232,9 @@ class _CommentsPageFactoryState extends State<CommentsPageFactory> {
 class GalleryPreviewElement extends StatelessWidget {
   final ExpandoMedia media;
   final double height;
-  final Function onTap;
+  final Function? onTap;
 
-  GalleryPreviewElement(this.media, {@required this.height, this.onTap})
+  GalleryPreviewElement(this.media, {required this.height, this.onTap})
       : assert(media != null),
         assert(media is ImageMedia);
 
@@ -246,12 +252,12 @@ class GalleryPreviewElement extends StatelessWidget {
 }
 
 class CupertinoTappableWidget extends StatefulWidget {
-  final Function onTap;
+  final Function? onTap;
   final Widget child;
   final StackFit fit;
 
   CupertinoTappableWidget(
-      {this.onTap, @required this.child, this.fit = StackFit.expand});
+      {this.onTap, required this.child, this.fit = StackFit.expand});
 
   @override
   _CupertinoTappableWidgetState createState() =>
@@ -267,7 +273,8 @@ class _CupertinoTappableWidgetState extends State<CupertinoTappableWidget> {
       fit: widget.fit,
       children: [
         CupertinoContextMenu(
-          child: GestureDetector(onTap: widget.onTap, child: widget.child),
+          child: GestureDetector(
+              onTap: widget.onTap as void Function()?, child: widget.child),
           actions: [
             CupertinoContextMenuAction(
               child: const Text('Action one'),
@@ -283,9 +290,9 @@ class _CupertinoTappableWidgetState extends State<CupertinoTappableWidget> {
 }
 
 class LinkPreviewWidget extends StatelessWidget {
-  final String previewUrl;
+  final String? previewUrl;
   final Uri uri;
-  LinkPreviewWidget({@required String link, this.previewUrl})
+  LinkPreviewWidget({required String link, this.previewUrl})
       : uri = Uri.parse(link);
 
   @override
@@ -314,7 +321,8 @@ class LinkPreviewWidget extends StatelessWidget {
                       height: 50,
                       width: 50,
                       child: FittedBox(
-                          fit: BoxFit.cover, child: Image.network(previewUrl))),
+                          fit: BoxFit.cover,
+                          child: Image.network(previewUrl!))),
                   Container(
                     child: Expanded(
                       child: Container(

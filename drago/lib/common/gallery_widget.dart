@@ -1,3 +1,5 @@
+
+
 import 'package:drago/blocs/submission_bloc.dart/submission_bloc.dart';
 import 'package:drago/common/picture.dart';
 import 'package:drago/sandbox/host.dart';
@@ -10,11 +12,11 @@ import 'common.dart';
 class GalleryWidget extends StatelessWidget {
   final PageController controller;
   final GalleryMedia media;
-  final SubmissionBloc bloc;
+  final SubmissionBloc? bloc;
   final startingIndex;
 
   GalleryWidget(
-      {@required this.media, @required this.bloc, this.startingIndex = 0})
+      {required this.media, required this.bloc, this.startingIndex = 0})
       : controller = PageController(initialPage: startingIndex);
 
   @override
@@ -36,14 +38,14 @@ class GalleryPageView extends StatelessWidget {
   final PageController controller;
   final GalleryMedia media;
 
-  GalleryPageView({@required this.media, @required this.controller});
+  GalleryPageView({required this.media, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: PageView(
           controller: controller,
-          children: media.src
+          children: media.src!
               .map<Widget>((src) => Center(
                     child: GalleryMediaWidget(
                       media: src,
@@ -58,7 +60,7 @@ class GalleryMediaWidget extends StatefulWidget {
   final ExpandoMedia media;
 
   GalleryMediaWidget({
-    @required this.media,
+    required this.media,
   }) : assert(media != null);
 
   @override
@@ -118,7 +120,7 @@ class GalleryPageIndicator extends StatefulWidget {
   final initialIndex;
 
   GalleryPageIndicator(
-      {@required this.total, @required this.controller, this.initialIndex = 0})
+      {required this.total, required this.controller, this.initialIndex = 0})
       : assert(controller != null),
         assert(total != null);
 
@@ -127,7 +129,7 @@ class GalleryPageIndicator extends StatefulWidget {
 }
 
 class GalleryPageIndicatorState extends State<GalleryPageIndicator> {
-  var index;
+  late var index;
 
   @override
   void initState() {
@@ -135,7 +137,7 @@ class GalleryPageIndicatorState extends State<GalleryPageIndicator> {
     index = widget.initialIndex;
     widget.controller.addListener(() {
       setState(() {
-        index = widget.controller.page.toInt();
+        index = widget.controller.page!.toInt();
       });
     });
   }

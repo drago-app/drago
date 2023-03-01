@@ -1,3 +1,5 @@
+
+
 import 'package:drago/comment_factory.dart';
 import 'package:drago/common/common.dart';
 import 'package:drago/screens/comments/widgets/widgets.dart';
@@ -8,13 +10,13 @@ import 'package:drago/blocs/comments_page_bloc/comments_page.dart';
 
 class CommentsPage extends StatelessWidget {
   final String numComments;
-  final SubmissionActions submissionActions;
-  final SubmissionSummary submissionSummary;
-  final Widget topWidget;
-  final Widget bottomWidget;
+  final SubmissionActions? submissionActions;
+  final SubmissionSummary? submissionSummary;
+  final Widget? topWidget;
+  final Widget? bottomWidget;
 
   CommentsPage(
-      {@required this.numComments,
+      {required this.numComments,
       this.submissionActions,
       this.submissionSummary,
       this.topWidget,
@@ -30,10 +32,10 @@ class CommentsPage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
-                topWidget,
-                bottomWidget,
-                submissionSummary,
-                submissionActions,
+                topWidget!,
+                bottomWidget!,
+                submissionSummary!,
+                submissionActions!,
                 _comments()
               ],
             )),

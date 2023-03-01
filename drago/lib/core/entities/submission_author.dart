@@ -2,6 +2,8 @@
 // import 'package:equatable/equatable.dart';
 // import 'package:flutter/foundation.dart';
 
+
+
 // enum AuthorType { Regular, Moderator, Admin, Special }
 
 // class SubmissionAuthor extends Equatable {

@@ -1,3 +1,5 @@
+
+
 import 'package:drago/models/comment_model.dart';
 
 import 'package:drago/theme.dart';
@@ -11,26 +13,26 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class CommentWidget extends StatelessWidget {
-  final CommentModel comment;
+  final CommentModel? comment;
   final AuthorViewModel authorViewModel;
   final ScoreViewModel scoreViewModel;
-  final List<Widget> children;
+  final List<Widget>? children;
   final List colors;
 
   final unescape = new HtmlUnescape();
 
   CommentWidget(
-      {@required this.comment,
+      {required this.comment,
       this.children,
-      @required this.colors,
-      @required this.scoreViewModel,
-      @required this.authorViewModel});
+      required this.colors,
+      required this.scoreViewModel,
+      required this.authorViewModel});
 
   @override
   Widget build(BuildContext context) {
     return CustomExpansionTile(
       backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
-      indentation: 8.0 * comment.depth,
+      indentation: 8.0 * comment!.depth,
       trailingOpen: [
         Icon(
           CupertinoIcons.ellipsis,
@@ -42,7 +44,7 @@ class CommentWidget extends StatelessWidget {
         FlairWidget(
           color: CupertinoColors.systemGrey2,
           style: TextStyle(color: CupertinoColors.systemGrey6, fontSize: 14),
-          flairText: '${comment.count}',
+          flairText: '${comment!.count}',
         ),
         SizedBox(
           width: 8,
@@ -53,9 +55,9 @@ class CommentWidget extends StatelessWidget {
           color: CupertinoColors.systemGrey,
         )
       ],
-      sideBorderColor: (comment.depth == 0)
+      sideBorderColor: (comment!.depth == 0)
           ? Colors.transparent
-          : colors[(comment.depth - 1) % colors.length],
+          : colors[(comment!.depth - 1) % colors.length],
       initiallyExpanded: true,
       title: RichText(
         text: TextSpan(children: [
@@ -66,10 +68,10 @@ class CommentWidget extends StatelessWidget {
           WidgetSpan(child: ScoreWidgetSpan(scoreViewModel))
         ]),
       ),
-      body: _body(context, comment),
-      children: (comment.children == null)
+      body: _body(context, comment!),
+      children: (comment!.children == null)
           ? []
-          : children
+          : children!
               .map<Widget>(
                   (c) => Padding(padding: EdgeInsets.only(left: 0), child: c))
               .toList(),
@@ -79,7 +81,7 @@ class CommentWidget extends StatelessWidget {
   Widget _body(BuildContext context, CommentModel comment) {
     return MarkdownBody(
       styleSheet: MarkdownTheme.of(context),
-      data: unescape.convert(comment.body),
+      data: unescape.convert(comment.body!),
       // onTapLink: (url) => _launchURL(url),
     );
   }

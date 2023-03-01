@@ -14,6 +14,6 @@ class CommentsPageInitial extends CommentsPageState {
 class CommentsLoaded extends CommentsPageState {
   final List comments;
 
-  CommentsLoaded({@required this.comments});
+  CommentsLoaded({required this.comments});
   List<Object> get props => [comments];
 }

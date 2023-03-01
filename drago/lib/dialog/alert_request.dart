@@ -1,7 +1,9 @@
+
+
 class AlertRequest {
-  final String title;
-  final String description;
-  final String buttonTitle;
+  final String? title;
+  final String? description;
+  final String? buttonTitle;
 
   AlertRequest({
     this.title,

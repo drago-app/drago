@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-typedef RegExpMatch Detect(String url);
-typedef Future<ExpandoMedia> HandleLink(String href, RegExpMatch detectResult);
+typedef RegExpMatch? Detect(String url);
+typedef Future<ExpandoMedia> HandleLink(String href, RegExpMatch? detectResult);
 typedef Future<VideoData> GetVideoData(String id);
 
 class Host {
@@ -16,18 +16,18 @@ class Host {
     imgurGifvHost
   ];
   final String moduleId;
-  final String name;
+  final String? name;
   final List<String> domains;
   final Detect detect;
   final HandleLink handleLink;
-  final GetVideoData getVideoData;
+  final GetVideoData? getVideoData;
 
   Host({
-    @required this.moduleId,
-    @required this.name,
-    @required this.domains,
-    @required this.detect,
-    @required this.handleLink,
+    required this.moduleId,
+    this.name,
+    required this.domains,
+    required this.detect,
+    required this.handleLink,
     this.getVideoData,
   });
   static Stream<Host> _getHost(String url) async* {
@@ -48,10 +48,10 @@ class Host {
 }
 
 class VideoData {
-  final String title;
-  final String duration;
-  final String publishedAt;
-  final String viewCount;
+  final String? title;
+  final String? duration;
+  final String? publishedAt;
+  final String? viewCount;
   VideoData({this.title, this.duration, this.publishedAt, this.viewCount});
 }
 
@@ -68,43 +68,43 @@ abstract class MediaVisitor {
 }
 
 abstract class ExpandoMedia {
-  static ExpandoMediaType type;
-  String get title;
+  static ExpandoMediaType? type;
+  String? get title;
   accept(MediaVisitor vistor);
 }
 
 class GalleryMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Gallery;
-  int get size => src.length;
-  final String title;
-  final String caption;
-  final String credits;
-  final List<ExpandoMedia> src;
+  int get size => src!.length;
+  final String? title;
+  final String? caption;
+  final String? credits;
+  final List<ExpandoMedia>? src;
   GalleryMedia({this.title, this.caption, this.credits, this.src});
   accept(MediaVisitor visitor) => visitor.visitGalleryMedia(this);
 }
 
 class ImageMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Image;
-  final String title;
-  final String caption;
-  final String credits;
+  final String? title;
+  final String? caption;
+  final String? credits;
   final String src;
-  final String href;
+  final String? href;
   ImageMedia(
-      {this.title, this.caption, this.credits, @required this.src, this.href});
+      {this.title, this.caption, this.credits, required this.src, this.href});
   accept(MediaVisitor visitor) => visitor.visitImageMedia(this);
 }
 
 class GifMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Image;
-  final String title;
-  final String caption;
-  final String credits;
+  final String? title;
+  final String? caption;
+  final String? credits;
   final String src;
-  final String href;
+  final String? href;
   GifMedia(
-      {this.title, this.caption, this.credits, @required this.src, this.href});
+      {this.title, this.caption, this.credits, required this.src, this.href});
 
   accept(MediaVisitor visitor) => visitor.visitGifMedia(this);
 }
@@ -112,20 +112,20 @@ class GifMedia implements ExpandoMedia {
 class VideoMedia implements ExpandoMedia {
   // https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/60b97e46a133b502cd0e44aa6830b1296cc4be62/lib/core/host.js
   static ExpandoMediaType type = ExpandoMediaType.Video;
-  final String title;
-  final String caption;
-  final String credits;
-  final String fallback;
-  final String href;
-  final String source;
-  final String poster;
-  final bool muted;
-  final num frameRate;
-  final bool loop;
-  final num playbackRate;
-  final bool reversable;
-  final bool reversed;
-  final num time;
+  final String? title;
+  final String? caption;
+  final String? credits;
+  final String? fallback;
+  final String? href;
+  final String? source;
+  final String? poster;
+  final bool? muted;
+  final num? frameRate;
+  final bool? loop;
+  final num? playbackRate;
+  final bool? reversable;
+  final bool? reversed;
+  final num? time;
   final List<VideoMediaSource> sources;
 
   VideoMedia(
@@ -143,25 +143,25 @@ class VideoMedia implements ExpandoMedia {
       this.reversable,
       this.reversed,
       this.time,
-      @required this.sources});
+      required this.sources});
 
   accept(MediaVisitor visitor) => visitor.visitVideoMedia(this);
 }
 
 class VideoMediaSource {
   final String source;
-  final String reverse;
+  final String? reverse;
   final String type;
 
-  VideoMediaSource({@required this.source, this.reverse, @required this.type});
+  VideoMediaSource({required this.source, this.reverse, required this.type});
 }
 
 class AudioMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Audio;
-  final bool autoplay;
-  final bool loop;
+  final bool? autoplay;
+  final bool? loop;
   final String title;
-  final List<AudioMediaSrc> sources;
+  final List<AudioMediaSrc>? sources;
 
   AudioMedia({this.autoplay, this.loop, this.sources, this.title = ''});
 
@@ -172,26 +172,26 @@ class AudioMediaSrc {
   final String file;
   final String type;
 
-  AudioMediaSrc({@required this.file, @required this.type});
+  AudioMediaSrc({required this.file, required this.type});
 }
 
 class IframeMedia implements ExpandoMedia {
   static ExpandoMediaType type = ExpandoMediaType.Iframe;
-  final bool muted;
-  final String expandoClass;
+  final bool? muted;
+  final String? expandoClass;
   final String embed;
-  final String embedAutoplay;
-  final String width;
-  final String height;
-  final bool fixedRatio;
-  final String pause;
-  final String play;
+  final String? embedAutoplay;
+  final String? width;
+  final String? height;
+  final bool? fixedRatio;
+  final String? pause;
+  final String? play;
   final String title;
 
   IframeMedia(
       {this.muted,
       this.expandoClass,
-      @required this.embed,
+      required this.embed,
       this.embedAutoplay,
       this.width,
       this.height,
@@ -205,8 +205,8 @@ class IframeMedia implements ExpandoMedia {
 class GenericaMedia implements ExpandoMedia {
   //https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/60b97e46a133b502cd0e44aa6830b1296cc4be62/lib/core/host.js
   static ExpandoMediaType type = ExpandoMediaType.Generic;
-  final bool muted;
-  final String expandoClass;
+  final bool? muted;
+  final String? expandoClass;
   final String title;
 
   GenericaMedia({this.muted, this.expandoClass, this.title = ''});
@@ -237,11 +237,11 @@ final Host defaultVideo = Host(
   name: 'defaultVideo',
   domains: [],
   detect: (String url) => RegExp(r'\.(webm|mp4|ogv|3gp|mkv)$').firstMatch(url),
-  handleLink: (String href, RegExpMatch detectResult) {
+  handleLink: (String href, RegExpMatch? detectResult) {
     // convert ogv to ogg?
     //https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/60b97e46a133b502cd0e44aa6830b1296cc4be62/lib/modules/hosts/defaultVideo.js
-    final extension = detectResult.group(1);
-    final format = 'video/$extension';
+    final ext = detectResult?.group(1);
+    final format = 'video/$ext';
 
     return Future.value(
       VideoMedia(
@@ -294,7 +294,7 @@ final Host imgurAlbumHost = Host(
           scheme: "http",
           host: "imgur.com",
           path:
-              "/ajaxalbums/getimages/${detectResult.group(1)}/hit.json?all=true"));
+              "/ajaxalbums/getimages/${detectResult?.group(1)}/hit.json?all=true"));
 
       var body = jsonDecode(response.body);
 

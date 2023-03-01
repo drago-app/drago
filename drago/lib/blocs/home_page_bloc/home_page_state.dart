@@ -14,14 +14,14 @@ class HomePageLoaded extends HomePageState {
   final List subscriptions;
   final List moderatedSubs;
 
-  HomePageLoaded({@required this.subscriptions, @required this.moderatedSubs})
+  HomePageLoaded({required this.subscriptions, required this.moderatedSubs})
       : assert(subscriptions != null),
         assert(moderatedSubs != null);
 
   @override
   List<Object> get props => [subscriptions, moderatedSubs];
 
-  HomePageLoaded copyWith({List subscriptions, List moderatedSubs}) {
+  HomePageLoaded copyWith({List? subscriptions, List? moderatedSubs}) {
     return HomePageLoaded(
         subscriptions: subscriptions ?? this.subscriptions,
         moderatedSubs: moderatedSubs ?? this.moderatedSubs);
@@ -29,6 +29,6 @@ class HomePageLoaded extends HomePageState {
 }
 
 class HomePageError extends HomePageState {
-  final String message;
+  final String? message;
   HomePageError(this.message);
 }

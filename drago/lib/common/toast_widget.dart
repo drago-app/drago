@@ -1,15 +1,17 @@
+
+
 import 'package:drago/icons_enum.dart';
 import 'package:flutter/cupertino.dart';
 
 class ToastWidget extends StatelessWidget {
-  final String message;
-  final Color color;
-  final DragoIcons icon;
+  final String? message;
+  final Color? color;
+  final DragoIcons? icon;
 
-  const ToastWidget({Key key, @required this.message, this.color, this.icon})
+  const ToastWidget({Key? key, required this.message, this.color, this.icon})
       : super(key: key);
 
-  factory ToastWidget.warning(String message) => ToastWidget(
+  factory ToastWidget.warning(String? message) => ToastWidget(
         message: message,
         color: CupertinoColors.activeOrange,
         icon: DragoIcons.clear,

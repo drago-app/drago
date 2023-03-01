@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 
 enum DragoIcons {
@@ -105,4 +107,4 @@ final Map<DragoIcons, dynamic> iconMap = {
 };
 
 final getIconData =
-    (DragoIcons icon) => iconMap[icon] ?? CupertinoIcons.clear_thick_circled;
+    (DragoIcons? icon) => iconMap[icon] ?? CupertinoIcons.clear_thick_circled;

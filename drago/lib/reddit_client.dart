@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'dart:io';
 
@@ -10,7 +12,7 @@ import 'core/entities/subreddit.dart';
 
 abstract class RedditClient {
   Future<void> initializeWithoutAuth();
-  String initializeWithAuth(String token);
+  String initializeWithAuth(String? token);
   Future<AuthUser> loginWithNewAccount(List<String> scopes, String state);
 
   Future<List<Subreddit>> defaultSubreddits();
@@ -18,22 +20,22 @@ abstract class RedditClient {
   Future<List<Subreddit>> moderatedSubreddits();
 
   Future<List<Map<dynamic, dynamic>>> hotSubmissions(
-      String subreddit, String after);
+      String subreddit, String? after);
   Future<List<Map<dynamic, dynamic>>> newestSubmissions(
-      String subreddit, String after);
+      String subreddit, String? after);
   Future<List<Map<dynamic, dynamic>>> risingSubmissions(
-      String subreddit, String after);
+      String subreddit, String? after);
   Future<List<Map<dynamic, dynamic>>> controversialSubmissions(
-      String subreddit, String after, TimeFilter filter);
+      String subreddit, String? after, TimeFilter? filter);
   Future<List<Map<dynamic, dynamic>>> topSubmissions(
-      String subreddit, String after, TimeFilter filter);
+      String subreddit, String? after, TimeFilter? filter);
 
-  Future<void> saveSubmission(String submissionId);
-  Future<void> unsaveSubmission(String submissionId);
+  Future<void> saveSubmission(String? submissionId);
+  Future<void> unsaveSubmission(String? submissionId);
 
-  Future<void> upvoteSubmission(String submissionId);
-  Future<void> downvoteSubmission(String submissionId);
-  Future<void> removeVoteSubmission(String submissionId);
+  Future<void> upvoteSubmission(String? submissionId);
+  Future<void> downvoteSubmission(String? submissionId);
+  Future<void> removeVoteSubmission(String? submissionId);
 
   Future<List<Map<dynamic, dynamic>>> getCommentsForSubmission(
       String submissionId);
@@ -42,7 +44,7 @@ abstract class RedditClient {
 }
 
 class DrawRedditClient implements RedditClient {
-  draw.Reddit _reddit;
+  late draw.Reddit _reddit;
   String _secret = '';
   String _identifier = 'Hp4M9q3bOeds3w';
   String _deviceID = 'pooppooppooppooppooppoop1';
@@ -60,9 +62,9 @@ class DrawRedditClient implements RedditClient {
   }
 
   @override
-  String initializeWithAuth(String token) {
+  String initializeWithAuth(String? token) {
     _reddit = draw.Reddit.restoreAuthenticatedInstance(
-      token,
+      token!,
       userAgent: userAgent,
       redirectUri: Uri.parse('http://localhost:8080'),
       clientId: _identifier,
@@ -74,7 +76,7 @@ class DrawRedditClient implements RedditClient {
   @override
   Future<AuthUser> loginWithNewAccount(
       List<String> scopes, String state) async {
-    Stream<String> onCode = await _server();
+    Stream<String?> onCode = await _server();
     _reddit = draw.Reddit.createWebFlowInstance(
       userAgent: userAgent,
       clientId: _identifier,
@@ -87,7 +89,7 @@ class DrawRedditClient implements RedditClient {
 
     _launchURL(authUrl);
 
-    final String code = await onCode.first;
+    final String code = (await onCode.first)!;
 
     await _reddit.auth.authorize(code);
 
@@ -101,7 +103,7 @@ class DrawRedditClient implements RedditClient {
       Stream<draw.SubredditRef> refs) async {
     return refs
         .map((sub) => sub as draw.RedditBaseInitializedMixin)
-        .map((sub) => Subreddit.fromJson(sub.data))
+        .map((sub) => Subreddit.fromJson(sub.data as Map<String?, dynamic>))
         .toList();
   }
 
@@ -117,28 +119,28 @@ class DrawRedditClient implements RedditClient {
 
   @override
   Future<List<Map<dynamic, dynamic>>> hotSubmissions(
-      String subreddit, String after) async {
+      String subreddit, String? after) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).hot, subreddit, after);
   }
 
   @override
   Future<List<Map<dynamic, dynamic>>> newestSubmissions(
-      String subreddit, String after) async {
+      String subreddit, String? after) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).newest, subreddit, after);
   }
 
   @override
   Future<List<Map<dynamic, dynamic>>> risingSubmissions(
-      String subreddit, String after) async {
+      String subreddit, String? after) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).rising, subreddit, after);
   }
 
   @override
   Future<List<Map<dynamic, dynamic>>> controversialSubmissions(
-      String subreddit, String after, TimeFilter filter) async {
+      String subreddit, String? after, TimeFilter? filter) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).controversial, subreddit, after,
         filter: filter);
@@ -146,7 +148,7 @@ class DrawRedditClient implements RedditClient {
 
   @override
   Future<List<Map<dynamic, dynamic>>> topSubmissions(
-      String subreddit, String after, TimeFilter filter) async {
+      String subreddit, String? after, TimeFilter? filter) async {
     return await _getSubmissions(
         _reddit.subreddit(subreddit).controversial, subreddit, after,
         filter: filter);
@@ -155,10 +157,10 @@ class DrawRedditClient implements RedditClient {
   Future<List<Map<dynamic, dynamic>>> _getSubmissions(
     Function drawMethod,
     String subreddit,
-    String after, {
-    TimeFilter filter,
+    String? after, {
+    TimeFilter? filter,
   }) async {
-    var params = Map<String, String>();
+    var params = Map<String, String?>();
     params['limit'] = '25';
     params['after'] = (after == null) ? null : 't3_$after';
 
@@ -173,32 +175,32 @@ class DrawRedditClient implements RedditClient {
   }
 
   @override
-  Future<void> unsaveSubmission(String submissionId) async {
-    final submission = await _reddit.submission(id: submissionId).populate();
+  Future<void> unsaveSubmission(String? submissionId) async {
+    final submission = await _reddit.submission(id: submissionId!).populate();
     return submission.unsave();
   }
 
   @override
-  Future<void> saveSubmission(String submissionId) async {
-    final submission = await _reddit.submission(id: submissionId).populate();
+  Future<void> saveSubmission(String? submissionId) async {
+    final submission = await _reddit.submission(id: submissionId!).populate();
     return submission.save();
   }
 
   @override
-  Future<void> upvoteSubmission(String submissionId) async {
-    final submission = await _reddit.submission(id: submissionId).populate();
+  Future<void> upvoteSubmission(String? submissionId) async {
+    final submission = await _reddit.submission(id: submissionId!).populate();
     return submission.upvote();
   }
 
   @override
-  Future<void> downvoteSubmission(String submissionId) async {
-    final submission = await _reddit.submission(id: submissionId).populate();
+  Future<void> downvoteSubmission(String? submissionId) async {
+    final submission = await _reddit.submission(id: submissionId!).populate();
     return submission.downvote();
   }
 
   @override
-  Future<void> removeVoteSubmission(String submissionId) async {
-    final submission = await _reddit.submission(id: submissionId).populate();
+  Future<void> removeVoteSubmission(String? submissionId) async {
+    final submission = await _reddit.submission(id: submissionId!).populate();
     return submission.clearVote();
   }
 
@@ -229,14 +231,14 @@ class DrawRedditClient implements RedditClient {
   }
 }
 
-Future<Stream<String>> _server() async {
-  final StreamController<String> onCode = new StreamController();
+Future<Stream<String?>> _server() async {
+  final StreamController<String?> onCode = new StreamController();
 
   final HttpServer server =
       await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
 
   server.listen((HttpRequest request) async {
-    final String code = request.uri.queryParameters["code"];
+    final String? code = request.uri.queryParameters["code"];
 
     request.response
       ..statusCode = 200

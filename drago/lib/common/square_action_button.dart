@@ -1,19 +1,21 @@
+
+
 import 'package:flutter/cupertino.dart';
 
 class SquareActionButton extends StatelessWidget {
   final Function onTap;
   final IconData iconData;
   final Color activeBackgroundColor;
-  final Color inActiveBackgroundColor;
-  final Color activeIconColor;
-  final Color inActiveIconColor;
+  final Color? inActiveBackgroundColor;
+  final Color? activeIconColor;
+  final Color? inActiveIconColor;
   final bool switchCondition;
 
   SquareActionButton(
-      {@required this.onTap,
-      @required this.iconData,
-      @required this.activeBackgroundColor,
-      @required this.switchCondition,
+      {required this.onTap,
+      required this.iconData,
+      required this.activeBackgroundColor,
+      required this.switchCondition,
       this.inActiveBackgroundColor,
       this.activeIconColor,
       this.inActiveIconColor})
@@ -25,7 +27,7 @@ class SquareActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: AnimatedSwitcher(
         duration: Duration(milliseconds: 150),
         child: (switchCondition)
@@ -54,7 +56,7 @@ class _ActiveSquareActionButton extends StatelessWidget {
   final IconData iconData;
 
   _ActiveSquareActionButton(
-      {@required this.backgroundColor, @required this.iconData, this.iconColor})
+      {required this.backgroundColor, required this.iconData, this.iconColor})
       : assert(backgroundColor != null),
         assert(iconData != null);
 
@@ -77,12 +79,12 @@ class _ActiveSquareActionButton extends StatelessWidget {
 }
 
 class _InactiveSquareActionButton extends StatelessWidget {
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final iconColor;
   final IconData iconData;
 
   _InactiveSquareActionButton(
-      {this.backgroundColor, @required this.iconData, this.iconColor})
+      {this.backgroundColor, required this.iconData, this.iconColor})
       : assert(iconData != null);
 
   @override

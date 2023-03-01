@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/icons_enum.dart';
 import 'package:equatable/equatable.dart';
@@ -24,7 +26,7 @@ class SubmissionSort extends Equatable {
   @override
   List<Object> get props => [type];
 
-  SubmissionSort copyWith({Option<SubmissionFilter> selectedFilter}) {
+  SubmissionSort copyWith({Option<SubmissionFilter>? selectedFilter}) {
     return SubmissionSort(
       icon,
       _baseDescription,

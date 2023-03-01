@@ -24,8 +24,10 @@ class HomePage extends StatelessWidget {
       } else if (state is HomePageInitial) {
         return CupertinoPageScaffold(child: Center(child: Placeholder()));
       } else if (state is HomePageError) {
-        return Center(child: Text(state.message));
+        return Center(child: Text(state.message!));
       }
+
+      return Placeholder(child: Text("build in home_page.dart"));
     });
   }
 
@@ -37,10 +39,10 @@ class HomePage extends StatelessWidget {
 }
 
 class ListItem extends StatelessWidget {
-  final String text;
+  final String? text;
   final bool last;
 
-  ListItem({@required this.text, this.last = false});
+  ListItem({required this.text, this.last = false});
 
   @override
   Widget build(BuildContext context) {

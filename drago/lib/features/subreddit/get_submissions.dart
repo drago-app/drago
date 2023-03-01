@@ -15,7 +15,7 @@ class GetRedditLinks
     implements UseCase<List<RedditLink>, GetRedditLinksParams> {
   final RedditService reddit;
 
-  GetRedditLinks({@required this.reddit});
+  GetRedditLinks({required this.reddit});
 
   @override
   Future<Either<Failure, List<RedditLink>>> call(
@@ -28,41 +28,41 @@ class GetRedditLinks
 class Submission extends Equatable {
   static String _defaultPreviewUrl = 'https://via.placeholder.com/150';
   final Author author;
-  final String domain,
+  final String? domain,
       title,
       url,
-      id,
       previewUrl,
       subreddit,
       authorFlairText,
       linkFlairText;
+  final String id;
   final DateTime createdUtc;
-  final bool edited, saved, isNSFW, stickied, archived;
+  final bool? edited, saved, isNSFW, stickied, archived;
   final NumComments numComments;
   final ScoreModel score; //todo I don't likke this
   final VoteState voteState;
 
   Submission(
-      {@required this.author,
-      @required this.createdUtc,
-      @required this.authorFlairText,
-      @required this.linkFlairText,
-      @required this.edited,
-      @required this.domain,
-      @required this.id,
-      @required this.numComments,
-      @required this.score,
-      @required this.title,
-      @required this.url,
-      @required this.previewUrl,
-      @required this.saved,
-      @required this.isNSFW,
-      @required this.stickied,
-      @required this.archived,
-      @required this.subreddit,
-      @required this.voteState});
+      {required this.author,
+      required this.createdUtc,
+      required this.authorFlairText,
+      required this.linkFlairText,
+      required this.edited,
+      required this.domain,
+      required this.id,
+      required this.numComments,
+      required this.score,
+      required this.title,
+      required this.url,
+      required this.previewUrl,
+      required this.saved,
+      required this.isNSFW,
+      required this.stickied,
+      required this.archived,
+      required this.subreddit,
+      required this.voteState});
 
-  Submission.fromRedditLink({@required RedditLink link, String previewUrl})
+  Submission.fromRedditLink({required RedditLink link, String? previewUrl})
       : author = Author.fromRedditLink(link: link),
         createdUtc = link.createdUtc,
         edited = link.edited,
@@ -105,7 +105,7 @@ class Submission extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         author,
         createdUtc,
         edited,
@@ -192,32 +192,32 @@ class Submission extends Equatable {
 class SelfSubmission extends Submission {
   static String _defaultPreview =
       'https://via.placeholder.com/150/0000FF/808080?Text=SELF';
-  final String body;
+  final String? body;
 
-  SelfSubmission.fromRedditLink({@required RedditLink link})
+  SelfSubmission.fromRedditLink({required RedditLink link})
       : body = link.body,
         super.fromRedditLink(link: link, previewUrl: _defaultPreview);
 
   SelfSubmission(
-      {@required this.body,
-      @required archived,
-      @required stickied,
-      @required authorFlairText,
-      @required linkFlairText,
-      @required author,
-      @required createdUtc,
-      @required edited,
-      @required domain,
-      @required id,
-      @required numComments,
-      @required score,
-      @required title,
-      @required url,
-      @required previewUrl,
-      @required saved,
-      @required isNSFW,
-      @required subreddit,
-      @required voteState})
+      {required this.body,
+      required archived,
+      required stickied,
+      required authorFlairText,
+      required linkFlairText,
+      required author,
+      required createdUtc,
+      required edited,
+      required domain,
+      required id,
+      required numComments,
+      required score,
+      required title,
+      required url,
+      required previewUrl,
+      required saved,
+      required isNSFW,
+      required subreddit,
+      required voteState})
       : super(
             author: author,
             stickied: stickied,
@@ -267,12 +267,12 @@ class MediaSubmission extends Submission {
   final ExpandoMedia media;
 
   MediaSubmission.fromRedditLink(
-      {@required RedditLink link, @required ExpandoMedia media})
+      {required RedditLink link, required ExpandoMedia media})
       : media = media,
         super.fromRedditLink(link: link);
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         media,
         super.id,
         super.saved,
@@ -282,25 +282,25 @@ class MediaSubmission extends Submission {
         super.stickied
       ];
   MediaSubmission(
-      {@required this.media,
-      @required stickied,
-      @required archived,
-      @required linkFlairText,
-      @required authorFlairText,
-      @required author,
-      @required createdUtc,
-      @required edited,
-      @required domain,
-      @required id,
-      @required numComments,
-      @required score,
-      @required title,
-      @required url,
-      @required previewUrl,
-      @required saved,
-      @required isNSFW,
-      @required subreddit,
-      @required voteState})
+      {required this.media,
+      required stickied,
+      required archived,
+      required linkFlairText,
+      required authorFlairText,
+      required author,
+      required createdUtc,
+      required edited,
+      required domain,
+      required id,
+      required numComments,
+      required score,
+      required title,
+      required url,
+      required previewUrl,
+      required saved,
+      required isNSFW,
+      required subreddit,
+      required voteState})
       : super(
             linkFlairText: linkFlairText,
             stickied: stickied,
@@ -353,29 +353,29 @@ class Author {
 
   /// This is the of the form:
   /// spez
-  final String name;
-  Author({this.type = AuthorType.regular, @required this.name});
-  factory Author.fromRedditLink({@required RedditLink link}) {
+  final String? name;
+  Author({this.type = AuthorType.regular, required this.name});
+  factory Author.fromRedditLink({required RedditLink link}) {
     if (link.distinguished == 'admin')
       return Author(name: link.author, type: AuthorType.admin);
     if (link.distinguished == 'moderator')
       return Author(name: link.author, type: AuthorType.moderator);
-    if (link.author.toLowerCase() == 'pinkywrinkle')
+    if (link.author!.toLowerCase() == 'pinkywrinkle')
       return Author(name: link.author, type: AuthorType.developer);
     return Author(name: link.author);
   }
   @override
   String toString() {
-    return name;
+    return name!;
   }
 }
 
 class GetRedditLinksParams {
-  final String after;
+  final String? after;
   final String subreddit;
-  final SubmissionSortType sort;
-  final TimeFilter filter;
+  final SubmissionSortType? sort;
+  final TimeFilter? filter;
 
   GetRedditLinksParams(
-      {@required this.subreddit, this.sort, this.filter, this.after});
+      {required this.subreddit, this.sort, this.filter, this.after});
 }

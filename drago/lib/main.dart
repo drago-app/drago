@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/favorite_subreddit_action.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/filter_subreddit_action.dart';
@@ -361,7 +363,7 @@ class RouteGenerator {
         return CupertinoPageRoute(
           builder: (context) => BlocProvider<CommentsPageBloc>(
             child: CommentsPageFactory(
-              submissionBloc: args as SubmissionBloc,
+              submissionBloc: args as SubmissionBloc?,
             ),
             create: (BuildContext context) => CommentsPageBloc(
                 getComments: getComments,

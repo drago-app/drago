@@ -1,10 +1,12 @@
+
+
 import 'package:drago/theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class ExpandableText extends StatefulWidget {
   const ExpandableText(
     this.text, {
-    Key key,
+    Key? key,
     this.onTap,
     this.trimLines = 4,
   })  : assert(text != null),
@@ -12,7 +14,7 @@ class ExpandableText extends StatefulWidget {
 
   final String text;
   final int trimLines;
-  final Function onTap;
+  final Function? onTap;
 
   @override
   ExpandableTextState createState() => ExpandableTextState();
@@ -26,7 +28,7 @@ class ExpandableTextState extends State<ExpandableText>
   void _onTapLink() {
     if (didExceedMaxLines) {
       setState(() => _readMore = !_readMore);
-      widget.onTap();
+      widget.onTap!();
     }
   }
 
@@ -63,7 +65,7 @@ class ExpandableTextState extends State<ExpandableText>
         didExceedMaxLines = textPainter.didExceedMaxLines;
 
         // Get the endIndex of data
-        int endIndex;
+        int? endIndex;
         final pos = textPainter.getPositionForOffset(Offset(
           textSize.width - linkSize.width,
           textSize.height,

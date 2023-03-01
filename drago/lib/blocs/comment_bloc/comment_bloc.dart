@@ -10,7 +10,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final BaseCommentModel comment;
   final GetMoreComments getMoreComments;
 
-  CommentBloc({@required this.comment, @required this.getMoreComments})
+  CommentBloc({required this.comment, required this.getMoreComments})
       : super(CommentInitial(comment: comment));
 
   // @override

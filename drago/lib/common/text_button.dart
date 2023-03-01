@@ -1,3 +1,5 @@
+
+
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +7,8 @@ import 'package:flutter/widgets.dart';
 
 class TextButton extends StatelessWidget {
   final String text;
-  final Function onTap;
-  final TextStyle style;
+  final Function? onTap;
+  final TextStyle? style;
   static TextStyle _defaultTextStyle = const TextStyle();
 
   TextButton(this.text, {this.onTap, this.style}) : assert(text != null);
@@ -14,7 +16,7 @@ class TextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Text(
         text,
         style: _defaultTextStyle.merge(style),
@@ -25,16 +27,16 @@ class TextButton extends StatelessWidget {
 
 class AuthorViewModel {
   final Author author;
-  final Function onTap;
-  final Color defaultColor;
-  String get name => author.name;
-  Color get color =>
+  final Function? onTap;
+  final Color? defaultColor;
+  String? get name => author.name;
+  Color? get color =>
       _mapTypeToColor(author.type, defaultColor ?? Colors.grey[600]);
 
-  AuthorViewModel({@required this.author, this.onTap, this.defaultColor})
+  AuthorViewModel({required this.author, this.onTap, this.defaultColor})
       : assert(author != null);
 
-  static Color _mapTypeToColor(AuthorType type, Color defaultColor) {
+  static Color? _mapTypeToColor(AuthorType type, Color? defaultColor) {
     if (type == AuthorType.admin) {
       return CupertinoColors.systemRed;
     } else if (type == AuthorType.moderator) {
@@ -49,7 +51,7 @@ class AuthorViewModel {
 
 class AuthorWidget extends StatelessWidget {
   final AuthorViewModel author;
-  final TextStyle style;
+  final TextStyle? style;
   static final _defaultTextStyle = TextStyle(
     letterSpacing: 0,
     fontWeight: FontWeight.w500,
@@ -60,7 +62,7 @@ class AuthorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(author.name,
+    return TextButton(author.name!,
         onTap: author.onTap,
         style: _defaultTextStyle
             .merge(TextStyle(color: author.color).merge(style ?? TextStyle())));

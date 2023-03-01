@@ -1,3 +1,5 @@
+
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:drago/blocs/submission_bloc.dart/submission.dart';
 import 'package:drago/common/common.dart';
@@ -182,7 +184,7 @@ Widget linkSubmission(Submission submission) => SubredditListItem(
         arguments: BlocProvider.of<SubmissionBloc>(context)),
     thumbnail: SubmissionThumbnail(
       heroTag: submission.url,
-      onTap: () => _launchURL(submission.url),
+      onTap: () => _launchURL(submission.url!),
       label: LinkThumbnailLabel(),
       previewUrl: submission.previewUrl ?? 'https://via.placeholder.com/150',
     ),

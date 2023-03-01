@@ -1,9 +1,7 @@
 import 'package:drago/models/comment_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'blocs/comment_bloc/comment.dart';
 import 'blocs/more_comments_bloc/more_comments.dart';
 import 'common/common.dart';
@@ -11,7 +9,7 @@ import 'main.dart';
 import 'screens/comments/widgets/widgets.dart';
 
 class CommentFactory extends StatelessWidget {
-  final BaseCommentModel comment;
+  final BaseCommentModel? comment;
   static final List colors = [
     Colors.red,
     Colors.orange,
@@ -23,8 +21,8 @@ class CommentFactory extends StatelessWidget {
   ];
 
   const CommentFactory({
-    Key key,
-    @required this.comment,
+    Key? key,
+    required this.comment,
   }) : super(key: key);
 
   @override
@@ -32,7 +30,7 @@ class CommentFactory extends StatelessWidget {
     if (comment is CommentModel) {
       return BlocProvider(
         create: (context) =>
-            CommentBloc(getMoreComments: getMoreComments, comment: comment),
+            CommentBloc(getMoreComments: getMoreComments, comment: comment!),
         child: Builder(
           builder: (context) => BlocConsumer<CommentBloc, CommentState>(
               listener: (context, state) {},
@@ -54,19 +52,21 @@ class CommentFactory extends StatelessWidget {
                             print(
                                 '[CommentFactory] need to update AuthorModel to redirect to user account page');
                           }),
-                      comment: comment,
+                      comment: comment as CommentModel?,
                       children: (comment as CommentModel)
                           .children
                           .map((child) => CommentFactory(comment: child))
                           .toList());
                 }
+                return Placeholder(child: Text("CommentFactory"));
               }),
         ),
       );
     } else {
       return BlocProvider(
-        create: (context) =>
-            MoreCommentsBloc(getMoreComments: getMoreComments, more: comment),
+        create: (context) => MoreCommentsBloc(
+            getMoreComments: getMoreComments,
+            more: comment as MoreCommentsModel),
         child: Builder(
           builder: (context) =>
               BlocConsumer<MoreCommentsBloc, MoreCommentsState>(
@@ -74,7 +74,7 @@ class CommentFactory extends StatelessWidget {
                   builder: (context, state) {
                     if (state is MoreCommentsInitial) {
                       return MoreCommentsWidget(
-                        comment,
+                        comment as MoreCommentsModel?,
                         onTap: () =>
                             BlocProvider.of<MoreCommentsBloc>(context).add(
                           LoadMoreComments(),

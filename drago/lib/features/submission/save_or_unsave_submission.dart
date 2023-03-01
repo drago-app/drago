@@ -1,3 +1,5 @@
+
+
 import 'package:dartz/dartz.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +13,7 @@ class SaveOrUnsaveSubmission implements UseCase<Unit, SaveOrUnsaveParams> {
   final RedditService reddit;
   final UserService userService;
 
-  SaveOrUnsaveSubmission({@required this.reddit, @required this.userService});
+  SaveOrUnsaveSubmission({required this.reddit, required this.userService});
 
   @override
   Future<Either<Failure, Unit>> call(params) async {
@@ -19,7 +21,7 @@ class SaveOrUnsaveSubmission implements UseCase<Unit, SaveOrUnsaveParams> {
       return Left(NotAuthorizedFailure());
     }
 
-    if (params.submission.saved) {
+    if (params.submission.saved!) {
       return await reddit.unsaveSubmission(params.submission);
     } else {
       return await reddit.saveSubmission(params.submission);
@@ -30,5 +32,5 @@ class SaveOrUnsaveSubmission implements UseCase<Unit, SaveOrUnsaveParams> {
 class SaveOrUnsaveParams {
   final Submission submission;
 
-  SaveOrUnsaveParams({@required this.submission}) : assert(submission != null);
+  SaveOrUnsaveParams({required this.submission}) : assert(submission != null);
 }
