@@ -1,6 +1,5 @@
 import 'package:drago/models/comment_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class CommentState extends Equatable {
   BaseCommentModel get comment;

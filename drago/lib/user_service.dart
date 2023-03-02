@@ -11,7 +11,7 @@ class UserService {
   // SharedPreferences prefs;
   final RedditService reddit;
 
-  UserService({required this.reddit}) : assert(reddit != null);
+  UserService({required this.reddit});
 
   Future<bool> isUserLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();

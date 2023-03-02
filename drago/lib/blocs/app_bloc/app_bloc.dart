@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:drago/reddit_service.dart';
-import 'package:meta/meta.dart';
 import '../../user_service.dart';
 import './app.dart';
 

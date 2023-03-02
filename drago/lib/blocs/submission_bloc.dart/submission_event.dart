@@ -1,6 +1,5 @@
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class SubmissionEvent extends Equatable {
   @override
