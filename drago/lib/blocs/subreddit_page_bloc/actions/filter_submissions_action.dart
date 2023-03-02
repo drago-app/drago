@@ -3,17 +3,13 @@ import 'package:dartz/dartz.dart';
 import '../../../features/subreddit/get_submissions.dart';
 import '../../../models/sort_option.dart';
 import '../subreddit_page.dart';
-import '../subreddit_page_state.dart';
 
 class SubmissionFilterAction implements Actionable {
   GetRedditLinks usecase;
   SubmissionSort sort;
   SubmissionFilter filter;
 
-  SubmissionFilterAction(this.usecase, this.sort, this.filter)
-      : assert(usecase != null),
-        assert(sort != null),
-        assert(filter != null);
+  SubmissionFilterAction(this.usecase, this.sort, this.filter);
 
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(bloc) =>

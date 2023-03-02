@@ -1,5 +1,4 @@
 import 'package:drago/features/subreddit/filter_subreddit.dart';
-import 'package:drago/features/subreddit/hide_read_submissions.dart';
 
 import '../../../icons_enum.dart';
 import '../subreddit_page_bloc.dart';
@@ -9,7 +8,7 @@ class FilterSubredditAction
     implements Actionable<SubredditPageState, SubredditPageBloc> {
   FilterSubreddit usecase;
 
-  FilterSubredditAction(this.usecase) : assert(usecase != null);
+  FilterSubredditAction(this.usecase);
 
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(

@@ -1,6 +1,5 @@
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class SubmissionState extends Equatable {
   Submission get submission;
@@ -14,7 +13,7 @@ abstract class SubmissionState extends Equatable {
 class SubmissionInitial extends SubmissionState {
   final Submission submission;
 
-  SubmissionInitial({required this.submission}) : assert(submission != null);
+  SubmissionInitial({required this.submission});
 
   SubmissionInitial copyWith({submission}) {
     return SubmissionInitial(submission: submission ?? this.submission);

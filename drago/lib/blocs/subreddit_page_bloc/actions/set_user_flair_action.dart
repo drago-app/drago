@@ -7,7 +7,7 @@ class SetUserFlairAction
     implements Actionable<SubredditPageState, SubredditPageBloc> {
   SetUserFlair usecase;
 
-  SetUserFlairAction(this.usecase) : assert(usecase != null);
+  SetUserFlairAction(this.usecase);
 
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(

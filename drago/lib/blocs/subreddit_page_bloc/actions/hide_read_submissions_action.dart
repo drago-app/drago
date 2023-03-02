@@ -8,7 +8,7 @@ class HideReadSubmissionsAction
     implements Actionable<SubredditPageState, SubredditPageBloc> {
   HideReadSubmissions usecase;
 
-  HideReadSubmissionsAction(this.usecase) : assert(usecase != null);
+  HideReadSubmissionsAction(this.usecase);
 
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(

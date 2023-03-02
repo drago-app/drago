@@ -9,7 +9,7 @@ class ShowRulesAction
     implements Actionable<SubredditPageState, SubredditPageBloc> {
   GetSubredditRules usecase;
 
-  ShowRulesAction(this.usecase) : assert(usecase != null);
+  ShowRulesAction(this.usecase);
 
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(

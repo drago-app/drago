@@ -1,5 +1,4 @@
 import 'package:drago/models/comment_model.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class MoreCommentsState {
   MoreCommentsModel get more;

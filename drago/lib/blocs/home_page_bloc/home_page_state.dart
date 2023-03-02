@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class HomePageState extends Equatable {
   @override
@@ -14,9 +13,7 @@ class HomePageLoaded extends HomePageState {
   final List subscriptions;
   final List moderatedSubs;
 
-  HomePageLoaded({required this.subscriptions, required this.moderatedSubs})
-      : assert(subscriptions != null),
-        assert(moderatedSubs != null);
+  HomePageLoaded({required this.subscriptions, required this.moderatedSubs});
 
   @override
   List<Object> get props => [subscriptions, moderatedSubs];

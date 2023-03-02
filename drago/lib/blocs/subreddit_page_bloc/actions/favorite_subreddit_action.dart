@@ -8,7 +8,7 @@ class FavoriteSubredditAction
     implements Actionable<SubredditPageState, SubredditPageBloc> {
   FavoriteSubreddit usecase;
 
-  FavoriteSubredditAction(this.usecase) : assert(usecase != null);
+  FavoriteSubredditAction(this.usecase);
 
   @override
   ActionModel<SubredditPageState, SubredditPageBloc> toAction(
