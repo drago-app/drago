@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drago/blocs/blocs.dart';
 import 'package:drago/common/common.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 // import 'package:drago/home/list_item_base.dart';
 // import 'package:drago/home/subreddit_tile_model.dart';
-// import 'package:sticky_headers/sticky_headers.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
       } else if (state is HomePageLoaded) {
         return CupertinoPageScaffold(
             child: Center(
-          child: _body(state),
+          child: _body(context, state),
         ));
       } else if (state is HomePageInitial) {
         return CupertinoPageScaffold(child: Center(child: Placeholder()));
@@ -31,10 +31,67 @@ class HomePage extends StatelessWidget {
     });
   }
 
-  Widget _body(HomePageLoaded state) {
-    return ListView(
-        children:
-            state.subscriptions.map((sub) => ListItem(text: sub)).toList());
+  Widget _body(BuildContext context, HomePageLoaded state) {
+    var buckets = AlphaBuckets(state.subscriptions);
+
+    return ScrollablePositionedList.builder(
+        itemCount: buckets.buckets.entries.length,
+        itemBuilder: (context, index) => CupertinoListSection(
+              hasLeading: false,
+              topMargin: 0,
+              header: Text(buckets.buckets.entries.toList()[index].key),
+              children: buckets.buckets.entries
+                  .toList()[index]
+                  .value
+                  .map((e) => CupertinoListTile(
+                        title: Text(e,
+                            style:
+                                CupertinoTheme.of(context).textTheme.textStyle),
+                        onTap: () => Navigator.of(context)
+                            .pushNamed('/subreddit', arguments: e),
+                      ))
+                  .toList(),
+            ));
+
+    // return ListView(
+    //     children: buckets.buckets.entries
+    //         .map((entry) => CupertinoListSection(
+    //               hasLeading: false,
+    //               topMargin: 0,
+    //               header: Text(entry.key),
+    // children: entry.value
+    //     .map((e) => CupertinoListTile(
+    //           title: Text(e,
+    //               style: CupertinoTheme.of(context)
+    //                   .textTheme
+    //                   .textStyle),
+    //           onTap: () => Navigator.of(context)
+    //               .pushNamed('/subreddit', arguments: e),
+    //         ))
+    //     .toList(),
+    //             ))
+    //         .toList());
+  }
+}
+
+class AlphaBuckets {
+  final Map<String, List<String>> buckets;
+
+  AlphaBuckets(List strings) : this.buckets = _makeBuckets(strings);
+
+  static Map<String, List<String>> _makeBuckets(List strings) {
+    Map<String, List<String>> answer = Map();
+
+    for (var s in strings) {
+      var first = (s[0] as String).toUpperCase();
+      if (!answer.containsKey(first)) {
+        answer[first] = [];
+      }
+
+      answer[first]?.add(s);
+    }
+
+    return answer;
   }
 }
 
@@ -53,7 +110,9 @@ class ListItem extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
-                    color: (!last) ? Colors.grey : Colors.transparent,
+                    color: (!last)
+                        ? CupertinoColors.separator.resolveFrom(context)
+                        : Colors.transparent,
                     width: 0))),
         child: Padding(
           padding: EdgeInsets.all(16),

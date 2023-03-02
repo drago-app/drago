@@ -1,9 +1,6 @@
-
-
 import 'package:drago/common/common.dart';
 import 'package:drago/core/entities/vote_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 
 class SubmissionActions extends StatelessWidget {
   final Function? onUpVote;
