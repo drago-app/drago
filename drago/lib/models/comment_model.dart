@@ -1,5 +1,3 @@
-
-
 import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/score_model.dart';
@@ -129,10 +127,7 @@ class ContinueThreadModel extends BaseCommentModel {
   final Map data;
 
   ContinueThreadModel(
-      {required id,
-      required depth,
-      required this.data,
-      required submissionId})
+      {required id, required depth, required this.data, required submissionId})
       : super(depth: depth, id: id, submissionId: submissionId);
 
   List<Object> get props => [id, depth, submissionId];

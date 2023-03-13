@@ -1,5 +1,3 @@
-
-
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
@@ -21,4 +19,8 @@ class NotAuthorizedFailure extends Failure {
 class PostArchivedFailure extends Failure {
   static String _message = "Posts older than six months are archived";
   PostArchivedFailure({message}) : super(message ?? _message);
+}
+
+class AuthFailure extends Failure {
+  AuthFailure({message}) : super(message);
 }

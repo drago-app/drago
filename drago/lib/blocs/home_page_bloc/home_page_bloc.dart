@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:drago/core/entities/subreddit.dart';
 import 'package:drago/core/usecases/usecase.dart';
 import 'package:drago/dialog/dialog_service.dart';
 import 'package:drago/features/user/usecases.dart';
@@ -37,8 +38,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       (failure) async* {
         yield HomePageError(failure.message);
       },
-      (defaults) async* {
-        final subs = defaults.map((d) => d.displayName).toList(growable: false);
+      (List<Subreddit> defaults) async* {
+        final subs = defaults;
 
         yield (state is HomePageLoaded)
             ? (state as HomePageLoaded).copyWith(subscriptions: subs)
@@ -56,9 +57,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       (failure) async* {
         yield HomePageError(failure.message);
       },
-      (subscriptions) async* {
-        final subs =
-            subscriptions.map((d) => d.displayName).toList(growable: false);
+      (List<Subreddit> subscriptions) async* {
+        final subs = subscriptions;
 
         yield (state is HomePageLoaded)
             ? (state as HomePageLoaded).copyWith(subscriptions: subs)
@@ -66,18 +66,18 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       },
     );
 
-    final failureOrMods = await getUsersSubscriptions(NoParams());
+    final failureOrMods = await getUsersModerations(NoParams());
 
     yield* failureOrMods.fold(
       (failure) async* {
         yield HomePageError(failure.message);
       },
-      (mods) async* {
-        final subs = mods.map((d) => d.displayName).toList(growable: false);
+      (List<Subreddit> mods) async* {
+        final m = mods;
 
         yield (state is HomePageLoaded)
-            ? (state as HomePageLoaded).copyWith(subscriptions: subs)
-            : HomePageLoaded(subscriptions: [], moderatedSubs: subs);
+            ? (state as HomePageLoaded).copyWith(moderatedSubs: m)
+            : HomePageLoaded(subscriptions: [], moderatedSubs: m);
       },
     );
   }

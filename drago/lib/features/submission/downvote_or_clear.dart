@@ -1,5 +1,3 @@
-
-
 import 'package:dartz/dartz.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:flutter/foundation.dart';

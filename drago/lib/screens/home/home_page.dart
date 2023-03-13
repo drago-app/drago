@@ -1,8 +1,9 @@
+import 'package:drago/common/common.dart';
+import 'package:drago/core/entities/subreddit.dart';
+import 'package:drago/icons_enum.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drago/blocs/blocs.dart';
-import 'package:drago/common/common.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 // import 'package:drago/home/list_item_base.dart';
 // import 'package:drago/home/subreddit_tile_model.dart';
@@ -11,79 +12,99 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomePageBloc, HomePageState>(builder: (context, state) {
-      if (state is HomePageLoading) {
-        return CupertinoPageScaffold(
-            child: Center(
-          child: LoadingIndicator(),
-        ));
-      } else if (state is HomePageLoaded) {
-        return CupertinoPageScaffold(
-            child: Center(
-          child: _body(context, state),
-        ));
-      } else if (state is HomePageInitial) {
-        return CupertinoPageScaffold(child: Center(child: Placeholder()));
-      } else if (state is HomePageError) {
-        return Center(child: Text(state.message!));
-      }
-
-      return Placeholder(child: Text("build in home_page.dart"));
+      return SafeArea(
+        top: false,
+        child: CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              leading: Icon(getIconData(DragoIcons.add), size: 24),
+              middle: Text("Subreddits"),
+            ),
+            child: _buildBody(context, state)),
+      );
     });
+
+    // return BlocBuilder<HomePageBloc, HomePageState>(builder: (context, state) {
+    //   if (state is HomePageLoading) {
+    //     return CupertinoPageScaffold(
+
+    //         child: Center(
+    //       child: LoadingIndicator(),
+    //     ));
+    //   } else if (state is HomePageLoaded) {
+    //     return CupertinoPageScaffold(
+    //         child: Center(
+    //       child: _body(context, state),
+    //     ));
+    //   } else if (state is HomePageInitial) {
+    //     return CupertinoPageScaffold(child: Center(child: Placeholder()));
+    //   } else if (state is HomePageError) {
+    //     return Center(child: Text(state.message!));
+    //   }
+
+    //   return Placeholder(child: Text("build in home_page.dart"));
+    // });
+  }
+
+  Widget _buildBody(BuildContext context, HomePageState state) {
+    if (state is HomePageLoading) {
+      return Center(child: LoadingIndicator());
+    }
+    if (state is HomePageLoaded) {
+      return _body(context, state);
+    }
+    if (state is HomePageInitial) {
+      return Placeholder();
+    }
+    if (state is HomePageError) {
+      return Center(child: Text(state.message!));
+    }
+    return Placeholder(child: Text("build in home_page.dart"));
   }
 
   Widget _body(BuildContext context, HomePageLoaded state) {
     var buckets = AlphaBuckets(state.subscriptions);
 
-    return ScrollablePositionedList.builder(
-        itemCount: buckets.buckets.entries.length,
+    var entries = buckets.buckets.entries.toList();
+
+    if (state.moderatedSubs.isNotEmpty) {
+      entries.insert(0, MapEntry("MODERATOR", state.moderatedSubs));
+    }
+
+    return ListView.builder(
+        itemCount: entries.length,
         itemBuilder: (context, index) => CupertinoListSection(
               hasLeading: false,
               topMargin: 0,
-              header: Text(buckets.buckets.entries.toList()[index].key),
-              children: buckets.buckets.entries
-                  .toList()[index]
+              header: Text(entries[index].key),
+              children: entries[index]
                   .value
                   .map((e) => CupertinoListTile(
-                        title: Text(e,
+                        trailing: Icon(
+                          getIconData(DragoIcons.favorite),
+                          color: CupertinoColors.lightBackgroundGray,
+                          size: 24,
+                        ),
+                        title: Text(e.displayName,
                             style:
                                 CupertinoTheme.of(context).textTheme.textStyle),
                         onTap: () => Navigator.of(context)
-                            .pushNamed('/subreddit', arguments: e),
+                            .pushNamed('/subreddit', arguments: e.displayName),
                       ))
                   .toList(),
             ));
-
-    // return ListView(
-    //     children: buckets.buckets.entries
-    //         .map((entry) => CupertinoListSection(
-    //               hasLeading: false,
-    //               topMargin: 0,
-    //               header: Text(entry.key),
-    // children: entry.value
-    //     .map((e) => CupertinoListTile(
-    //           title: Text(e,
-    //               style: CupertinoTheme.of(context)
-    //                   .textTheme
-    //                   .textStyle),
-    //           onTap: () => Navigator.of(context)
-    //               .pushNamed('/subreddit', arguments: e),
-    //         ))
-    //     .toList(),
-    //             ))
-    //         .toList());
   }
 }
 
 class AlphaBuckets {
-  final Map<String, List<String>> buckets;
+  final Map<String, List<Subreddit>> buckets;
 
-  AlphaBuckets(List strings) : this.buckets = _makeBuckets(strings);
+  AlphaBuckets(List<Subreddit> subs) : this.buckets = _makeBuckets(subs);
 
-  static Map<String, List<String>> _makeBuckets(List strings) {
-    Map<String, List<String>> answer = Map();
+  static Map<String, List<Subreddit>> _makeBuckets(List<Subreddit> subs) {
+    Map<String, List<Subreddit>> answer = Map();
 
-    for (var s in strings) {
-      var first = (s[0] as String).toUpperCase();
+    for (var s in subs) {
+      var first = s.displayName[0].toUpperCase();
       if (!answer.containsKey(first)) {
         answer[first] = [];
       }
@@ -95,36 +116,36 @@ class AlphaBuckets {
   }
 }
 
-class ListItem extends StatelessWidget {
-  final String? text;
-  final bool last;
+// class ListItem extends StatelessWidget {
+//   final String? text;
+//   final bool last;
 
-  ListItem({required this.text, this.last = false});
+//   ListItem({required this.text, this.last = false});
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () =>
-          Navigator.of(context).pushNamed('/subreddit', arguments: text),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: (!last)
-                        ? CupertinoColors.separator.resolveFrom(context)
-                        : Colors.transparent,
-                    width: 0))),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            '$text',
-            style: CupertinoTheme.of(context).textTheme.textStyle,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () =>
+//           Navigator.of(context).pushNamed('/subreddit', arguments: text),
+//       child: Container(
+//         decoration: BoxDecoration(
+//             border: Border(
+//                 bottom: BorderSide(
+//                     color: (!last)
+//                         ? CupertinoColors.separator.resolveFrom(context)
+//                         : Colors.transparent,
+//                     width: 0))),
+//         child: Padding(
+//           padding: EdgeInsets.all(16),
+//           child: Text(
+//             '$text',
+//             style: CupertinoTheme.of(context).textTheme.textStyle,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // NOTE: If refactoring this page, consider this package
 //  https://github.com/quire-io/scroll-to-index

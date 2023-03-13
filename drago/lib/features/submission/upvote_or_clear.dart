@@ -1,8 +1,5 @@
-
-
 import 'package:dartz/dartz.dart';
 import 'package:drago/features/subreddit/get_submissions.dart';
-import 'package:flutter/foundation.dart';
 import 'package:drago/core/entities/vote_state.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/core/usecases/usecase.dart';

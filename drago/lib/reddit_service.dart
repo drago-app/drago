@@ -5,7 +5,6 @@ import 'package:drago/features/subreddit/get_submissions.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/sandbox/types.dart';
 import 'package:drago/core/error/failures.dart';
-import 'package:flutter/foundation.dart';
 import 'core/entities/subreddit.dart';
 import 'user_service.dart';
 
@@ -52,8 +51,8 @@ class RedditService {
           redditClient.subscriptions, 'RedditService#subscriptions');
 
   Future<Either<Failure, List<Subreddit>>> moderatedSubreddits() async =>
-      tryAndSortSubreddits(
-          redditClient.subscriptions, 'RedditService#moderatedSubreddits');
+      tryAndSortSubreddits(redditClient.moderatedSubreddits,
+          'RedditService#moderatedSubreddits');
 
   Future<Either<Failure, Unit>> saveSubmission(
       Submission submissionModel) async {
@@ -183,8 +182,12 @@ class RedditService {
     'vote'
   ];
 
-  Future<AuthUser> loginWithNewAccount() async {
+  Future<AuthenticatedUser> loginWithNewAccount() async {
     return redditClient.loginWithNewAccount(_scopes, _state);
+  }
+
+  Future<AuthenticatedUser> currentUser() async {
+    return await redditClient.getCurrentUser();
   }
 
   initializeWithoutAuth() async {

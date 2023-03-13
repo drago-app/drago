@@ -1,8 +1,8 @@
-
-
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
+import 'package:drago/core/error/failures.dart';
 import 'package:drago/models/sort_option.dart';
 import 'package:drago/user_service.dart';
 import 'package:draw/draw.dart' as draw;
@@ -13,7 +13,9 @@ import 'core/entities/subreddit.dart';
 abstract class RedditClient {
   Future<void> initializeWithoutAuth();
   String initializeWithAuth(String? token);
-  Future<AuthUser> loginWithNewAccount(List<String> scopes, String state);
+  Future<AuthenticatedUser> loginWithNewAccount(
+      List<String> scopes, String state);
+  Future<AuthenticatedUser> getCurrentUser();
 
   Future<List<Subreddit>> defaultSubreddits();
   Future<List<Subreddit>> subscriptions();
@@ -74,7 +76,16 @@ class DrawRedditClient implements RedditClient {
   }
 
   @override
-  Future<AuthUser> loginWithNewAccount(
+  Future<AuthenticatedUser> getCurrentUser() async {
+    draw.Redditor me = await _reddit.user.me();
+    return AuthenticatedUser(
+      name: me.displayName,
+      token: _reddit.auth.credentials.toJson(),
+    );
+  }
+
+  @override
+  Future<AuthenticatedUser> loginWithNewAccount(
       List<String> scopes, String state) async {
     Stream<String?> onCode = await _server();
     _reddit = draw.Reddit.createWebFlowInstance(
@@ -95,8 +106,10 @@ class DrawRedditClient implements RedditClient {
 
     draw.Redditor me = await _reddit.user.me();
 
-    return AuthUser(
-        name: me.displayName, token: _reddit.auth.credentials.toJson());
+    return AuthenticatedUser(
+      name: me.displayName,
+      token: _reddit.auth.credentials.toJson(),
+    );
   }
 
   Future<List<Subreddit>> _drawSubToSubreddit(

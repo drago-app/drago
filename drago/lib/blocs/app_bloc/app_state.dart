@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../user_service.dart';
-
 abstract class AppState extends Equatable {
   @override
   List<Object> get props => [];
@@ -15,19 +13,17 @@ class AppUninitialized extends AppState {}
 class AppInitializing extends AppState {}
 
 class AppInitializedWithAuthUser extends AppState {
-  final AuthUser user;
+  final String username;
 
-  AppInitializedWithAuthUser({required this.user});
+  AppInitializedWithAuthUser({required this.username});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [username];
 }
 
 class AppInitializedWithoutAuthUser extends AppState {
-  final AuthUser user;
-
-  AppInitializedWithoutAuthUser({required this.user});
+  AppInitializedWithoutAuthUser();
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [];
 }

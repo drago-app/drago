@@ -1,10 +1,7 @@
-
-
 import 'package:dartz/dartz.dart';
 import 'package:drago/core/error/failures.dart';
 import 'package:drago/core/usecases/usecase.dart';
 import 'package:drago/reddit_service.dart';
-import 'package:flutter/foundation.dart';
 
 class FavoriteSubreddit implements UseCase<Unit, FavoriteSubredditParams> {
   final RedditService reddit;
@@ -19,5 +16,5 @@ class FavoriteSubreddit implements UseCase<Unit, FavoriteSubredditParams> {
 
 class FavoriteSubredditParams {
   final String subreddit;
-  FavoriteSubredditParams(this.subreddit) : assert(subreddit != null);
+  FavoriteSubredditParams(this.subreddit);
 }

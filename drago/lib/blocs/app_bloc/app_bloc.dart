@@ -22,20 +22,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Stream<AppState> _mapUserTappedLoginToState() async* {
-    final AuthUser user = await userService.logIn();
+    final failureOrUser = await userService.logIn();
 
-    yield AppInitializedWithAuthUser(user: user);
+    yield* failureOrUser.fold((failure) async* {
+      yield AppInitializedWithoutAuthUser();
+    }, (user) async* {
+      yield AppInitializedWithAuthUser(username: user.name);
+    });
   }
 
   Stream<AppState> _mapAppStartedToState() async* {
     yield AppInitializing();
 
-    final user = await userService.loggedInUser();
-    if (user is UnAuthUser) {
-      yield AppInitializedWithoutAuthUser(
-          user: UnAuthUser(name: "", token: ""));
-    } else {
-      yield AppInitializedWithAuthUser(user: user);
-    }
+    final failureOrUser = await userService.getCurrentUser();
+
+    yield* failureOrUser.fold((failure) async* {
+      yield AppInitializedWithoutAuthUser();
+    }, (user) async* {
+      yield AppInitializedWithAuthUser(username: user.name);
+    });
   }
 }

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 
 enum DragoIcons {
@@ -62,8 +60,10 @@ enum DragoIcons {
   rules,
   automoderator,
   approved_submitters,
-  report_to_admins
+  report_to_admins,
+  add
 }
+
 final Map<DragoIcons, dynamic> iconMap = {
   DragoIcons.upvote: CupertinoIcons.arrow_up,
   DragoIcons.downvote: CupertinoIcons.arrow_down,
@@ -99,11 +99,12 @@ final Map<DragoIcons, dynamic> iconMap = {
   DragoIcons.filter: CupertinoIcons.nosign,
   DragoIcons.side_bar: CupertinoIcons.sidebar_right,
   DragoIcons.moderator: CupertinoIcons.shield,
-  DragoIcons.favorite: CupertinoIcons.star,
+  DragoIcons.favorite: CupertinoIcons.star_fill,
   DragoIcons.unfavorite: CupertinoIcons.star_slash,
   DragoIcons.hide_read_posts: CupertinoIcons.eye_slash,
   DragoIcons.set_user_flair: CupertinoIcons.tag,
   DragoIcons.rules: CupertinoIcons.square_list,
+  DragoIcons.add: CupertinoIcons.add
 };
 
 final getIconData =

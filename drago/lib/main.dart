@@ -1,5 +1,3 @@
-
-
 import 'package:dartz/dartz.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/favorite_subreddit_action.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/filter_subreddit_action.dart';
@@ -7,6 +5,7 @@ import 'package:drago/blocs/subreddit_page_bloc/actions/hide_read_submissions_ac
 import 'package:drago/blocs/subreddit_page_bloc/actions/set_user_flair_action.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/show_rules_action.dart';
 import 'package:drago/blocs/subreddit_page_bloc/actions/show_sidebar_action.dart';
+import 'package:drago/models/auth/accounts.dart';
 import 'package:drago/reddit_client.dart';
 import 'package:drago/features/comment/get_comments.dart';
 import 'package:drago/features/comment/get_more_comments.dart';
@@ -45,7 +44,12 @@ final RedditClient _redditClient = DrawRedditClient();
 
 final RedditService _reddit = RedditService(redditClient: _redditClient);
 
-final UserService _userService = UserService(reddit: _reddit);
+final MyDatabase db = MyDatabase();
+
+final UserStore userStore = UserStore(db: db);
+
+final UserService _userService =
+    UserService(reddit: _reddit, userStore: userStore);
 
 final GetDefaultSubreddits _getDefaultSubreddits =
     GetDefaultSubreddits(reddit: _reddit);

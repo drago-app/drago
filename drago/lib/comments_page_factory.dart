@@ -4,7 +4,6 @@ import 'package:drago/screens/comments/comments_page.dart';
 import 'package:drago/screens/comments/widgets/widgets.dart';
 import 'package:drago/screens/subreddit/widgets/submission/submission_thumbnail.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/submission_bloc.dart/submission.dart';
@@ -322,7 +321,11 @@ class LinkPreviewWidget extends StatelessWidget {
                       width: 50,
                       child: FittedBox(
                           fit: BoxFit.cover,
-                          child: Image.network(previewUrl!))),
+                          child: Image.network(previewUrl!, errorBuilder:
+                              (BuildContext context, Object exception,
+                                  stackTrace) {
+                            return SizedBox.shrink();
+                          }))),
                   Container(
                     child: Expanded(
                       child: Container(
