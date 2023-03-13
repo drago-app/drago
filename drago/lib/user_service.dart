@@ -23,7 +23,8 @@ class UserStore {
     await Future.forEach(
         accounts,
         (Account acct) async =>
-            await this.db.into(this.db.accounts).insert(acct));
+            // await this.db.into(this.db.accounts).insert(acct));
+            this.db.update(this.db.accounts).write(acct));
   }
 
   Future<List<Account>> getAccounts() async {
